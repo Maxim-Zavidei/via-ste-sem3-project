@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApplicationTier", "ApplicationTier\ApplicationTier.csproj", "{5BCA13F0-3F8D-416A-B9F1-6DFD97A22047}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAccessTier", "DataAccessTier\DataAccessTier.csproj", "{2ED4B309-95F8-474F-9FE3-09879F256C17}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{5BCA13F0-3F8D-416A-B9F1-6DFD97A22047}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5BCA13F0-3F8D-416A-B9F1-6DFD97A22047}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5BCA13F0-3F8D-416A-B9F1-6DFD97A22047}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2ED4B309-95F8-474F-9FE3-09879F256C17}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2ED4B309-95F8-474F-9FE3-09879F256C17}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2ED4B309-95F8-474F-9FE3-09879F256C17}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2ED4B309-95F8-474F-9FE3-09879F256C17}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
