@@ -14,10 +14,13 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - name: Perform Checkout
-      uses: actions/checkout@v2
-    - name: Deploy
-      uses: peaceiris/actions-gh-pages@v3
+    - name: Copy the application folder
+      uses: andstor/copycat-action@v3
       with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_branch: app
+        personal_token: ${{ secrets.PERSONAL_TOKEN }}
+        src_path: /ApplicationTier
+        src_branch: main
+        dst_path: /.
+        dst_branch: app
+        dst_owner: Maxim-Zavidei
+        dst_repo_name: via-ste-sem3-project
