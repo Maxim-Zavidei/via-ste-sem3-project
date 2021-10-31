@@ -1,0 +1,23 @@
+name: Mirror changes to the app branch
+
+on:
+  workflow_dispatch:
+  push:
+    paths-ignore:
+    - '.github/**' # Ignore changes towards the .github directory
+    - 'BusinessTier/**' # Ignore changes of the Bussiness tier
+    - 'DataAccessTier/**' # Ignore changes of the Data Access tier
+    branches:
+    - main # Only trigger on the development branch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Perform Checkout
+      uses: actions/checkout@v2
+    - name: Deploy
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_branch: app
