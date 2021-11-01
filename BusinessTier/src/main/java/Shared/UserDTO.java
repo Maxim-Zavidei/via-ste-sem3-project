@@ -16,11 +16,11 @@ public class UserDTO implements Serializable
     this.password = password;
     this.securityLevel = securityLevel;
   }
-  public UserDTO(User user)
+ /* public UserDTO(User user)
   {
     this(user.getUserId(), user.getUsername(), user.getPassword(),
         user.getSecurityLevel());
-  }
+  }*/
 
   public int getUserId()
   {

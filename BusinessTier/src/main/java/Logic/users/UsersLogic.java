@@ -1,12 +1,17 @@
 package Logic.users;
+import Tier1.ClientCommunicator;
 import Tier1.UserNotFoundException;
-import Tier3.Communicator;
+import Tier3.ServerCommunicator;
+
 import Shared.User;
 
 public class UsersLogic
 {
-  Communicator communicator= Communicator.getInstance();
-  public UsersLogic() throws Exception
+  public static void main(String[] args) throws Exception {
+    ClientCommunicator clientCommunicator = new ClientCommunicator(1234);
+  }
+  //Communicator communicator= Communicator.getInstance();
+  /*public UsersLogic() throws Exception
   {
   }
 
@@ -36,6 +41,6 @@ public class UsersLogic
   public User getUserFromDatabase(String username)
   {
     return communicator.getUserFromDatabase(username);
-  }
+  }*/
 
 }

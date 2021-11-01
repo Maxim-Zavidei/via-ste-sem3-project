@@ -15,6 +15,9 @@ namespace DataAccessTier {
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); });
+                .ConfigureWebHostDefaults(webBuilder => { 
+                    webBuilder.UseUrls("https://localhost:5002/");
+                    webBuilder.UseStartup<Startup>(); 
+                    });
     }
 }

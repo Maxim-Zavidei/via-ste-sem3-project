@@ -1,6 +1,6 @@
 package Tier1;
 
-import Logic.UsersLogic;
+import Logic.users.*;
 import Shared.User;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,8 +22,9 @@ public class UserController
   @PostMapping("/login")
   EntityModel<User> one(@RequestBody User user)
   {
-    User loggingUser = logic.login(user.getUsername(),user.getPassword());
-    return assembler.toModel(loggingUser);
+    //User loggingUser = logic.login(user.getUsername(),user.getPassword());
+   // return assembler.toModel(loggingUser);
+   return null;
   }
 
 
