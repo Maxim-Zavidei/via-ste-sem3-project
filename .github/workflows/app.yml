@@ -3,7 +3,7 @@ name: Build and deploy ASP.Net Core app to Azure Web App - app-via-ste-sem3-proj
 on:
   push:
     branches:
-      - master
+      - main
     paths:
       - ApplicationTier/**
 
