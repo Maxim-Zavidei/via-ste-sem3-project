@@ -1,0 +1,47 @@
+﻿@page "/Users"
+@using ApplicationTier.Models
+@using ApplicationTier.Data.Impl
+@inject UserData _userData
+<h3>List of Users</h3>
+@if (allUsers == null)
+{
+    <p>Loading...</p>
+}
+else if(!allUsers.Any())
+{
+    <p>No items exist.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Username</th>
+            <th>Password</th>
+            <th>Email</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var user in allUsers)
+        {
+            <tr>
+                <td>@user.Id</td>
+                <td>@user.Username</td>
+                <td>@user.Password</td>
+                <td>@user.Email</td>
+                <td><button><i class="oi oi-trash" style="color: red"/></button></td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+
+@code {
+    private IList<User> allUsers;
+    protected override async Task OnInitializedAsync()
+    {
+        allUsers = await _userData.GetUsersAsync();
+    }
+
+}
