@@ -15,10 +15,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Copy the application folder
-      uses: andstor/copycat-action@v3
+      uses: andstor/copycat-action@v3.2.4
       with:
         personal_token: ${{ secrets.PERSONAL_TOKEN }}
-        src_path: /ApplicationTier
+        src_path: /ApplicationTier/
         src_branch: main
         dst_path: /.
         dst_branch: app
