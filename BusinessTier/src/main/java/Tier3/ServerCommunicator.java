@@ -23,8 +23,10 @@ import java.security.cert.X509Certificate;
 
 @SpringBootApplication
 public class ServerCommunicator {
- 
+
   private static ServerCommunicator instance;
+  private static UserCommunucator userCommunucator;
+  private RestTemplate restTemplate;
   private static final String url = "https://localhost:5002/";
 
   /**
@@ -55,40 +57,13 @@ public class ServerCommunicator {
     return instance;
   }
 
-  private ServerCommunicator() throws IOException {
-
-    /*
-     * Socket socket = new Socket("localhost", 1098);
-     * 
-     * outToServer = new ObjectOutputStream(socket.getOutputStream()); inFromServer
-     * = new ObjectInputStream(socket.getInputStream());
-     */
-    // HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
-    // public boolean verify(String hostname, SSLSession session) {
-    // return true;
-    // }
-    // });
-    // ClientConfig config = new ClientConfig();
-    // Client client = ClientBuilder.newClient(config);
-    // target = client.target("https://localhost:5002/");
-    // carDTOArrayListType = new GenericType<ArrayList<User>>() {
-    // };
+  private ServerCommunicator() throws IOException, KeyManagementException, KeyStoreException, NoSuchAlgorithmException {
+    this.userCommunucator = new UserCommunucator();
+    restTemplate = restTemplate();
 
   }
 
-  public ArrayList<User> getUserFromDatabase() {
-    try {
-      
-      ResponseEntity<User[]> responseEntity = restTemplate().getForEntity(url+"User/GetUsers", User[].class);
-      User[] users = responseEntity.getBody();
-     /* MediaType contentType = responseEntity.getHeaders().getContentType();
-      HttpStatus statusCode = responseEntity.getStatusCode();*/
-      return new ArrayList<>(Arrays.asList(users));
-}
-
-     catch (Exception e) {
-      e.printStackTrace();
-    }
-    return null;
+  public ArrayList<User> getUsersFromDatabase() {
+      return userCommunucator.getUsersFromDatabase(restTemplate, url);
   }
 }

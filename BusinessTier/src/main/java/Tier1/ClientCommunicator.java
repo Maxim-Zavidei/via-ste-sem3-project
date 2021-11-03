@@ -7,10 +7,6 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 public class ClientCommunicator {
-    private BufferedReader in;
-    private PrintWriter out;
-    private Socket socket;
-    private  String ip;
 
     private ServerSocket welcomeSocket;
 

@@ -1,28 +1,19 @@
 package Tier1;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.PrintWriter;
-import java.lang.reflect.Array;
 import java.net.Socket;
-import java.util.ArrayList;
 
 import com.google.gson.Gson;
 
-import org.springframework.web.cors.reactive.CorsWebFilter;
 
 import Shared.User;
-import Tier3.ServerCommunicator;
 
 public class CommunicationThreadHandler implements Runnable {
-    private BufferedReader in;
-    private PrintWriter out;
     private Socket socket;
     private  String ip;
-    private ServerCommunicator communicator;
+    private UserController userController;
     private Gson gson;
     InputStream is;
     OutputStream os;
@@ -34,13 +25,7 @@ public class CommunicationThreadHandler implements Runnable {
         try {
             is = socket.getInputStream();
             os = socket.getOutputStream();
-            this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            this.out = new PrintWriter(this.socket.getOutputStream(),true);
-            try {
-                communicator= ServerCommunicator.getInstance();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            userController = new UserController();
             gson = new Gson();
         } catch (IOException e) {
             e.printStackTrace();
@@ -49,88 +34,65 @@ public class CommunicationThreadHandler implements Runnable {
     @Override
     public void run(){
         while (true){
-            
             try {
-                byte[] lenBytes = new byte[4];
-                is.read(lenBytes, 0, 4);
-                int len = (((lenBytes[3] & 0xff) << 24) | ((lenBytes[2] & 0xff) << 16) |
-                  ((lenBytes[1] & 0xff) << 8) | (lenBytes[0] & 0xff));
-                byte[] receivedBytes = new byte[len];
-                is.read(receivedBytes, 0, len);
-                String received = new String(receivedBytes, 0, len);
-
+                String received = read();
                 switch(received)
                 {
                     case "login": {
-                        lenBytes = new byte[4];
-                        is.read(lenBytes, 0, 4);
-                            len = (((lenBytes[3] & 0xff) << 24) | ((lenBytes[2] & 0xff) << 16) |
-                                ((lenBytes[1] & 0xff) << 8) | (lenBytes[0] & 0xff));
-                        receivedBytes = new byte[len];
-                        is.read(receivedBytes, 0, len);
-                        received = new String(receivedBytes, 0, len);
+                        received = read();
                         User user = gson.fromJson(received, User.class);
-
-                        String toSend = logIn(user);
-                        byte[] toSendBytes = toSend.getBytes();
-                        int toSendLen = toSendBytes.length;
-                        byte[] toSendLenBytes = new byte[4];
-                        toSendLenBytes[0] = (byte)(toSendLen & 0xff);
-                        toSendLenBytes[1] = (byte)((toSendLen >> 8) & 0xff);
-                        toSendLenBytes[2] = (byte)((toSendLen >> 16) & 0xff);
-                        toSendLenBytes[3] = (byte)((toSendLen >> 24) & 0xff);
-                        os.write(toSendLenBytes);
-                        os.write(toSendBytes);
-
+                        String toSend = userController.logIn(user);
+                        send(toSend);
                         if(toSend.equals("Successful"))
                         {
+                            cashedUser = userController.getCashedUser();
                             toSend = gson.toJson(cashedUser);
-                            toSendBytes = toSend.getBytes();
-                            toSendLen = toSendBytes.length;
-                            toSendLenBytes = new byte[4];
-                            toSendLenBytes[0] = (byte)(toSendLen & 0xff);
-                            toSendLenBytes[1] = (byte)((toSendLen >> 8) & 0xff);
-                            toSendLenBytes[2] = (byte)((toSendLen >> 16) & 0xff);
-                            toSendLenBytes[3] = (byte)((toSendLen >> 24) & 0xff);
-                            os.write(toSendLenBytes);
-                            os.write(toSendBytes);
+                            send(toSend);
                         }
                     }
                 }
-
-// System.out.println("Server received: " + received);
-
-        // Sending
-        
-
-               /* String command = in.readLine();
-                switch(command)
-                {
-                    case "login": {
-                        String json = in.readLine();
-                        User user = gson.fromJson(json, User.class);
-                        out.println(logIn(user));
-                    }
-                }*/
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
     }
-    private String logIn(User user)
-    {
-        ArrayList<User> users = communicator.getUserFromDatabase();
-        for(int i = 0; i < users.size(); i++){
-            if(user.getUsername().equals(users.get(i).getUsername())){
-                if(user.getPassword().equals(users.get(i).getPassword()))
-                {
-                    cashedUser = users.get(i);
-                    System.out.println(users.get(i));
-                    return "Successful";
-                } else return "Incorrect password";
-            }
-        }
-        return "User not found";
 
+    private  String read()
+    {
+        String received = "";
+        try{
+            byte[] lenBytes = new byte[4];
+            is.read(lenBytes, 0, 4);
+            int len = (((lenBytes[3] & 0xff) << 24) | ((lenBytes[2] & 0xff) << 16) |
+              ((lenBytes[1] & 0xff) << 8) | (lenBytes[0] & 0xff));
+            byte[] receivedBytes = new byte[len];
+            is.read(receivedBytes, 0, len);
+            received = new String(receivedBytes, 0, len);
+            return received;
+        } catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+        return received;
     }
+
+    private void send(String toSend)
+    {
+        try{
+            byte[] toSendBytes = toSend.getBytes();
+            int toSendLen = toSendBytes.length;
+            byte[] toSendLenBytes = new byte[4];
+            toSendLenBytes[0] = (byte)(toSendLen & 0xff);
+            toSendLenBytes[1] = (byte)((toSendLen >> 8) & 0xff);
+            toSendLenBytes[2] = (byte)((toSendLen >> 16) & 0xff);
+            toSendLenBytes[3] = (byte)((toSendLen >> 24) & 0xff);
+            os.write(toSendLenBytes);
+            os.write(toSendBytes);
+        } catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+   
 }   
