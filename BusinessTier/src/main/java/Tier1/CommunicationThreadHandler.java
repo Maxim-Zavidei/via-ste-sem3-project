@@ -42,7 +42,6 @@ public class CommunicationThreadHandler implements Runnable {
                 e.printStackTrace();
             }
             gson = new Gson();
-            run();
         } catch (IOException e) {
             e.printStackTrace();
         }

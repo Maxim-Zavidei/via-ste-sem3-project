@@ -8,7 +8,7 @@ import Shared.User;
 public class UsersLogic
 {
   public static void main(String[] args) throws Exception {
-    ClientCommunicator clientCommunicator = new ClientCommunicator(1234);
+    ClientCommunicator clientCommunicator = new ClientCommunicator(8080);
   }
   //Communicator communicator= Communicator.getInstance();
   /*public UsersLogic() throws Exception
