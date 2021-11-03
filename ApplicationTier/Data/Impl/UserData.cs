@@ -12,50 +12,17 @@ namespace ApplicationTier.Data.Impl
 {
     public class UserData : IUserService
     {
-        private string ip;
-        private int port;
         private IList<User> _users;
         private TcpClient _client;
         private NetworkStream _stream;
-        public UserData(string ip, int port)
-        {
-            this.ip = ip;
-            StartConnection();
-        }
 
-        private void StartConnection()
+        public async Task StartConnection(string ip, int port)
         {
-            IPAddress ipAddress = IPAddress.Parse(ip);
-            TcpListener listener = new TcpListener(ipAddress, port);
-            listener.Start();
-            while (true)
-            {
-                try
-                {
-                    _client = listener.AcceptTcpClient();
-                    Console.WriteLine("Connection initiated");
-                    _stream = _client.GetStream();
-                    FetchData();
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e.Message);
-                    CloseConnection();
-                }
-            }
-        }
+            TcpClient _client = new TcpClient(ip, port);
 
-        private async Task FetchData()
-        {
             try
             {
-                StreamReader streamReader = new StreamReader(_stream, Encoding.UTF8);
-                string dataReceived = streamReader.ReadLine();
-
-                if (!string.IsNullOrEmpty(dataReceived))
-                {
-                    _users = JsonSerializer.Deserialize<List<User>>(dataReceived);
-                }
+                _stream = _client.GetStream();
             }
             catch (Exception e)
             {
@@ -64,25 +31,152 @@ namespace ApplicationTier.Data.Impl
             }
         }
 
-        private void CloseConnection()
+        public async Task FetchUsers()
         {
-            _client.Close();
+            try
+            {
+                //Sending request
+                string request = "fetchUsers";
+                int toSendLen = Encoding.ASCII.GetByteCount(request);
+                byte[] toSendBytes = Encoding.ASCII.GetBytes(request);
+                byte[] toSendLenBytes = BitConverter.GetBytes(toSendLen);
+                _stream.Write(toSendLenBytes);
+                _stream.Write(toSendBytes);
+
+
+                //Receiving message
+                byte[] rcvLenBytes = new byte[4];
+                _stream.Read(rcvLenBytes);
+                int rcvLen = BitConverter.ToInt32(rcvLenBytes, 0);
+                byte[] rcvBytes = new byte[rcvLen];
+                _stream.Read(rcvBytes);
+                String rcv = Encoding.ASCII.GetString(rcvBytes);
+                if (rcv.Equals("Fetching..."))
+                {
+                    rcvLenBytes = new byte[4];
+                    _stream.Read(rcvLenBytes);
+                    rcvLen = BitConverter.ToInt32(rcvLenBytes, 0);
+                    rcvBytes = new byte[rcvLen];
+                    _stream.Read(rcvBytes);
+                    rcv = Encoding.ASCII.GetString(rcvBytes);
+                    _users = JsonSerializer.Deserialize<List<User>>(rcv);
+                }
+                else throw new Exception("Wrong credentials");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                CloseConnection();
+            }
         }
-        
-        public Task<User> ValidateUserAsync(string username, string password)
+
+        public async Task<User> ValidateUserAsync(string username, string password)
         {
+            User userToReturn = new User();
+            try
+            {
+                //Sending
+                User user = new User
+                {
+                    Username = username,
+                    Password = password
+                };
+
+                //Sending request
+                string request = "login";
+                int toSendLen = Encoding.ASCII.GetByteCount(request);
+                byte[] toSendBytes = Encoding.ASCII.GetBytes(request);
+                byte[] toSendLenBytes = BitConverter.GetBytes(toSendLen);
+                _stream.Write(toSendLenBytes);
+                _stream.Write(toSendBytes);
+
+
+                string userToJson = user.ToString();
+                Console.WriteLine(userToJson);
+                toSendLen = Encoding.ASCII.GetByteCount(userToJson);
+                toSendBytes = Encoding.ASCII.GetBytes(userToJson);
+                toSendLenBytes = BitConverter.GetBytes(toSendLen);
+                _stream.Write(toSendLenBytes);
+                _stream.Write(toSendBytes);
+
+                //Receiving
+                byte[] rcvLenBytes = new byte[4];
+                _stream.Read(rcvLenBytes);
+                int rcvLen = BitConverter.ToInt32(rcvLenBytes, 0);
+                byte[] rcvBytes = new byte[rcvLen];
+                _stream.Read(rcvBytes);
+                String rcv = Encoding.ASCII.GetString(rcvBytes);
+                switch (rcv)
+                {
+                    case "Successful":
+                    {
+                        rcvLenBytes = new byte[4];
+                        _stream.Read(rcvLenBytes);
+                        rcvLen = BitConverter.ToInt32(rcvLenBytes, 0);
+                        rcvBytes = new byte[rcvLen];
+                        _stream.Read(rcvBytes);
+                        rcv = Encoding.ASCII.GetString(rcvBytes);
+                        userToReturn = JsonSerializer.Deserialize<User>(rcv);
+                        Console.WriteLine(userToReturn);
+                        break;
+                    }
+                    case "Incorrect password":
+                    {
+                        throw new Exception("Incorrect password");
+                    }
+                    case "Incorrect user":
+                    {
+                        throw new Exception("Incorrect user");
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                if (e is IOException || e is SocketException) Console.WriteLine(e.Message);
+                else throw;
+            }
+
+
+            return userToReturn;
+
+            /*Console.WriteLine("Debug point 3");
             StreamWriter streamWriter = new StreamWriter(_stream, Encoding.UTF8);
-            User user = new User();
-            user.Username = username;
-            user.Password = password;
+            StreamReader streamReader = new StreamReader(_stream, Encoding.UTF8);
+            await streamWriter.WriteLineAsync("login");
+            User user = new User
+            {
+                Username = username,
+                Password = password
+            };
             string userToJson = JsonSerializer.Serialize(user);
-            streamWriter.WriteLineAsync(userToJson);
-            throw new NotImplementedException();
+            Console.WriteLine(userToJson);
+            await streamWriter.WriteLineAsync(userToJson);
+            string dataReceived = await streamReader.ReadLineAsync();
+            Console.WriteLine(dataReceived);
+            User userReceived = new User();
+            if (!string.IsNullOrEmpty(dataReceived))
+                userReceived = JsonSerializer.Deserialize<User>(dataReceived);
+            return userReceived;*/
         }
 
         public async Task<IList<User>> GetUsersAsync()
         {
+            try
+            {
+                await FetchUsers();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+
             return _users;
+        }
+
+        public async Task CloseConnection()
+        {
+            _client.Close();
+            _stream.Close();
         }
     }
 }
