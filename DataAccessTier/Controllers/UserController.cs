@@ -13,7 +13,14 @@ namespace DataAccessTier.Controllers
     [Route("[controller]")]
     public class UserController : ControllerBase
     {
-        private UserDb db = new UserDb();
+        private UserDb db {get;set;}
+        private int userCount;
+
+        public UserController(UserDb udb)
+        {
+            db = udb;
+        }
+
         private List<User> GetUsers()
         {
             return new List<User>{

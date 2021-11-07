@@ -10,6 +10,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ApplicationTier.Data;
+using ApplicationTier.Data.Impl;
+using Microsoft.AspNetCore.Components.Authorization;
+using Authentication;
 
 namespace ApplicationTier {
     public class Startup {
@@ -25,6 +28,9 @@ namespace ApplicationTier {
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddSingleton<WeatherForecastService>();
+            services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
+            services.AddScoped<ICommunicator, Communicator>();
+            services.AddScoped<IUserService, UserData>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

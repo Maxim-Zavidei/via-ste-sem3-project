@@ -1,0 +1,70 @@
+@page "/register"
+@using Authentication
+@using ApplicationTier.Models
+@using Data
+@using System.ComponentModel.DataAnnotations
+
+@inject IUserService UserService
+@inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+<h1>Register</h1>
+<AuthorizeView>
+    <NotAuthorized>
+
+        <div class="col-xs-4">
+            <div class="form-group">
+                <label>Email:</label>
+                <input class="form-control" type="text" placeholder="email" @bind-value="email" />
+            </div>
+            <div class="form-group">
+                <label>Username:</label>
+                <input class="form-control" type="text" placeholder="user name" @bind-value="username" />
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input class="form-control" type="password" placeholder="password" @bind-value="password" />
+            </div>
+        </div>
+        <div style="color:red">@errorMessage</div>
+
+        <button class="btn btn-light"><a href="" @onclick="RegisterUser">
+                Register
+            </a>
+        </button>
+    </NotAuthorized>
+</AuthorizeView>
+@code {
+    [Required]
+    [MinLength(4)]
+    private string username;
+    [Required]
+    [MinLength(4)]
+    private string password;
+    [Required(ErrorMessage = "Enter your email.")]
+    [MinLength(8)]
+    private string email;
+    public string errorMessage;
+
+    public async Task RegisterUser()
+    {
+        User user = new User();
+        user.Username = username;
+        user.Email = email;
+        user.Password = password;
+        errorMessage = "";
+        try
+        {
+            await UserService.AddUserAsync(user);
+            await ((CustomAuthenticationStateProvider)AuthenticationStateProvider).ValidateLogin(username, password);
+            username = "";
+            password = "";
+        }
+        catch (Exception e)
+        {
+            errorMessage = e.Message;
+        }
+        NavigationManager.NavigateTo("/");
+    }
+}
+}

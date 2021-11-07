@@ -66,4 +66,7 @@ public class ServerCommunicator {
   public ArrayList<User> getUsersFromDatabase() {
       return userCommunucator.getUsersFromDatabase(restTemplate, url);
   }
+  public void addUser(User user) {
+     userCommunucator.addUser(restTemplate, url, user);
+}
 }

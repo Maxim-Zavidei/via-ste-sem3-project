@@ -13,22 +13,12 @@ namespace ApplicationTier.Data.Impl
     public class UserData : IUserService
     {
         private IList<User> _users;
-        private TcpClient _client;
-        private NetworkStream _stream;
+        ICommunicator Communicator { get; set; }
 
-        public async Task StartConnection(string ip, int port)
+
+        public UserData(ICommunicator communicator)
         {
-            TcpClient _client = new TcpClient(ip, port);
-
-            try
-            {
-                _stream = _client.GetStream();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-                CloseConnection();
-            }
+            Communicator = communicator;
         }
 
         public async Task FetchUsers()
@@ -37,28 +27,14 @@ namespace ApplicationTier.Data.Impl
             {
                 //Sending request
                 string request = "fetchUsers";
-                int toSendLen = Encoding.ASCII.GetByteCount(request);
-                byte[] toSendBytes = Encoding.ASCII.GetBytes(request);
-                byte[] toSendLenBytes = BitConverter.GetBytes(toSendLen);
-                _stream.Write(toSendLenBytes);
-                _stream.Write(toSendBytes);
+                await Communicator.send(request);
 
 
                 //Receiving message
-                byte[] rcvLenBytes = new byte[4];
-                _stream.Read(rcvLenBytes);
-                int rcvLen = BitConverter.ToInt32(rcvLenBytes, 0);
-                byte[] rcvBytes = new byte[rcvLen];
-                _stream.Read(rcvBytes);
-                String rcv = Encoding.ASCII.GetString(rcvBytes);
+                String rcv = await Communicator.read();
                 if (rcv.Equals("Fetching..."))
                 {
-                    rcvLenBytes = new byte[4];
-                    _stream.Read(rcvLenBytes);
-                    rcvLen = BitConverter.ToInt32(rcvLenBytes, 0);
-                    rcvBytes = new byte[rcvLen];
-                    _stream.Read(rcvBytes);
-                    rcv = Encoding.ASCII.GetString(rcvBytes);
+                    rcv = await Communicator.read();
                     _users = JsonSerializer.Deserialize<List<User>>(rcv);
                 }
                 else throw new Exception("Wrong credentials");
@@ -66,7 +42,7 @@ namespace ApplicationTier.Data.Impl
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
-                CloseConnection();
+                await CloseConnection();
             }
         }
 
@@ -78,56 +54,40 @@ namespace ApplicationTier.Data.Impl
                 //Sending
                 User user = new User
                 {
+                    Id = 0,
                     Username = username,
-                    Password = password
+                    Password = password,
+                    Email = ""
                 };
 
                 //Sending request
                 string request = "login";
-                int toSendLen = Encoding.ASCII.GetByteCount(request);
-                byte[] toSendBytes = Encoding.ASCII.GetBytes(request);
-                byte[] toSendLenBytes = BitConverter.GetBytes(toSendLen);
-                _stream.Write(toSendLenBytes);
-                _stream.Write(toSendBytes);
+                await Communicator.send(request);
 
 
                 string userToJson = user.ToString();
                 Console.WriteLine(userToJson);
-                toSendLen = Encoding.ASCII.GetByteCount(userToJson);
-                toSendBytes = Encoding.ASCII.GetBytes(userToJson);
-                toSendLenBytes = BitConverter.GetBytes(toSendLen);
-                _stream.Write(toSendLenBytes);
-                _stream.Write(toSendBytes);
+                await Communicator.send(userToJson);
 
                 //Receiving
-                byte[] rcvLenBytes = new byte[4];
-                _stream.Read(rcvLenBytes);
-                int rcvLen = BitConverter.ToInt32(rcvLenBytes, 0);
-                byte[] rcvBytes = new byte[rcvLen];
-                _stream.Read(rcvBytes);
-                String rcv = Encoding.ASCII.GetString(rcvBytes);
+                String rcv = await Communicator.read();
                 switch (rcv)
                 {
                     case "Successful":
-                    {
-                        rcvLenBytes = new byte[4];
-                        _stream.Read(rcvLenBytes);
-                        rcvLen = BitConverter.ToInt32(rcvLenBytes, 0);
-                        rcvBytes = new byte[rcvLen];
-                        _stream.Read(rcvBytes);
-                        rcv = Encoding.ASCII.GetString(rcvBytes);
-                        userToReturn = JsonSerializer.Deserialize<User>(rcv);
-                        Console.WriteLine(userToReturn);
-                        break;
-                    }
+                        {
+                            rcv = await Communicator.read();
+                            userToReturn = JsonSerializer.Deserialize<User>(rcv);
+                            Console.WriteLine(userToReturn);
+                            break;
+                        }
                     case "Incorrect password":
-                    {
-                        throw new Exception("Incorrect password");
-                    }
+                        {
+                            throw new Exception("Incorrect password");
+                        }
                     case "Incorrect user":
-                    {
-                        throw new Exception("Incorrect user");
-                    }
+                        {
+                            throw new Exception("Incorrect user");
+                        }
                 }
             }
             catch (Exception e)
@@ -138,25 +98,6 @@ namespace ApplicationTier.Data.Impl
 
 
             return userToReturn;
-
-            /*Console.WriteLine("Debug point 3");
-            StreamWriter streamWriter = new StreamWriter(_stream, Encoding.UTF8);
-            StreamReader streamReader = new StreamReader(_stream, Encoding.UTF8);
-            await streamWriter.WriteLineAsync("login");
-            User user = new User
-            {
-                Username = username,
-                Password = password
-            };
-            string userToJson = JsonSerializer.Serialize(user);
-            Console.WriteLine(userToJson);
-            await streamWriter.WriteLineAsync(userToJson);
-            string dataReceived = await streamReader.ReadLineAsync();
-            Console.WriteLine(dataReceived);
-            User userReceived = new User();
-            if (!string.IsNullOrEmpty(dataReceived))
-                userReceived = JsonSerializer.Deserialize<User>(dataReceived);
-            return userReceived;*/
         }
 
         public async Task<IList<User>> GetUsersAsync()
@@ -173,10 +114,32 @@ namespace ApplicationTier.Data.Impl
             return _users;
         }
 
+        public async Task<User> AddUserAsync(User user)
+        {
+            User userToLog = new();
+            try
+            {
+                await Communicator.send("adduser");
+                string toSend = JsonSerializer.Serialize(user);
+                await Communicator.send(toSend);
+                string rcv = await Communicator.read();
+                if (rcv.Equals("Succsessful"))
+                {
+                    string userJson = await Communicator.read();
+                    userToLog = JsonSerializer.Deserialize<User>(userJson);
+                }
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+            return userToLog;
+        }
+
         public async Task CloseConnection()
         {
-            _client.Close();
-            _stream.Close();
+            await Communicator.CloseConnection();
         }
     }
 }

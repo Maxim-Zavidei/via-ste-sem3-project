@@ -49,7 +49,19 @@ public class CommunicationThreadHandler implements Runnable {
                             toSend = gson.toJson(cashedUser);
                             send(toSend);
                         }
-                    }
+                    } break;
+                    case "adduser": {
+                        received = read();
+                        User user = gson.fromJson(received, User.class);
+                        String toSend = userController.addUser(user);
+                        send(toSend);
+                        if(toSend.equals("Successful"))
+                        {
+                            cashedUser = userController.getCashedUser();
+                            toSend = gson.toJson(cashedUser);
+                            send(toSend);
+                        }
+                    } break;
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -57,7 +69,7 @@ public class CommunicationThreadHandler implements Runnable {
         }
     }
 
-    private  String read()
+    private  synchronized String read()
     {
         String received = "";
         try{
@@ -76,7 +88,7 @@ public class CommunicationThreadHandler implements Runnable {
         return received;
     }
 
-    private void send(String toSend)
+    private synchronized void send(String toSend)
     {
         try{
             byte[] toSendBytes = toSend.getBytes();

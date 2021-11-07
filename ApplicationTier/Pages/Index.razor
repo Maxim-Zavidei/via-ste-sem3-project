@@ -4,6 +4,8 @@
 @using System.Text.Json;
 @using System.Text.Json.Serialization;
 @using System.Net
+@using Data.Impl;
+@using Models;
 
 <h1>Hello, world!</h1>
 
@@ -35,7 +37,13 @@ Welcome to your new app.
 
     public async Task ConnectTo()
     {
-        string toSend = "login";
+       /* UserData userData = new UserData();
+        await userData.StartConnection("localhost", 8080);
+        User us = await userData.ValidateUserAsync(this.username, this.password);
+        this.newusername = us.Username;
+        this.newpassword = us.Password;*/
+
+        /*string toSend = "login";
 
             TcpClient client = new TcpClient("localhost", 8080);
 
@@ -116,13 +124,5 @@ Welcome to your new app.
         
         stream.Close();
         client.Close();*/
-    }
-
-    private class User
-    {
-        public int id {get;set;}
-        public string username {get;set;}
-        public string password {get;set;}
-        public string email {get;set;}
     }
 }
