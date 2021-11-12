@@ -10,25 +10,22 @@ using ApplicationTier.Models;
 
 namespace ApplicationTier.Data.Impl
 {
-    public class Communicator: ICommunicator
+    public class Communicator : ICommunicator
     {
         private string ip;
         private int port;
         private static TcpClient _client;
         private static NetworkStream _stream;
 
-        
+
 
         public Communicator()
         {
-            this.ip = "localhost";
-            this.port = 8080;
-            _client = new TcpClient(ip, port);
-            _stream = _client.GetStream();
+
         }
 
 
-        public  async Task<String> read()
+        public async Task<String> read()
         {
             byte[] rcvLenBytes = new byte[4];
             _stream.Read(rcvLenBytes);
@@ -39,7 +36,7 @@ namespace ApplicationTier.Data.Impl
             return rcv;
         }
 
-        public  async Task send(String toSend)
+        public async Task send(String toSend)
         {
             int toSendLen = Encoding.ASCII.GetByteCount(toSend);
             byte[] toSendBytes = Encoding.ASCII.GetBytes(toSend);
@@ -48,16 +45,24 @@ namespace ApplicationTier.Data.Impl
             _stream.Write(toSendBytes);
         }
 
+        public async Task StartConnection()
+        {
+            this.ip = "localhost";
+            this.port = 8080;
+            _client = new TcpClient(ip, port);
+            _stream = _client.GetStream();
+        }
+
         public async Task CloseConnection()
         {
-           // await send("close");
+            // await send("close");
             //string r = await read();
             //if (r.Equals("closed"))
             //{
-                await send("close");
-                _client.Close();
-                _stream.Close();
-                System.Console.WriteLine("closed");
+            await send("close");
+            _client.Close();
+            _stream.Close();
+            System.Console.WriteLine("closed");
             //}
 
         }

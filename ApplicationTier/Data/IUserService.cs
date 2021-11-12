@@ -11,5 +11,6 @@ namespace ApplicationTier.Data
         Task<IList<User>> GetUsersAsync();
         Task<User> AddUserAsync(User user);
         Task CloseConnection();
+        Task StartConnection();
     }
 }

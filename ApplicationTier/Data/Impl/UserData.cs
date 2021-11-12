@@ -136,7 +136,10 @@ namespace ApplicationTier.Data.Impl
             }
             return userToLog;
         }
-
+        public async Task StartConnection()
+        {
+            await Communicator.StartConnection();
+        }
         public async Task CloseConnection()
         {
             await Communicator.CloseConnection();

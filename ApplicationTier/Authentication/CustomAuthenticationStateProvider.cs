@@ -26,6 +26,7 @@ namespace Authentication
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
            var identity = new ClaimsIdentity();
+           await userService.StartConnection();
             if (cachedUser == null)
             {
                 string userAsJson =  await jsRuntime.InvokeAsync<string>("sessionStorage.getItem", "currentUser");

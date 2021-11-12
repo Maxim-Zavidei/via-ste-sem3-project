@@ -10,5 +10,6 @@ namespace ApplicationTier.Data
         Task send(string toSend);
         Task<string> read();
         Task CloseConnection();
+        Task StartConnection();
     }
 }
