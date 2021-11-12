@@ -4,7 +4,6 @@ import Shared.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -13,7 +12,6 @@ import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.TrustStrategy;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
-import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import javax.net.ssl.SSLContext;
 import java.security.KeyManagementException;
@@ -64,9 +62,10 @@ public class ServerCommunicator {
   }
 
   public ArrayList<User> getUsersFromDatabase() {
-      return userCommunucator.getUsersFromDatabase(restTemplate, url);
+    return userCommunucator.getUsersFromDatabase(restTemplate, url);
   }
-  public void addUser(User user) {
-     userCommunucator.addUser(restTemplate, url, user);
-}
+
+  public User addUser(User user) {
+    return userCommunucator.addUser(restTemplate, url, user);
+  }
 }

@@ -5,13 +5,13 @@ import java.io.Serializable;
 public class UserDTO implements Serializable
 {
   private static final long serialVersionID = 1L;
-  private int userId;
+  private int id;
   private String username;
   private String password;
   private int securityLevel;
   public UserDTO(int userId, String username, String password, int securityLevel)
   {
-    this.userId = userId;
+    this.id = userId;
     this.username = username;
     this.password = password;
     this.securityLevel = securityLevel;
@@ -24,7 +24,7 @@ public class UserDTO implements Serializable
 
   public int getUserId()
   {
-    return userId;
+    return id;
   }
 
   public String getUsername()

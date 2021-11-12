@@ -62,6 +62,11 @@ public class CommunicationThreadHandler implements Runnable {
                             send(toSend);
                         }
                     } break;
+                    case "close": {
+                        socket.shutdownInput();
+                        socket.shutdownOutput();
+                        
+                    } break;
                 }
             } catch (Exception e) {
                 e.printStackTrace();

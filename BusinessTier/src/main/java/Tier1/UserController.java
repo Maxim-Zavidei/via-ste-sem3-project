@@ -42,8 +42,8 @@ public class UserController extends Controller {
   public String addUser(User user) throws Exception
   {
     String toReturn = validateEmail(user.getEmail());
-    communicator.addUser(user);
-    cashedUser = user;
+    
+    cashedUser = communicator.addUser(user);
     return toReturn;
   }
 

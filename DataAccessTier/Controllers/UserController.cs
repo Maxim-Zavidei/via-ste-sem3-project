@@ -13,10 +13,10 @@ namespace DataAccessTier.Controllers
     [Route("[controller]")]
     public class UserController : ControllerBase
     {
-        private UserDb db {get;set;}
+        private IUserRepo db {get;set;}
         private int userCount;
 
-        public UserController(UserDb udb)
+        public UserController(IUserRepo udb)
         {
             db = udb;
         }
@@ -53,8 +53,8 @@ namespace DataAccessTier.Controllers
         [HttpPost("CreateUser")]
         public async Task<IActionResult> Create([FromBody] User user)
         {
-            await db.AddUserAsync(user);
-            return Ok();
+            User u = await db.AddUserAsync(user);
+            return Ok(u);
         }
 
         /* [HttpPut("UpdateUser")]

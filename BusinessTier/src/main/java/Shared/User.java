@@ -1,14 +1,18 @@
 package Shared;
 
+import java.io.Serializable;
+
 import javax.persistence.Entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Entity
-public class User
+public class User implements Serializable
 {
-  private int userId;
+  @JsonProperty("id")
+  private int id;
   private String username;
   private String password;
   private String email;
@@ -16,7 +20,7 @@ public class User
   public User(){}
   public User(int userId, String username, String password, String  email)
   {
-    this.userId = userId;
+    this.id = userId;
     this.username = username;
     this.password = password;
     //this.securityLevel = securityLevel;
@@ -26,9 +30,9 @@ public class User
   public String getEmail() {
       return email;
   }
-  public int getUserId()
+  public int getId()
   {
-    return userId;
+    return id;
   }
 
   public String getUsername()
@@ -50,9 +54,9 @@ public class User
       this.email = email;
   }
 
-  public void setUserId(int userId)
+  public void setId(int userId)
   {
-    this.userId = userId;
+    this.id = userId;
   }
 
   public void setUsername(String username)

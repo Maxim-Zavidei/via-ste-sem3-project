@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace DataAccessTier.Data
 {
-    public class UserDb
+    public class UserRepo : IUserRepo
     {
         CalendarDbContext db {get;set;}
 
-        public UserDb(CalendarDbContext calendarDbContext)
+        public UserRepo(CalendarDbContext calendarDbContext)
         {
             db = calendarDbContext;
         }
@@ -21,7 +21,8 @@ namespace DataAccessTier.Data
         public async Task<User> AddUserAsync(User user) {
             await db.Users.AddAsync(user);
             await db.SaveChangesAsync();
-            return user;
+            User u = await db.Users.FirstAsync(us => us.Username==user.Username);
+            return u;
         }
     }
 

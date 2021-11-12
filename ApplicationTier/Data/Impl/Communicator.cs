@@ -54,8 +54,10 @@ namespace ApplicationTier.Data.Impl
             //string r = await read();
             //if (r.Equals("closed"))
             //{
+                await send("close");
                 _client.Close();
                 _stream.Close();
+                System.Console.WriteLine("closed");
             //}
 
         }

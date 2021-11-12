@@ -39,7 +39,6 @@ namespace Authentication
             {
                 identity = SetupClaimsForUser(cachedUser);
             }
-
             ClaimsPrincipal cachedClaimsPrincipal = new ClaimsPrincipal(identity);
             return await Task.FromResult(new AuthenticationState(cachedClaimsPrincipal));
         }

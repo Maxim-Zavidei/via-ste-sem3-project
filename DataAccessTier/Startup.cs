@@ -29,7 +29,7 @@ namespace DataAccessTier {
                 c.SwaggerDoc("v1", new OpenApiInfo {Title = "DataAccessTier", Version = "v1"});
             });
             services.AddDbContext<CalendarDbContext>(options => options.UseNpgsql(Configuration.GetConnectionString("CalendarDatabase")));
-            services.AddScoped<UserDb>();
+            services.AddScoped<IUserRepo, UserRepo>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
