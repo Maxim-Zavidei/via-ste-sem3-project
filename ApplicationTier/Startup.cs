@@ -29,7 +29,7 @@ namespace ApplicationTier {
             services.AddServerSideBlazor();
             services.AddSingleton<WeatherForecastService>();
             services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
-            services.AddScoped<ICommunicator, Communicator>();
+            //services.AddScoped<ICommunicator, Communicator>();
             services.AddScoped<IUserService, UserData>();
         }
 

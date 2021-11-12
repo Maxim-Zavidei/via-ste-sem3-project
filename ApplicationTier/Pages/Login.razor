@@ -4,7 +4,6 @@
 @using ApplicationTier.Data
 
 @inject AuthenticationStateProvider AuthenticationStateProvider
-@inject ICommunicator Communicator
 @inject NavigationManager NavigationManager
 
 <AuthorizeView>
@@ -41,6 +40,7 @@
     public async Task PerformLogin() {
         errorMessage = "";
         try {
+            ((CustomAuthenticationStateProvider) AuthenticationStateProvider).StartConnection();
             await ((CustomAuthenticationStateProvider) AuthenticationStateProvider).ValidateLogin(username, password);
             username = "";
             password = "";

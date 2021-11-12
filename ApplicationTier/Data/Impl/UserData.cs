@@ -16,9 +16,9 @@ namespace ApplicationTier.Data.Impl
         ICommunicator Communicator { get; set; }
 
 
-        public UserData(ICommunicator communicator)
+        public UserData()
         {
-            Communicator = communicator;
+           // Communicator = communicator;
         }
 
         public async Task FetchUsers()
@@ -137,7 +137,9 @@ namespace ApplicationTier.Data.Impl
             return userToLog;
         }
         public async Task StartConnection()
+    
         {
+            Communicator = new Communicator();
             await Communicator.StartConnection();
         }
         public async Task CloseConnection()
