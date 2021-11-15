@@ -1,37 +1,15 @@
-﻿<div class="top-row pl-4 navbar navbar-dark">
-    <a class="navbar-brand" href="">ApplicationTier</a>
-    <button class="navbar-toggler" @onclick="ToggleNavMenu">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-</div>
+<MudNavMenu>
+    
+    <MudText Typo="Typo.h6" Class="px-4">FirstName LastName</MudText>
+    <MudText Typo="Typo.body2" Class="px-4 mud-text-secondary">Control Panel</MudText>
 
-<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
-    <ul class="nav flex-column">
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="oi oi-home" aria-hidden="true"></span> Home
-            </NavLink>
-        </li>
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="counter">
-                <span class="oi oi-plus" aria-hidden="true"></span> Counter
-            </NavLink>
-        </li>
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="fetchdata">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Fetch data
-            </NavLink>
-        </li>
-    </ul>
-</div>
-
-@code {
-    private bool collapseNavMenu = true;
-
-    private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
-
-    private void ToggleNavMenu() {
-        collapseNavMenu = !collapseNavMenu;
-    }
-
-}
+    <MudDivider Class="my-2" />
+    
+    <MudNavLink Href="/dashboard" Icon="@Icons.Filled.Dashboard">Dashboard</MudNavLink>
+    <MudNavLink Href="/friends" Icon="@Icons.Filled.People">Friends</MudNavLink>
+    <MudNavGroup Title="Settings" Icon="@Icons.Filled.Settings" Expanded="false">
+        <MudNavLink Href="/sharing" Icon="@Icons.Filled.Share" IconColor="Color.Success">Sharing</MudNavLink>
+        <MudNavLink Href="/security" Icon="@Icons.Filled.Security" IconColor="Color.Info">Security</MudNavLink>
+    </MudNavGroup>
+    <MudNavLink Href="/about" Icon="@Icons.Filled.Article">About</MudNavLink>
+</MudNavMenu>

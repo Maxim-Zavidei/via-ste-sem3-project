@@ -1,18 +1,28 @@
 @inherits LayoutComponentBase
-@using LoginComponent
-<div class="page">
-    <div class="sidebar">
+
+<MudThemeProvider/>
+
+<MudLayout>
+    <MudAppBar Elevation="3">
+        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => ToggleDrawerState())" />
+        <MudText Typo="Typo.h5" Class="ml-3">Application</MudText>
+        <MudSpacer/>
+        <MudButton Variant="Variant.Filled" StartIcon="@Icons.Filled.Login" Color="Color.Primary" Size="Size.Large" Class="ma-2" Link="/login">Login</MudButton>
+        <MudButton Variant="Variant.Filled" StartIcon="@Icons.Filled.Assignment" Color="Color.Primary" Size="Size.Large" Class="ma-2" Link="/register">Register</MudButton>
+    </MudAppBar>
+    <MudDrawer @bind-Open="IsDrawerOpen" ClipMode="DrawerClipMode.Always" Elevation="14">
         <NavMenu/>
-    </div>
+    </MudDrawer>
+    <MudMainContent>
+        @Body
+    </MudMainContent>
+</MudLayout>
 
-    <div class="main">
-        <div class="top-row px-4">
-            <Login/>
-            <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
-        </div>
+@code {
 
-        <div class="content px-4">
-            @Body
-        </div>
-    </div>
-</div>
+    bool IsDrawerOpen = false;
+    void ToggleDrawerState() {
+        IsDrawerOpen = !IsDrawerOpen;
+    }
+
+}
