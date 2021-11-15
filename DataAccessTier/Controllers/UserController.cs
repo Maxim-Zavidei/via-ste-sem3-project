@@ -21,12 +21,12 @@ namespace DataAccessTier.Controllers
             db = udb;
         }
 
-        private List<User> GetUsers()
+       /* private List<User> GetUsers()
         {
             return new List<User>{
                 new User{Id = 1, Username = "Yoyo", Password = "123", Email = "yoyo@gmail.com"}
             };
-        }
+        }*/
 
         [HttpGet("GetUsers")]
         public async Task<IActionResult> Get()
