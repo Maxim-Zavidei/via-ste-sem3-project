@@ -1,56 +1,81 @@
 @page "/login"
 @namespace LoginComponent
 @using Authentication
-@using ApplicationTier.Data
+@using System.ComponentModel.DataAnnotations
 
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject NavigationManager NavigationManager
 
-<AuthorizeView>
-  <NotAuthorized>  
-        <div class="form-check form-check-inline">
-            <label>Username: </label>
-            <input class="form-control form-control-sm"  type="text" placeholder="user name" @bind-value="username" />
-        </div>
-        <div class="form-check form-check-inline">
-            <label>Password: </label>
-            <input class="form-control form-control-sm" type="password" placeholder="password" @bind-value="password"/>
-        </div>
-        <div style="color:red">@errorMessage</div>
 
-        <a href="" @onclick="PerformLogin">
-            Login
-        </a>
-        <a href="" @onclick="Register">
-            Register
-        </a>
-    </NotAuthorized>
-    <Authorized>
-        <a href="" @onclick="PerformLogout">
-            Log out
-        </a>
-    </Authorized>
-</AuthorizeView>
+<MudGrid Justify="Justify.Center">
+    <MudItem xs="3" Class="my-8">
+            <MudPaper Elevation="14" Class="d-flex align-center justify-center mud-width-full py-8">
+            <table>
+                <tr>
+                    <td>
+                        <MudText Typo="Typo.h4" Align="Align.Center" Class="ma-5">Sign In</MudText>
+                        <img class="profile-img" src="https://lh5.googleusercontent.com/-b0-k99FZlyE/AAAAAAAAAAI/AAAAAAAAAAA/eu7opA4byxI/photo.jpg?sz=120" alt="">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <MudForm @ref="form" @bind-IsValid="@success" @bind-Errors="@errors">
+                        <MudTextField T="string" @bind-Value="@Email" Label="Email" Required="true" RequiredError="Email is required" Validation="@(new EmailAddressAttribute() {ErrorMessage = "The email address is invalid"})"/>
+                        <MudTextField T="string" @bind-Value="@Password" Label="Password" Required="true" RequiredError="Password is required" InputType="InputType.Password" Validation="@(new Func<string, IEnumerable<string>>(PasswordStrength))"/>
+                        <MudButton Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" Class="py-2 mt-4" OnClick="@(()=>PerformLogin())">Login</MudButton>
+                        </MudForm>
+                        <a href="/register" class="text-center new-account">Don't have an account? Register here </a>
+                    </td>
+                </tr>
+            </table>
+            </MudPaper>
+    </MudItem>
+</MudGrid>
 
 @code {
-    private string username;
-    private string password;
-    private string errorMessage;
+
+    private string Email;
+    private string Password;
+
 
     public async Task PerformLogin() {
+        Console.WriteLine("Loggin in");
         errorMessage = "";
         try {
             ((CustomAuthenticationStateProvider) AuthenticationStateProvider).StartConnection();
-            await ((CustomAuthenticationStateProvider) AuthenticationStateProvider).ValidateLogin(username, password);
-            username = "";
-            password = "";
+            await ((CustomAuthenticationStateProvider) AuthenticationStateProvider).ValidateLogin(Email, Password);
+            Email = "";
+            Password = "";
             NavigationManager.NavigateTo("/");
         } catch (Exception e) {
             errorMessage = e.Message;
         }
     }
 
-    public async Task PerformLogout() {
+    bool success;
+    string[] errors = { };
+    MudForm form;
+
+
+    private IEnumerable<string> PasswordStrength(string pw) {
+        if (string.IsNullOrWhiteSpace(pw)) {
+            yield return "Password is required";
+            yield break;
+        }
+        if (pw.Length < 8) yield return "Password must be at least of length 8";
+        @* if (!Regex.IsMatch(pw, @"[A-Z]"))
+            yield return "Password must contain at least one capital letter";
+        if (!Regex.IsMatch(pw, @"[a-z]"))
+            yield return "Password must contain at least one lowercase letter";
+        if (!Regex.IsMatch(pw, @"[0-9]"))
+            yield return "Password must contain at least one digit"; *@
+    }
+
+
+    private string errorMessage;
+
+
+    @* public async Task PerformLogout() {
         errorMessage = "";
         username = "";
         password = "";
@@ -62,5 +87,5 @@
     public async Task Register()
     {
         NavigationManager.NavigateTo("/register");
-    }
+    } *@
 }
