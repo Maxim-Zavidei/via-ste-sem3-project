@@ -42,6 +42,7 @@ namespace Authentication
             ClaimsPrincipal cachedClaimsPrincipal = new ClaimsPrincipal(identity);
             return await Task.FromResult(new AuthenticationState(cachedClaimsPrincipal));
         }
+        
         public async Task ValidateLogin(string username, string pass)
         {
             if(string.IsNullOrEmpty(username)) throw new Exception("Enter username");

@@ -27,7 +27,7 @@
 
                             <MudText Typo="Typo.body2" Align="Align.Center" Class="my-4" FullWidth="true" Color="Color.Error">@ErrorMessage</MudText>
                             <MudDivider/>
-                            <a href="/register" class="register-href">Don't have an account? Register here </a>
+                            <a href="/register" class="text-center register-href">Don't have an account? Register here </a>
                         </EditForm>
                     </td>
                 </tr>
@@ -72,7 +72,6 @@
     private string ErrorMessage;
 
     private async Task OnValidLoginFormSubmit(EditContext context) {
-        Console.WriteLine("Loggin in");
         ErrorMessage = "";
         try {
             ((CustomAuthenticationStateProvider) AuthenticationStateProvider).StartConnection();

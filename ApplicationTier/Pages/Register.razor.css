@@ -1,0 +1,12 @@
+.profile-img {
+    width: 96px;
+    height: 96px;
+    margin: 0 auto 10px;
+    display: block;
+    border-radius: 50%;
+}
+
+.login-href {
+    display: block;
+    margin-top: 10px;
+}
