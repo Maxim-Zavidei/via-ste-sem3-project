@@ -7,33 +7,11 @@
 @using Data.Impl;
 @using Models;
 
-<h1>Hello, world!</h1>
+<LoginComponent.Login/>
 
-Welcome to your new app.
-<div class="form-check form-check-inline">
-            <label>Username: </label>
-            <input class="form-control form-control-sm"  type="text" placeholder="username" @bind-value="username" />
-        </div>
-        <div class="form-check form-check-inline">
-            <label>Password: </label>
-            <input class="form-control form-control-sm" type="password" placeholder="password" @bind-value="password"/>
-        </div>
-        <div style="color:red">@errorMessage</div>
-<button class="btn btn-light"><a href="" @onclick="ConnectTo">
-                Connect
-            </a>
-        </button>
-<p>@newusername</p>
-<p>@newpassword</p>
-
-<SurveyPrompt Title="How is Blazor working for you?"/>
 
 @code{
-    private string username;
-    private string password;
-    private string newusername;
-    private string newpassword;
-    private string errorMessage;
+
 
     public async Task ConnectTo()
     {

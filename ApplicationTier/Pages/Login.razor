@@ -6,86 +6,80 @@
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject NavigationManager NavigationManager
 
-
 <MudGrid Justify="Justify.Center">
     <MudItem xs="3" Class="my-8">
-            <MudPaper Elevation="14" Class="d-flex align-center justify-center mud-width-full py-8">
+            <MudPaper Elevation="14" Class="d-flex align-center justify-center py-8">
             <table>
                 <tr>
                     <td>
                         <MudText Typo="Typo.h4" Align="Align.Center" Class="ma-5">Sign In</MudText>
-                        <img class="profile-img" src="https://lh5.googleusercontent.com/-b0-k99FZlyE/AAAAAAAAAAI/AAAAAAAAAAA/eu7opA4byxI/photo.jpg?sz=120" alt="">
+                        <img class="profile-img" src="https://lh5.googleusercontent.com/-b0-k99FZlyE/AAAAAAAAAAI/AAAAAAAAAAA/eu7opA4byxI/photo.jpg?sz=120">
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <MudForm @ref="form" @bind-IsValid="@success" @bind-Errors="@errors">
-                        <MudTextField T="string" @bind-Value="@Email" Label="Email" Required="true" RequiredError="Email is required" Validation="@(new EmailAddressAttribute() {ErrorMessage = "The email address is invalid"})"/>
-                        <MudTextField T="string" @bind-Value="@Password" Label="Password" Required="true" RequiredError="Password is required" InputType="InputType.Password" Validation="@(new Func<string, IEnumerable<string>>(PasswordStrength))"/>
-                        <MudButton Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" Class="py-2 mt-4" OnClick="@(()=>PerformLogin())">Login</MudButton>
-                        </MudForm>
-                        <a href="/register" class="text-center new-account">Don't have an account? Register here </a>
+                        <EditForm Model="@LoginFormModel" OnValidSubmit="OnValidLoginFormSubmit">
+                            <DataAnnotationsValidator/>
+                
+                            <MudTextField Label="Email" Class="mt-3" @bind-Value="LoginFormModel.Email" For="@(() => LoginFormModel.Email)" Adornment="Adornment.End" AdornmentIcon="@Icons.Filled.AlternateEmail"/>
+                            <MudTextField Label="Password" Class="mt-3" @bind-Value="LoginFormModel.Password" For="@(() => LoginFormModel.Password)" InputType="@PasswordInputType" Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon" OnAdornmentClick="TogglePasswordVisibiltyState"/>
+                            <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" Class="py-2 mt-4">Login</MudButton>
+
+                            <MudText Typo="Typo.body2" Align="Align.Center" Class="my-4" FullWidth="true" Color="Color.Error">@ErrorMessage</MudText>
+                            <MudDivider/>
+                            <a href="/register" class="register-href">Don't have an account? Register here </a>
+                        </EditForm>
                     </td>
                 </tr>
             </table>
-            </MudPaper>
+        </MudPaper>
     </MudItem>
 </MudGrid>
 
 @code {
+    
+    // Variables for handling the state and behaviour of the show password button.
+    private InputType PasswordInputType = InputType.Password;
+    private string PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+    private bool IsPasswordVisible;
 
-    private string Email;
-    private string Password;
+    private void TogglePasswordVisibiltyState() {
+        if (IsPasswordVisible) {
+            IsPasswordVisible = false;
+            PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+            PasswordInputType = InputType.Password;
+        } else {
+            IsPasswordVisible = true;
+            PasswordInputIcon = Icons.Material.Filled.Visibility;
+            PasswordInputType = InputType.Text;
+        }
+    }
 
+    // Class that contains the input data of the login form.
+    public class LoginForm {
 
-    public async Task PerformLogin() {
+        [Required]
+        [EmailAddress]
+        public string Email { get; set; }
+
+        [Required]
+        [StringLength(30, ErrorMessage = "Password must be at least 8 characters long.", MinimumLength = 8)]
+        public string Password { get; set; }
+        
+    }
+
+    private LoginForm LoginFormModel = new LoginForm();
+    private string ErrorMessage;
+
+    private async Task OnValidLoginFormSubmit(EditContext context) {
         Console.WriteLine("Loggin in");
-        errorMessage = "";
+        ErrorMessage = "";
         try {
             ((CustomAuthenticationStateProvider) AuthenticationStateProvider).StartConnection();
-            await ((CustomAuthenticationStateProvider) AuthenticationStateProvider).ValidateLogin(Email, Password);
-            Email = "";
-            Password = "";
+            await ((CustomAuthenticationStateProvider) AuthenticationStateProvider).ValidateLogin(LoginFormModel.Email, LoginFormModel.Password);
             NavigationManager.NavigateTo("/");
         } catch (Exception e) {
-            errorMessage = e.Message;
+            ErrorMessage = e.Message;
         }
     }
-
-    bool success;
-    string[] errors = { };
-    MudForm form;
-
-
-    private IEnumerable<string> PasswordStrength(string pw) {
-        if (string.IsNullOrWhiteSpace(pw)) {
-            yield return "Password is required";
-            yield break;
-        }
-        if (pw.Length < 8) yield return "Password must be at least of length 8";
-        @* if (!Regex.IsMatch(pw, @"[A-Z]"))
-            yield return "Password must contain at least one capital letter";
-        if (!Regex.IsMatch(pw, @"[a-z]"))
-            yield return "Password must contain at least one lowercase letter";
-        if (!Regex.IsMatch(pw, @"[0-9]"))
-            yield return "Password must contain at least one digit"; *@
-    }
-
-
-    private string errorMessage;
-
-
-    @* public async Task PerformLogout() {
-        errorMessage = "";
-        username = "";
-        password = "";
-        try {
-            ((CustomAuthenticationStateProvider) AuthenticationStateProvider).Logout();
-            NavigationManager.NavigateTo("/");
-        } catch (Exception e) { }
-    }
-    public async Task Register()
-    {
-        NavigationManager.NavigateTo("/register");
-    } *@
 }
