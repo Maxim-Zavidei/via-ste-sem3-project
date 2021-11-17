@@ -59,11 +59,11 @@
     public class LoginForm {
 
         [Required]
-        [EmailAddress]
+        //[EmailAddress]
         public string Email { get; set; }
 
         [Required]
-        [StringLength(30, ErrorMessage = "Password must be at least 8 characters long.", MinimumLength = 8)]
+        //[StringLength(30, ErrorMessage = "Password must be at least 8 characters long.", MinimumLength = 8)]
         public string Password { get; set; }
         
     }
@@ -76,7 +76,7 @@
         try {
             ((CustomAuthenticationStateProvider) AuthenticationStateProvider).StartConnection();
             await ((CustomAuthenticationStateProvider) AuthenticationStateProvider).ValidateLogin(LoginFormModel.Email, LoginFormModel.Password);
-            NavigationManager.NavigateTo("/");
+            //NavigationManager.NavigateTo("/");
         } catch (Exception e) {
             ErrorMessage = e.Message;
         }
