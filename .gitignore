@@ -447,8 +447,17 @@ $RECYCLE.BIN/
 ##
 ## Visual Studio Code
 ##
-.vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
+
+ApplicationTier/.vscode/*
+!ApplicatioTier/.vscode/settings.json
+!ApplicationTier/.vscode/tasks.json
+!ApplicationTier/.vscode/launch.json
+!ApplicationTier/.vscode/extensions.json
+
+DataAccessTier/.vscode/*
+!DataAccessTier/.vscode/settings.json
+!DataAccessTier/.vscode/tasks.json
+!DataAccessTier/.vscode/launch.json
+!DataAccessTier/.vscode/extensions.json
+
+BussinesTier/.mvn/*
