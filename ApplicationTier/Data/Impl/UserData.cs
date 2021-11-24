@@ -100,11 +100,13 @@ namespace ApplicationTier.Data.Impl
             return userToReturn;
         }
 
+        //TODO
         public async Task<IList<User>> GetUsersAsync()
         {
+            
             try
             {
-                await FetchUsers();
+                 await FetchUsers();
             }
             catch (Exception e)
             {
@@ -123,7 +125,7 @@ namespace ApplicationTier.Data.Impl
                 string toSend = JsonSerializer.Serialize(user);
                 await Communicator.send(toSend);
                 string rcv = await Communicator.read();
-                if (rcv.Equals("Succsessful"))
+                if (rcv.Equals("Successful"))
                 {
                     string userJson = await Communicator.read();
                     userToLog = JsonSerializer.Deserialize<User>(userJson);

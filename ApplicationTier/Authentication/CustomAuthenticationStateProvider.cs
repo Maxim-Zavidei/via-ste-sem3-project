@@ -61,6 +61,28 @@ namespace Authentication
             }
             NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(new ClaimsPrincipal(identity))));
         }
+
+        public async Task ValidateRegister(User user)
+        {
+            if (string.IsNullOrEmpty(user.Username)) throw new Exception("Enter username");
+            if (string.IsNullOrEmpty(user.Password)) throw new Exception("Enter password");
+            if (string.IsNullOrEmpty(user.Email)) throw new Exception("Enter email");
+            ClaimsIdentity identity = new ClaimsIdentity();
+            try
+            {
+                User userToBeAdded = await userService.AddUserAsync(user);
+                identity = SetupClaimsForUser(userToBeAdded);
+                string serilializedData = JsonSerializer.Serialize(user);
+                jsRuntime.InvokeVoidAsync("sessionStorage.getItem", "currentUSer", serilializedData);
+                cachedUser = userToBeAdded;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+            NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(new ClaimsPrincipal(identity))));
+        }
         public async Task Logout()
         {
             await userService.CloseConnection();

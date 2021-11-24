@@ -2,6 +2,7 @@
 @using Authentication
 @using Data
 @using System.ComponentModel.DataAnnotations
+@using ApplicationTier.Models
 
 @inject IUserService UserService
 @inject NavigationManager NavigationManager
@@ -90,9 +91,13 @@
     private async Task OnValidRegisterFormSubmit(EditContext context) {
         Console.WriteLine("Registering User");
         ErrorMessage = "";
-        try {
+        try
+        {
+            User user = new User(){Email = RegisterFormModel.Email, Id = 0, Password = RegisterFormModel.Password, Username = RegisterFormModel.LastName};
             if (RegisterFormModel.Password != RegisterFormModel.PasswordConfirmation) throw new Exception("Both passwords must be identical");
-
+            ((CustomAuthenticationStateProvider) AuthenticationStateProvider).StartConnection();
+            await ((CustomAuthenticationStateProvider) AuthenticationStateProvider).ValidateRegister(user);
+            //NavigationManager.NavigateTo();
         } catch(Exception e) {
             ErrorMessage = ErrorMessage = e.Message;
         }
