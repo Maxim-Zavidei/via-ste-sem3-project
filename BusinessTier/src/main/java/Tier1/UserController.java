@@ -1,16 +1,10 @@
 package Tier1;
 
-import Logic.users.*;
 import Shared.User;
 
 import java.util.ArrayList;
 
-import org.springframework.hateoas.EntityModel;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
-
-public class UserController extends Controller {
+public class UserController extends Controller3 {
   // private final UsersLogic logic;
   // private final UserModelAssembler assembler;
   private User cashedUser;
@@ -34,7 +28,7 @@ public class UserController extends Controller {
       if (user.getUsername().equals(users.get(i).getUsername())) {
         if (user.getPassword().equals(users.get(i).getPassword())) {
           cashedUser = users.get(i);
-          System.out.println(users.get(i));
+          System.out.println(users.get(i).getUsername() + ", " + users.get(i).getPassword());
           return "Successful";
         } else
           return "Incorrect password";
@@ -42,12 +36,24 @@ public class UserController extends Controller {
     }
     return "User not found";
   }
+  public ArrayList<User> FetchUsersFromDatabase(){
+    try
+    {
+      ArrayList<User> users = super.communicator.getUsersFromDatabase();
+      return users;
+    }
+    catch (Exception e)
+    {
+      System.out.println(e.getMessage());
+    }
+    return null;
+  }
 
   public String addUser(User user) throws Exception
   {
     String toReturn = validateEmail(user.getEmail());
-    
-    cashedUser = communicator.addUser(user);
+
+    cashedUser = super.communicator.addUser(user);
     return toReturn;
   }
 

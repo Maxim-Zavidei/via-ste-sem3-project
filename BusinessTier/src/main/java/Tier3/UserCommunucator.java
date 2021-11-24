@@ -1,17 +1,12 @@
 package Tier3;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-
-import com.google.gson.Gson;
-
 import Shared.User;
-
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
+import com.google.gson.Gson;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class UserCommunucator {
     public UserCommunucator() {
@@ -38,8 +33,18 @@ public class UserCommunucator {
     }
 
     public User addUser(RestTemplate restTemplate, String url, User user) {
-        ResponseEntity<String> responseEntityStr = restTemplate.postForEntity(url+"User/CreateUser", user, String.class);
-        User u = gson.fromJson(responseEntityStr.getBody(), User.class);
-        return u;
+        //Need validation if email exists (maybe email = better key than id?)
+        try
+        {
+            ResponseEntity<String> responseEntityStr = restTemplate
+                .postForEntity(url + "User/CreateUser", user, String.class);
+            User u = gson.fromJson(responseEntityStr.getBody(), User.class);
+            return u;
+        }
+        catch (Exception e)
+        {
+
+        }
+        return null;
     }
 }
