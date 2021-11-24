@@ -32,7 +32,7 @@ public class UserCommunucator {
              */
             return new ArrayList<>(Arrays.asList(users));
         } catch (Exception e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         }
         return null;
     }

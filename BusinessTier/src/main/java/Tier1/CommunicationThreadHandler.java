@@ -28,7 +28,7 @@ public class CommunicationThreadHandler implements Runnable {
             userController = new UserController();
             gson = new Gson();
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
     }
     @Override
@@ -70,6 +70,7 @@ public class CommunicationThreadHandler implements Runnable {
                 }
             } catch (Exception e) {
                 Thread.currentThread().interrupt();
+                System.out.println(e.getMessage());
             }
         }
     }
@@ -88,7 +89,7 @@ public class CommunicationThreadHandler implements Runnable {
             return received;
         } catch(Exception e)
         {
-            e.printStackTrace();
+            Thread.currentThread().interrupt();
         }
         return received;
     }

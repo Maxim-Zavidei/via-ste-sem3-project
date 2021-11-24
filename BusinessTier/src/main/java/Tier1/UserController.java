@@ -26,6 +26,10 @@ public class UserController extends Controller {
    */
   public String logIn(User user) {
     ArrayList<User> users = super.communicator.getUsersFromDatabase();
+    if(users == null)
+    {
+      return "Server down";
+    }
     for (int i = 0; i < users.size(); i++) {
       if (user.getUsername().equals(users.get(i).getUsername())) {
         if (user.getPassword().equals(users.get(i).getPassword())) {

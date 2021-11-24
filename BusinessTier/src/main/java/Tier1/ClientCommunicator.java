@@ -15,7 +15,7 @@ public class ClientCommunicator {
             this.welcomeSocket = new ServerSocket(port);
             execute();
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
     }
     public void execute(){
@@ -26,7 +26,7 @@ public class ClientCommunicator {
                 Thread thread = new Thread(new CommunicationThreadHandler(socket));
                 thread.start();
             } catch (IOException e) {
-                e.printStackTrace();
+                System.out.println(e.getMessage());
             }
         }
     }
