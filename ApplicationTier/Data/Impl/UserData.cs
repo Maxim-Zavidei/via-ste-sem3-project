@@ -87,13 +87,17 @@ namespace ApplicationTier.Data.Impl
                     case "Incorrect user":
                         {
                             throw new Exception("Incorrect user");
+                        } break;
+                    case "Server down":
+                        {
+                            throw new Exception("Server is currently unavailable. Try again later.");
                         }
                 }
             }
             catch (Exception e)
             {
-                if (e is IOException || e is SocketException) Console.WriteLine(e.Message);
-                else throw;
+                /*if (e is IOException || e is SocketException) Console.WriteLine(e.Message);
+                else */throw new Exception("Sever is currently unavailable. Try again later.");
             }
 
 
