@@ -26,13 +26,13 @@ namespace ApplicationTier.Data.Impl
             try
             {
                 //Sending request
-                string request = "fetchUsers";
+                string request = "fetchusers";
                 await Communicator.send(request);
 
 
                 //Receiving message
                 String rcv = await Communicator.read();
-                if (rcv.Equals("Fetching..."))
+                if (!rcv.Equals("No users in database"))
                 {
                     rcv = await Communicator.read();
                     _users = JsonSerializer.Deserialize<List<User>>(rcv);
@@ -83,11 +83,12 @@ namespace ApplicationTier.Data.Impl
                     case "Incorrect password":
                         {
                             throw new Exception("Incorrect password");
+                            
                         }
                     case "Incorrect user":
                         {
                             throw new Exception("Incorrect user");
-                        } break;
+                        } 
                     case "Server down":
                         {
                             throw new Exception("Server is currently unavailable. Try again later.");
@@ -133,6 +134,10 @@ namespace ApplicationTier.Data.Impl
                 {
                     string userJson = await Communicator.read();
                     userToLog = JsonSerializer.Deserialize<User>(userJson);
+                }
+                else
+                {
+                    //
                 }
 
             }
