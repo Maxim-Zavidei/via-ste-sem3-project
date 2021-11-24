@@ -4,7 +4,7 @@ import Shared.User;
 
 import java.util.ArrayList;
 
-public class UserController extends Controller3 {
+public class UserController extends Controller {
   // private final UsersLogic logic;
   // private final UserModelAssembler assembler;
   private User cashedUser;
