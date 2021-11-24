@@ -1,14 +1,13 @@
 package Tier1;
 
+import Shared.User;
+import com.google.gson.Gson;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
-
-import com.google.gson.Gson;
-
-
-import Shared.User;
+import java.util.ArrayList;
 
 public class CommunicationThreadHandler implements Runnable {
     private Socket socket;
@@ -17,7 +16,7 @@ public class CommunicationThreadHandler implements Runnable {
     private Gson gson;
     InputStream is;
     OutputStream os;
-    User cashedUser;
+    public User cashedUser;
 
     public CommunicationThreadHandler(Socket socket){
         this.socket = socket;
@@ -54,6 +53,7 @@ public class CommunicationThreadHandler implements Runnable {
                         received = read();
                         User user = gson.fromJson(received, User.class);
                         String toSend = userController.addUser(user);
+                        if(toSend==null) toSend = "Could not create user";
                         send(toSend);
                         if(toSend.equals("Successful"))
                         {
@@ -61,7 +61,19 @@ public class CommunicationThreadHandler implements Runnable {
                             toSend = gson.toJson(cashedUser);
                             send(toSend);
                         }
+
                     } break;
+                    case "fetchusers":{
+                        String toSend = "";
+                        ArrayList<User> users = userController
+                            .FetchUsersFromDatabase();
+                        if(users==null){toSend = "No users in database"; send(toSend);}
+                        else{
+                            toSend = gson.toJson(users);
+                            send(toSend);
+                        }
+                        break;
+                    }
                     case "close": {
                         socket.shutdownInput();
                         socket.shutdownOutput();
@@ -92,6 +104,7 @@ public class CommunicationThreadHandler implements Runnable {
             Thread.currentThread().interrupt();
         }
         return received;
+
     }
 
     private synchronized void send(String toSend)
@@ -112,5 +125,5 @@ public class CommunicationThreadHandler implements Runnable {
         }
     }
 
-   
+
 }   
