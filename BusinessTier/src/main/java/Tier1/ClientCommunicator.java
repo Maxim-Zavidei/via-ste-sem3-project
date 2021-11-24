@@ -6,7 +6,24 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
+
+
 public class ClientCommunicator {
+
+    /*@Primary
+    @Bean
+    void clientCommunicator(){
+        try {
+            this.welcomeSocket = new ServerSocket(8080);
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }*/
 
     private ServerSocket welcomeSocket;
 
