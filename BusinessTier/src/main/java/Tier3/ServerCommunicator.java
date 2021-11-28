@@ -23,7 +23,7 @@ import java.security.cert.X509Certificate;
 public class ServerCommunicator {
 
   private static ServerCommunicator instance;
-  private static UserCommunucator userCommunucator;
+  private static UserCommunicator userCommunicator;
   private RestTemplate restTemplate;
   private static final String url = "https://localhost:5002/";
 
@@ -56,16 +56,16 @@ public class ServerCommunicator {
   }
 
   private ServerCommunicator() throws IOException, KeyManagementException, KeyStoreException, NoSuchAlgorithmException {
-    this.userCommunucator = new UserCommunucator();
+    this.userCommunicator = new UserCommunicator();
     restTemplate = restTemplate();
 
   }
 
   public ArrayList<User> getUsersFromDatabase() {
-    return userCommunucator.getUsersFromDatabase(restTemplate, url);
+    return userCommunicator.getUsersFromDatabase(restTemplate, url);
   }
 
   public User addUser(User user) {
-    return userCommunucator.addUser(restTemplate, url, user);
+    return userCommunicator.addUser(restTemplate, url, user);
   }
 }

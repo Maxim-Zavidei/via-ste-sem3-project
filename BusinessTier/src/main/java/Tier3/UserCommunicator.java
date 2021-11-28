@@ -8,8 +8,8 @@ import org.springframework.web.client.RestTemplate;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class UserCommunucator {
-    public UserCommunucator() {
+public class UserCommunicator {
+    public UserCommunicator() {
         gson = new Gson();
 
     }
