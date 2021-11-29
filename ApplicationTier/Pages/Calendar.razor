@@ -1,0 +1,110 @@
+﻿@page "/calendar"
+@using MudBlazor.Extensions
+@using System.Globalization
+
+<MudToolBar>
+    <MudIconButton Icon="@Icons.Material.Outlined.Menu" Color="Color.Inherit" Class="mr-5"/>
+    <MudIconButton Icon="@Icons.Material.Outlined.Add"/>
+    <MudIconButton Icon="@Icons.Material.Outlined.Edit"/>
+    <MudIconButton Icon="@Icons.Material.Outlined.Remove" Color="Color.Inherit"/>
+    <MudIconButton Icon="@Icons.Material.Outlined.Settings" Color="Color.Inherit"/>
+    <MudContainer>
+        <MudButton Variant="Variant.Text" Size="Size.Small" Class="ma-2" @onclick="SwitchToPreviousMonth">&lt;</MudButton>
+        <MudButton Variant="Variant.Text" Size="Size.Medium" Class="ma-2">@MonthNames[DisplayedMonth]</MudButton>
+        <MudButton Variant="Variant.Text" Size="Size.Small" Class="ma-2" @onclick="SwitchToNextMonth">&gt;</MudButton>
+    </MudContainer>
+    <MudSpacer/>
+    <MudIconButton Icon="@Icons.Material.Outlined.Notifications"/>
+    <MudIconButton Icon="@Icons.Material.Outlined.PushPin"/>
+    <MudIconButton Icon="@Icons.Material.Outlined.PeopleAlt"/>
+    <MudIconButton Icon="@Icons.Material.Outlined.MoreVert" Color="Color.Inherit"/>
+</MudToolBar>
+
+<MudGrid Justify="Justify.Center">
+    @{
+        UpdateCalendarView();
+    }
+    <table>
+        <thead>
+        <tr>
+            @foreach (var day in WeekDays) {
+                <th>
+                    <MudPaper Class="px-16 py-2 ma-2" Elevation="3">@day</MudPaper>
+                </th>
+            }
+        </tr>
+        </thead>
+        <tbody>
+        @for (var i = 0; i < Days.GetLength(0); i++) {
+            <tr>
+                @for (var j = 0; j < 7; j++) {
+                    <td>
+                        @{
+                            var i1 = i;
+                            var j1 = j;
+                        }
+                        @if (@Days[i1, j1] == 0) {
+                            <MudPaper Class="pa-16 ma-2" Elevation="3" Style="background-color: grey">
+                                
+                            </MudPaper>
+                        }
+                        else {
+                            <MudPaper Class="pa-16 ma-2" Elevation="3">
+                                <MudFab Color="Color.Secondary" Size="Size.Small" IconSize="Size.Small" Class="ma-2" Label="@Days[i1, j1].ToString()" />
+                            </MudPaper>
+                        }
+                    </td>
+                }
+            </tr>
+        }
+        </tbody>
+    </table>
+</MudGrid>
+
+@code {
+    private static readonly string[] WeekDays = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
+    private static readonly string[] MonthNames = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
+    
+    private DateTime SelectedDate = DateTime.Now;
+    private int[,] Days;
+
+    private void UpdateSelectedDate(int year, int month, int day) {
+        SelectedDate = new DateTime(year, month, day);
+        UpdateCalendarView();
+    }
+
+    private void UpdateCalendarView() {
+        var StartDayOfSelectedMonth = (int) SelectedDate.StartOfMonth(CultureInfo.CurrentCulture).DayOfWeek;
+        var EndDayOfSelectedMonth = (int) SelectedDate.EndOfMonth(CultureInfo.CurrentCulture).DayOfWeek;
+        var WeeksToDisplay = (StartDayOfSelectedMonth + DateTime.DaysInMonth(SelectedDate.Year, SelectedDate.Month) + (7 - EndDayOfSelectedMonth) - 1) / 7;
+        var DayCount = 1;
+        Days = new int[WeeksToDisplay, 7];
+
+        for (var i = 0; i < StartDayOfSelectedMonth; i++) Days[0, i] = 0;
+        for (var i = StartDayOfSelectedMonth - 1; i < 7; i++) Days[0, i] = DayCount++;
+        for (var j = 1; j < WeeksToDisplay - 1; j++) {
+            for (var i = 0; i < 7; i++) Days[j, i] = DayCount++;
+        }
+        for (var i = 0; i < EndDayOfSelectedMonth; i++) Days[Days.GetLength(0) - 1, i] = DayCount++;
+        for (var i = EndDayOfSelectedMonth; i < 7; i++) Days[Days.GetLength(0) - 1, i] = 0;
+
+        // foreach (var i in Days) {
+        //     Console.WriteLine(i);
+        // }
+    }
+
+    private int DisplayedMonth = 0;
+    
+    private void SwitchToPreviousMonth() {
+        if (DisplayedMonth == 0) return;
+        DisplayedMonth--;
+        UpdateSelectedDate(SelectedDate.Year, DisplayedMonth, 1);
+    }
+
+    private void SwitchToNextMonth() {
+        if (DisplayedMonth == 11) return;
+        DisplayedMonth++;
+        UpdateSelectedDate(SelectedDate.Year, DisplayedMonth, 1);
+    }
+
+}

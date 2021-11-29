@@ -3,6 +3,7 @@
 @using Data
 @using System.ComponentModel.DataAnnotations
 @using ApplicationTier.Models
+@using InputType = MudBlazor.InputType
 
 @inject IUserService UserService
 @inject NavigationManager NavigationManager
@@ -15,7 +16,7 @@
                 <tr>
                     <td>
                         <MudText Typo="Typo.h4" Align="Align.Center" Class="ma-5">Register an account</MudText>
-                        <img class="profile-img" src="https://lh5.googleusercontent.com/-b0-k99FZlyE/AAAAAAAAAAI/AAAAAAAAAAA/eu7opA4byxI/photo.jpg?sz=120">
+                        <img class="profile-img" src="https://lh5.googleusercontent.com/-b0-k99FZlyE/AAAAAAAAAAI/AAAAAAAAAAA/eu7opA4byxI/photo.jpg?sz=120" alt="Profile Image">
                     </td>
                 </tr>
                 <tr>
@@ -26,7 +27,7 @@
                             <MudTextField Label="Email" Class="mt-3" @bind-Value="RegisterFormModel.Email" For="@(() => RegisterFormModel.Email)" Adornment="Adornment.End" AdornmentIcon="@Icons.Filled.AlternateEmail"/>
                             <MudTextField Label="First Name" Class="mt-3" @bind-Value="RegisterFormModel.FirstName" For="@(() => RegisterFormModel.FirstName)" Adornment="Adornment.End" AdornmentIcon="@Icons.Filled.AccountBox"/>
                             <MudTextField Label="Last Name" Class="mt-3" @bind-Value="RegisterFormModel.LastName" For="@(() => RegisterFormModel.LastName)" Adornment="Adornment.End" AdornmentIcon="@Icons.Filled.AccountBox"/>
-                            <MudTextField Label="Password" Class="mt-3" @bind-Value="RegisterFormModel.Password" For="@(() => RegisterFormModel.Password)" InputType="@PasswordInputType" Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon" OnAdornmentClick="TogglePasswordVisibiltyState"/>
+                            <MudTextField Label="Password" Class="mt-3" @bind-Value="RegisterFormModel.Password" For="@(() => RegisterFormModel.Password)" InputType="@PasswordInputType" Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon" OnAdornmentClick="TogglePasswordVisibilityState"/>
                             <MudTextField Label="Retype Password" Class="mt-3" InputType="InputType.Password" @bind-Value="RegisterFormModel.PasswordConfirmation" For="@(() => RegisterFormModel.PasswordConfirmation)" Adornment="Adornment.End" AdornmentIcon="@Icons.Outlined.Lock"/>
                             <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" Class="py-2 mt-4">Register</MudButton>
 
@@ -48,7 +49,7 @@
     private string PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
     private bool IsPasswordVisible;
 
-    private void TogglePasswordVisibiltyState() {
+    private void TogglePasswordVisibilityState() {
         if (IsPasswordVisible) {
             IsPasswordVisible = false;
             PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
@@ -85,7 +86,7 @@
         
     }
 
-    private RegisterForm RegisterFormModel = new RegisterForm();
+    private readonly RegisterForm RegisterFormModel = new();
     private string ErrorMessage;
 
     private async Task OnValidRegisterFormSubmit(EditContext context) {
