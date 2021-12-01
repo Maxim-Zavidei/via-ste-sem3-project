@@ -5,8 +5,9 @@
 @using Authentication
 
 <MudGrid Justify="Justify.Center">
-    <MudItem xs="6" Class="my-6 ">
-        <MudPaper Elevation="14" Class="d-flex align-center justify-center px-16 py-8">
+    <MudItem Class="my-2 ">
+        @* Elevation="3" *@
+        <MudPaper Class="d-flex align-center justify-center px-8 py-2">
 
 
             <EditForm Model="@EventFormModel" OnValidSubmit="OnValidEventFormSubmit">
@@ -38,7 +39,7 @@
                 </MudItem>
                 <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" Class="py-2 mt-4">Add</MudButton>
 
-                <MudButton  ButtonType="ButtonType.Button" Variant="Variant.Filled" Color="Color.Error" FullWidth="true" Class="py-2 mt-4">Cancel</MudButton>
+                <MudButton ButtonType="ButtonType.Button" Variant="Variant.Filled" Color="Color.Error" FullWidth="true" Class="py-2 mt-4">Cancel</MudButton>
 
                 <MudText Typo="Typo.body2" Align="Align.Center" Class="my-4" FullWidth="true" Color="Color.Error">@ErrorMessage</MudText>
 
