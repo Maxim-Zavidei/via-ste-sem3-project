@@ -1,5 +1,6 @@
 package Tier1;
 
+import Shared.Event;
 import Shared.User;
 import com.google.gson.Gson;
 
@@ -72,8 +73,18 @@ public class CommunicationThreadHandler implements Runnable {
                             toSend = gson.toJson(users);
                             send(toSend);
                         }
-                        break;
-                    }
+                    } break;
+                    case "getMyEvents":{
+                        received = read();
+                        String toSend = "";
+                        ArrayList<Event> events = userController
+                            .getUsersEventsFromDatabase(Integer.parseInt(received));
+                        if(events==null){toSend = "No events in database"; send(toSend);}
+                        else{
+                            toSend = gson.toJson(events);
+                            send(toSend);
+                        }
+                    }break;
                     case "close": {
                         socket.shutdownInput();
                         socket.shutdownOutput();

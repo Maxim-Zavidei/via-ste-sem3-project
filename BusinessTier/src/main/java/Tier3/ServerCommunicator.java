@@ -68,4 +68,8 @@ public class ServerCommunicator {
   public User addUser(User user) {
     return userCommunicator.addUser(restTemplate, url, user);
   }
+
+  public ArrayList<Event> getUserEventFromDatabase(int id) {
+    return userCommunicator.getUserEventsFromDatabase(restTemplate, url, id);
+  }
 }

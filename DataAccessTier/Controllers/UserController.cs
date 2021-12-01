@@ -20,13 +20,6 @@ namespace DataAccessTier.Controllers
             db = udb;
         }
 
-       /* private List<User> GetUsers()
-        {
-            return new List<User>{
-                new User{Id = 1, Username = "Yoyo", Password = "123", Email = "yoyo@gmail.com"}
-            };
-        }*/
-
         [HttpGet("GetUsers")]
         public async Task<IActionResult> Get()
         {
@@ -34,39 +27,6 @@ namespace DataAccessTier.Controllers
             {
                 var ussers = await db.GetUsersAsync();
                 return Ok(ussers);
-            } catch(Exception e)
-            {
-                return StatusCode(500, e.Message);
-            }
-
-
-        }
-
-        [HttpGet]
-        [Route("{id:int}/GetEvents")]
-        public async Task<IActionResult> GetEvents([FromRoute] int id)
-        {
-            try
-            {
-                var events = await db.GetUserEvents(id);
-                return Ok(events);
-            } catch(Exception e)
-            {
-                return StatusCode(500, e.Message);
-            }
-
-
-        }
-
-         [HttpPost]
-        [Route("{id:int}/AddEvent")]
-        public async Task<IActionResult> AddEvent([FromRoute] int id, [FromBody] Event evt)
-        {
-            try
-            {
-                evt.UserId = id;
-                var events = await db.AddEventAsync(evt);
-                return Ok(events);
             } catch(Exception e)
             {
                 return StatusCode(500, e.Message);

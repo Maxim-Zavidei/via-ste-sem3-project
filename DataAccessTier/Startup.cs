@@ -31,6 +31,7 @@ namespace DataAccessTier {
             services.AddDbContext<CalendarDbContext>(options => options.UseNpgsql(Configuration.GetConnectionString("CalendarDatabase")));
             //services.AddDbContext<CalendarDbContext>());
             services.AddScoped<IUserRepo, UserRepo>();
+            services.AddScoped<IEventRepo, EventRepo>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

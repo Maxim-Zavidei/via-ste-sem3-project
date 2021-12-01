@@ -1,5 +1,6 @@
 package Tier3;
 
+import Shared.Event;
 import Shared.User;
 import com.google.gson.Gson;
 import org.springframework.http.ResponseEntity;
@@ -11,11 +12,15 @@ import java.util.Arrays;
 public class UserCommunicator {
     public UserCommunicator() {
         gson = new Gson();
-
     }
 
-    Gson gson;
-
+    private Gson gson;
+/**
+ * User
+ * @param restTemplate
+ * @param url
+ * @return
+ */
     public ArrayList<User> getUsersFromDatabase(RestTemplate restTemplate, String url) {
         try {
 
@@ -47,4 +52,17 @@ public class UserCommunicator {
         }
         return null;
     }
+
+    public ArrayList<Event> getUserEventsFromDatabase(RestTemplate restTemplate, String url, int id) {
+        try {
+
+            ResponseEntity<Event[]> responseEntity = restTemplate.getForEntity(url + "Event/"+ id + "/GetEvents", Event[].class);
+            Event[] events = responseEntity.getBody();
+            return new ArrayList<>(Arrays.asList(events));
+        } catch (Exception e) {
+            //e.printStackTrace();
+        }
+        return null;
+    }
+
 }

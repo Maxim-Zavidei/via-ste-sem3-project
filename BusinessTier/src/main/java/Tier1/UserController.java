@@ -1,5 +1,6 @@
 package Tier1;
 
+import Shared.Event;
 import Shared.User;
 
 import java.util.ArrayList;
@@ -41,6 +42,19 @@ public class UserController extends Controller {
     {
       ArrayList<User> users = super.communicator.getUsersFromDatabase();
       return users;
+    }
+    catch (Exception e)
+    {
+      System.out.println(e.getMessage());
+    }
+    return null;
+  }
+
+  public ArrayList<Event> getUsersEventsFromDatabase(int id){
+    try
+    {
+      ArrayList<Event> events = super.communicator.getUserEventFromDatabase(id);
+      return events;
     }
     catch (Exception e)
     {
