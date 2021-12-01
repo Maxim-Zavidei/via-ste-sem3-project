@@ -74,6 +74,11 @@ public class UserController extends Controller {
     super.communicator.deleteUser(userId);
   }
 
+  public void changeSharingStatus(int userId) throws IllegalArgumentException
+  {
+    super.communicator.changeSharingStatus(userId);
+  }
+
   public User getCashedUser() {
     return cashedUser;
   }

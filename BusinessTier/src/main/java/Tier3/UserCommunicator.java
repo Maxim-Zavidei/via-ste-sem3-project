@@ -65,4 +65,14 @@ public class UserCommunicator {
             throw new IllegalArgumentException("User not found in DB");
         }
     }
+    public void changeSharingStatus(RestTemplate restTemplate, String url, int userId) throws IllegalArgumentException
+    {
+        try{
+            restTemplate.patchForObject(url, userId+"/ChangeSharingStatus", String.class);
+        }
+        catch (Exception e)
+        {
+            throw new IllegalArgumentException("User not found in DB");
+        }
+    }
 }

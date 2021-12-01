@@ -84,6 +84,7 @@ public class CommunicationThreadHandler implements Runnable {
                             received = read();
                             int userId = Integer.parseInt(received);
                             userController.deleteUser(userId);
+                            //Better ideas for comm flow//
                             toSend = "Success";
                         }
                         catch (Exception e)
@@ -108,6 +109,20 @@ public class CommunicationThreadHandler implements Runnable {
                         }
                         break;
                     }
+                    case "changeSharingStatus":{
+                        try{
+                            received = read();
+                            int userId = Integer.parseInt(received);
+                            userController.changeSharingStatus(userId);
+                            //Better ideas for comm flow//
+                            toSend = "Success";
+                        }
+                        catch (Exception e)
+                        {
+                            toSend = e.getMessage();
+                        }
+                        send(toSend);
+                    }break;
                     case "close": {
                         socket.shutdownInput();
                         socket.shutdownOutput();
