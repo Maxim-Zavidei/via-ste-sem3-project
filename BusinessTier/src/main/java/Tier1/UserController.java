@@ -1,6 +1,5 @@
 package Tier1;
 
-import Shared.Event;
 import Shared.User;
 
 import java.util.ArrayList;
@@ -50,7 +49,7 @@ public class UserController extends Controller {
     return null;
   }
 
-  public ArrayList<Event> getUsersEventsFromDatabase(int id){
+  /*public ArrayList<Event> getUsersEventsFromDatabase(int id){
     try
     {
       ArrayList<Event> events = super.communicator.getUserEventFromDatabase(id);
@@ -61,7 +60,7 @@ public class UserController extends Controller {
       System.out.println(e.getMessage());
     }
     return null;
-  }
+  }*/
 
   public String addUser(User user) throws Exception
   {
