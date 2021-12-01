@@ -4,9 +4,13 @@
 
 <MudToolBar>
     <MudIconButton Icon="@Icons.Material.Outlined.Menu" Color="Color.Inherit" Class="mr-5"/>
-    <MudIconButton Icon="@Icons.Material.Outlined.Add"/>
+    
+    <MudTooltip Text="Add Event" Color="Color.Secondary" Placement="Placement.Bottom">
+        <MudIconButton Icon="@Icons.Material.Outlined.Add" OnClick="@DisplayEvent"/>
+    </MudTooltip>
+    
     <MudIconButton Icon="@Icons.Material.Outlined.Edit"/>
-    <MudIconButton Icon="@Icons.Material.Outlined.Remove" Color="Color.Inherit"/>
+    <MudIconButton Icon="@Icons.Material.Outlined.Remove" Color="Color.Inherit" OnClick="@CloseEvent"/>
     <MudIconButton Icon="@Icons.Material.Outlined.Settings" Color="Color.Inherit"/>
     <MudContainer>
         <MudButton Variant="Variant.Text" Size="Size.Small" Class="ma-2" @onclick="() => SwitchMonth(false)">&lt;</MudButton>
@@ -19,7 +23,10 @@
     <MudIconButton Icon="@Icons.Material.Outlined.PeopleAlt"/>
     <MudIconButton Icon="@Icons.Material.Outlined.MoreVert" Color="Color.Inherit"/>
 </MudToolBar>
-
+@if (showAddEvent)
+    {
+        <Event/>
+    }
 <MudGrid Justify="Justify.Center">
 
     <table>
@@ -47,8 +54,8 @@
                             </MudPaper>
                         }
                         else {
-                            <MudPaper Class="pa-16 ma-2" Elevation="3">
-                                <MudFab Color="Color.Secondary" Size="Size.Small" IconSize="Size.Small" Class="ma-2" Label="@Days[i1, j1].ToString()" />
+                            <MudPaper  Class="pa-16 ma-2  " Elevation="3"  >
+                                <MudFab Color="Color.Secondary" Size="Size.Small" IconSize="Size.Small" Class="ma-2  " Label="@Days[i1, j1].ToString()" />
                             </MudPaper>
                         }
                     </td>
@@ -99,5 +106,15 @@
     
     protected override async Task OnInitializedAsync() {
         UpdateCalendarView();
+    }
+    private bool showAddEvent { get; set;}
+
+    private void DisplayEvent()
+    {
+        showAddEvent = true;
+    }
+    private void CloseEvent()
+    {
+        showAddEvent = true;
     }
 }
