@@ -58,6 +58,23 @@ namespace DataAccessTier.Controllers
 
         }
 
+         [HttpPost]
+        [Route("{id:int}/AddEvent")]
+        public async Task<IActionResult> AddEvent([FromRoute] int id, [FromBody] Event evt)
+        {
+            try
+            {
+                evt.UserId = id;
+                var events = await db.AddEventAsync(evt);
+                return Ok(events);
+            } catch(Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
+
+
+        }
+
         /* [HttpGet("GetUser")]
          public IActionResult GetUser([FromQuery] string username, [Fro] string password)
          {
