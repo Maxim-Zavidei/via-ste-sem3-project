@@ -6,7 +6,7 @@
     <MudIconButton Icon="@Icons.Material.Outlined.Menu" Color="Color.Inherit" Class="mr-5"/>
     
     <MudTooltip Text="Add Event" Color="Color.Secondary" Placement="Placement.Bottom">
-        <MudIconButton Icon="@Icons.Material.Outlined.Add" OnClick="@DisplayEvent"/>
+        <MudIconButton Icon="@Icons.Material.Outlined.Add" OnClick="@ToggleOpen"/>
     </MudTooltip>
     
     <MudIconButton Icon="@Icons.Material.Outlined.Edit"/>
@@ -25,8 +25,15 @@
 </MudToolBar>
 @if (showAddEvent)
     {
+        
         <Event/>
     }
+<MudPopover Open="@_isOpen" Fixed="true" Class="px-4 pt-4">
+    <div class="d-flex flex-column">
+         <Event/>
+        <MudButton OnClick="@ToggleOpen" Class="ml-auto mr-n3 mb-1" Color="Color.Error">Close</MudButton>
+    </div>
+</MudPopover>
 <MudGrid Justify="Justify.Center">
 
     <table>
@@ -106,6 +113,15 @@
     
     protected override async Task OnInitializedAsync() {
         UpdateCalendarView();
+    }
+    public bool _isOpen;
+
+    public void ToggleOpen()
+    {
+        if (_isOpen)
+            _isOpen = false;
+        else
+            _isOpen = true;
     }
     private bool showAddEvent { get; set;}
 
