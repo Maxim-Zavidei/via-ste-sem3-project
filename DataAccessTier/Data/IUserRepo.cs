@@ -13,6 +13,8 @@ namespace DataAccessTier.Data
         public Task<DbSet<User>> GetUsersAsync();
 
         public Task<User> AddUserAsync(User user);
+
+        public Task<IList<Event>> GetUserEvents(int userId); 
     }
 
 }

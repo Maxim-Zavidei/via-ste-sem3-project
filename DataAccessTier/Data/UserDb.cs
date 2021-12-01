@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using DataAccessTier.Model;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace DataAccessTier.Data
 {
@@ -23,6 +24,14 @@ namespace DataAccessTier.Data
             await db.SaveChangesAsync();
             User u = await db.Users.FirstAsync(us => us.Username==user.Username);
             return u;
+        }
+
+        public async Task<IList<Event>> GetUserEvents(int userId)
+        {
+            
+            return db.Event.Include(e => e.Address)
+            .Where(e => e.UserId == userId).ToList<Event>();
+            //throw new NotImplementedException();
         }
     }
 

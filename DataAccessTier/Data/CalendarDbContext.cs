@@ -9,6 +9,7 @@ namespace DataAccessTier.Data
     public class CalendarDbContext : DbContext
     {
         public  DbSet<User> Users { get; set; }
+        public  DbSet<Event> Event { get; set; }
 
          /*public string DbPath { get; private set; }
 

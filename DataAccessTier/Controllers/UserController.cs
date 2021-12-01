@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using DataAccessTier.Model;
 using DataAccessTier.Data;
 
@@ -35,6 +34,22 @@ namespace DataAccessTier.Controllers
             {
                 var ussers = await db.GetUsersAsync();
                 return Ok(ussers);
+            } catch(Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
+
+
+        }
+
+        [HttpGet]
+        [Route("{id:int}/GetEvents")]
+        public async Task<IActionResult> GetEvents([FromRoute] int id)
+        {
+            try
+            {
+                var events = await db.GetUserEvents(id);
+                return Ok(events);
             } catch(Exception e)
             {
                 return StatusCode(500, e.Message);

@@ -10,6 +10,8 @@ namespace DataAccessTier.Model {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id {get;set;}
+        [JsonIgnore]
+        public int UserId {get;set;}
         
         [JsonPropertyName("title")]
         public string Title { get; set; }
