@@ -9,9 +9,9 @@
     <MudIconButton Icon="@Icons.Material.Outlined.Remove" Color="Color.Inherit"/>
     <MudIconButton Icon="@Icons.Material.Outlined.Settings" Color="Color.Inherit"/>
     <MudContainer>
-        <MudButton Variant="Variant.Text" Size="Size.Small" Class="ma-2" @onclick="SwitchToPreviousMonth">&lt;</MudButton>
+        <MudButton Variant="Variant.Text" Size="Size.Small" Class="ma-2" @onclick="() => SwitchMonth(false)">&lt;</MudButton>
         <MudButton Variant="Variant.Text" Size="Size.Medium" Class="ma-2">@MonthNames[DisplayedMonth]</MudButton>
-        <MudButton Variant="Variant.Text" Size="Size.Small" Class="ma-2" @onclick="SwitchToNextMonth">&gt;</MudButton>
+        <MudButton Variant="Variant.Text" Size="Size.Small" Class="ma-2" @onclick="() => SwitchMonth(true)">&gt;</MudButton>
     </MudContainer>
     <MudSpacer/>
     <MudIconButton Icon="@Icons.Material.Outlined.Notifications"/>
@@ -21,9 +21,7 @@
 </MudToolBar>
 
 <MudGrid Justify="Justify.Center">
-    @{
-        UpdateCalendarView();
-    }
+
     <table>
         <thead>
         <tr>
@@ -64,19 +62,20 @@
 @code {
     private static readonly string[] WeekDays = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
     private static readonly string[] MonthNames = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
-    
+
     private DateTime SelectedDate = DateTime.Now;
+    private int DisplayedMonth = DateTime.Now.Month - 1;
+    private int DisplayedYear = DateTime.Now.Year;
+    
     private int[,] Days;
 
-    private void UpdateSelectedDate(int year, int month, int day) {
-        SelectedDate = new DateTime(year, month, day);
-        UpdateCalendarView();
-    }
-
     private void UpdateCalendarView() {
-        var StartDayOfSelectedMonth = (int) SelectedDate.StartOfMonth(CultureInfo.CurrentCulture).DayOfWeek;
-        var EndDayOfSelectedMonth = (int) SelectedDate.EndOfMonth(CultureInfo.CurrentCulture).DayOfWeek;
-        var WeeksToDisplay = (StartDayOfSelectedMonth + DateTime.DaysInMonth(SelectedDate.Year, SelectedDate.Month) + (7 - EndDayOfSelectedMonth) - 1) / 7;
+        var DisplayedDate = new DateTime(DisplayedYear, DisplayedMonth + 1, 1);
+        var StartDayOfSelectedMonth = (int) DisplayedDate.StartOfMonth(CultureInfo.InvariantCulture).DayOfWeek;
+        StartDayOfSelectedMonth += StartDayOfSelectedMonth == 0 ? 7 : 0;
+        var EndDayOfSelectedMonth = (int) DisplayedDate.EndOfMonth(CultureInfo.InvariantCulture).DayOfWeek;
+        EndDayOfSelectedMonth += EndDayOfSelectedMonth == 0 ? 7 : 0;
+        var WeeksToDisplay = (StartDayOfSelectedMonth + DateTime.DaysInMonth(DisplayedDate.Year, DisplayedDate.Month) + (7 - EndDayOfSelectedMonth) - 1) / 7;
         var DayCount = 1;
         Days = new int[WeeksToDisplay, 7];
 
@@ -87,24 +86,18 @@
         }
         for (var i = 0; i < EndDayOfSelectedMonth; i++) Days[Days.GetLength(0) - 1, i] = DayCount++;
         for (var i = EndDayOfSelectedMonth; i < 7; i++) Days[Days.GetLength(0) - 1, i] = 0;
-
-        // foreach (var i in Days) {
-        //     Console.WriteLine(i);
-        // }
     }
 
-    private int DisplayedMonth = 0;
+    private void SwitchMonth(bool GoForward) {
+        DisplayedMonth += GoForward ? 1 : -1;
+        if (DisplayedMonth is -1 or 12) {
+            DisplayedYear += DisplayedMonth % 11;
+            DisplayedMonth = (DisplayedMonth % 12 + 12) % 12;
+        }
+        UpdateCalendarView();
+    }
     
-    private void SwitchToPreviousMonth() {
-        if (DisplayedMonth == 0) return;
-        DisplayedMonth--;
-        UpdateSelectedDate(SelectedDate.Year, DisplayedMonth, 1);
+    protected override async Task OnInitializedAsync() {
+        UpdateCalendarView();
     }
-
-    private void SwitchToNextMonth() {
-        if (DisplayedMonth == 11) return;
-        DisplayedMonth++;
-        UpdateSelectedDate(SelectedDate.Year, DisplayedMonth, 1);
-    }
-
 }
