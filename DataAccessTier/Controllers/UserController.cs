@@ -78,5 +78,21 @@ namespace DataAccessTier.Controllers
                 return StatusCode(500, e.Message);
             }
         }
+        
+        [HttpPatch]
+        [Route("/{userId:int}/ChangeSharingStatus")]
+        public async Task<IActionResult> ChangeSharedStatus([FromRoute] int userId)
+        {
+            try
+            {
+                await db.ChangeSharingStatus(userId);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+
+            }
+        }
     }
 }

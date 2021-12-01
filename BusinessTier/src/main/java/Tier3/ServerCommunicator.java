@@ -1,31 +1,32 @@
 package Tier3;
 
-import Shared.*;
-
-import java.io.IOException;
-import java.util.ArrayList;
-
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
-import org.springframework.web.client.RestTemplate;
+import Shared.Event;
+import Shared.User;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.TrustStrategy;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.web.client.RestTemplate;
+
 import javax.net.ssl.SSLContext;
+import java.io.IOException;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
+import java.util.ArrayList;
 
 @SpringBootApplication
 public class ServerCommunicator {
 
   private static ServerCommunicator instance;
   private static UserCommunicator userCommunicator;
+  private static EventCommunicator eventCommunicator;
   private RestTemplate restTemplate;
-  private static final String url = "https://localhost:5002/";
+  private static final String url = "https://localhost:5000/";
 
   /**
    * disregards the CA in order to connect to localhost of c# Web API
@@ -56,7 +57,8 @@ public class ServerCommunicator {
   }
 
   private ServerCommunicator() throws IOException, KeyManagementException, KeyStoreException, NoSuchAlgorithmException {
-    this.userCommunicator = new UserCommunicator();
+    userCommunicator = new UserCommunicator();
+    eventCommunicator = new EventCommunicator();
     restTemplate = restTemplate();
 
   }
@@ -69,9 +71,12 @@ public class ServerCommunicator {
     return userCommunicator.addUser(restTemplate, url, user);
   }
 
-  public ArrayList<Event> getUserEventFromDatabase(int id) {
-    return userCommunicator.getUserEventsFromDatabase(restTemplate, url, id);
+  public ArrayList<Event> fetchUserEventFromDatabase(int id) throws Exception
+  {
+    return eventCommunicator.fetchUserEventsFromDatabase(restTemplate, url, id);
   }
+
+
   public void deleteUser(int userId) throws IllegalArgumentException
   {
     userCommunicator.deleteUser(restTemplate, url, userId);

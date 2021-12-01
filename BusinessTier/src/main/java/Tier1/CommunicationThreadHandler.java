@@ -14,6 +14,7 @@ public class CommunicationThreadHandler implements Runnable {
     private Socket socket;
     private  String ip;
     private UserController userController;
+    private EventController eventController;
     private Gson gson;
     InputStream is;
     OutputStream os;
@@ -26,6 +27,7 @@ public class CommunicationThreadHandler implements Runnable {
             is = socket.getInputStream();
             os = socket.getOutputStream();
             userController = new UserController();
+            eventController = new EventController();
             gson = new Gson();
         } catch (IOException e) {
             System.out.println(e.getMessage());
@@ -82,6 +84,7 @@ public class CommunicationThreadHandler implements Runnable {
                             received = read();
                             int userId = Integer.parseInt(received);
                             userController.deleteUser(userId);
+                            //Better ideas for comm flow//
                             toSend = "Success";
                         }
                         catch (Exception e)
@@ -91,15 +94,34 @@ public class CommunicationThreadHandler implements Runnable {
                         send(toSend);
                     } break;
                     case "getMyEvents":{
-                        received = read();
-                        toSend = "";
-                        ArrayList<Event> events = userController
-                            .getUsersEventsFromDatabase(Integer.parseInt(received));
-                        if(events==null){toSend = "No events in database"; send(toSend);}
-                        else{
+                        try
+                        {
+                            received = read();
+                            ArrayList<Event> events = eventController
+                                .fetchUserEventsFromDatabase(Integer.parseInt(received));
                             toSend = gson.toJson(events);
                             send(toSend);
                         }
+                        catch (Exception e)
+                        {
+                            toSend = e.getMessage();
+                            send(toSend);
+                        }
+                        break;
+                    }
+                    case "changeSharingStatus":{
+                        try{
+                            received = read();
+                            int userId = Integer.parseInt(received);
+                            userController.changeSharingStatus(userId);
+                            //Better ideas for comm flow//
+                            toSend = "Success";
+                        }
+                        catch (Exception e)
+                        {
+                            toSend = e.getMessage();
+                        }
+                        send(toSend);
                     }break;
                     case "close": {
                         socket.shutdownInput();

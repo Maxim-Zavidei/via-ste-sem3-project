@@ -1,6 +1,5 @@
 package Tier3;
 
-import Shared.Event;
 import Shared.User;
 import com.google.gson.Gson;
 import org.springframework.http.ResponseEntity;
@@ -54,24 +53,22 @@ public class UserCommunicator {
         return null;
     }
 
-    public ArrayList<Event> getUserEventsFromDatabase(RestTemplate restTemplate, String url, int id) {
-        try {
-
-            ResponseEntity<Event[]> responseEntity = restTemplate.getForEntity(url + "Event/"+ id + "/GetEvents", Event[].class);
-            Event[] events = responseEntity.getBody();
-            return new ArrayList<>(Arrays.asList(events));
-        } catch (Exception e) {
-            //e.printStackTrace();
-        }
-        return null;
-    }
-
     public void deleteUser(RestTemplate restTemplate, String url, int userId) throws IllegalArgumentException
     {
         try
         {
             restTemplate.delete(url+"/"+userId);
 
+        }
+        catch (Exception e)
+        {
+            throw new IllegalArgumentException("User not found in DB");
+        }
+    }
+    public void changeSharingStatus(RestTemplate restTemplate, String url, int userId) throws IllegalArgumentException
+    {
+        try{
+            restTemplate.patchForObject(url, userId+"/ChangeSharingStatus", String.class);
         }
         catch (Exception e)
         {
