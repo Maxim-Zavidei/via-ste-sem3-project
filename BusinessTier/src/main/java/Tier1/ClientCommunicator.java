@@ -40,6 +40,8 @@ public class ClientCommunicator {
             try {
                 System.out.println("Waiting for client....");
                 Socket socket = this.welcomeSocket.accept();
+                System.out.println("Client connected");
+
                 Thread thread = new Thread(new CommunicationThreadHandler(socket));
                 thread.start();
             } catch (IOException e) {

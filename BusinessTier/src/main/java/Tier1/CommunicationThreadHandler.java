@@ -36,12 +36,13 @@ public class CommunicationThreadHandler implements Runnable {
         while (true){
             try {
                 String received = read();
+                String toSend = "";
                 switch(received)
                 {
                     case "login": {
                         received = read();
                         User user = gson.fromJson(received, User.class);
-                        String toSend = userController.logIn(user);
+                        toSend = userController.logIn(user);
                         send(toSend);
                         if(toSend.equals("Successful"))
                         {
@@ -53,7 +54,7 @@ public class CommunicationThreadHandler implements Runnable {
                     case "adduser": {
                         received = read();
                         User user = gson.fromJson(received, User.class);
-                        String toSend = userController.addUser(user);
+                        toSend = userController.addUser(user);
                         if(toSend==null) toSend = "Could not create user";
                         send(toSend);
                         if(toSend.equals("Successful"))
@@ -65,18 +66,33 @@ public class CommunicationThreadHandler implements Runnable {
 
                     } break;
                     case "fetchusers":{
-                        String toSend = "";
                         ArrayList<User> users = userController
                             .FetchUsersFromDatabase();
-                        if(users==null){toSend = "No users in database"; send(toSend);}
+                        if(users==null){toSend = "No users in database";
+                        }
                         else{
                             toSend = gson.toJson(users);
-                            send(toSend);
                         }
+                        send(toSend);
+                        break;
+                    }
+                    case "deleteuser":{
+                        try
+                        {
+                            received = read();
+                            int userId = Integer.parseInt(received);
+                            userController.deleteUser(userId);
+                            toSend = "Success";
+                        }
+                        catch (Exception e)
+                        {
+                            toSend = e.getMessage();
+                        }
+                        send(toSend);
                     } break;
                     case "getMyEvents":{
                         received = read();
-                        String toSend = "";
+                        toSend = "";
                         ArrayList<Event> events = userController
                             .getUsersEventsFromDatabase(Integer.parseInt(received));
                         if(events==null){toSend = "No events in database"; send(toSend);}
