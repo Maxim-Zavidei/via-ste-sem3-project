@@ -72,4 +72,8 @@ public class ServerCommunicator {
   public ArrayList<Event> getUserEventFromDatabase(int id) {
     return userCommunicator.getUserEventsFromDatabase(restTemplate, url, id);
   }
+  public void deleteUser(int userId) throws IllegalArgumentException
+  {
+    userCommunicator.deleteUser(restTemplate, url, userId);
+  }
 }

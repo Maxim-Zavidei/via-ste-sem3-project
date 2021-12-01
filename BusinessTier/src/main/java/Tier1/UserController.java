@@ -70,6 +70,10 @@ public class UserController extends Controller {
     cashedUser = super.communicator.addUser(user);
     return toReturn;
   }
+  public void deleteUser(int userId) throws IllegalArgumentException
+  {
+    super.communicator.deleteUser(userId);
+  }
 
   public User getCashedUser() {
     return cashedUser;

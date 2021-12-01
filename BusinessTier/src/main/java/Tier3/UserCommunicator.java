@@ -12,6 +12,7 @@ import java.util.Arrays;
 public class UserCommunicator {
     public UserCommunicator() {
         gson = new Gson();
+
     }
 
     private Gson gson;
@@ -65,4 +66,16 @@ public class UserCommunicator {
         return null;
     }
 
+    public void deleteUser(RestTemplate restTemplate, String url, int userId) throws IllegalArgumentException
+    {
+        try
+        {
+            restTemplate.delete(url+"/"+userId);
+
+        }
+        catch (Exception e)
+        {
+            throw new IllegalArgumentException("User not found in DB");
+        }
+    }
 }
