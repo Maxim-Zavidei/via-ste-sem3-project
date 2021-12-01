@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using DataAccessTier.Model;
 using System.Threading.Tasks;
 using System.Linq;
+using System.Net.Sockets;
 
 namespace DataAccessTier.Data
 {
@@ -51,6 +52,20 @@ namespace DataAccessTier.Data
             {
                 Console.WriteLine(e.Message);
                 throw new Exception("No such user found in DB");
+            }
+        }
+
+        public async Task ChangeSharingStatus(int userId)
+        {
+            try
+            {
+                User user = await GetUserById(userId);
+                user.IsSharingCalendar = !user.IsSharingCalendar;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                throw new Exception("No such user found in Database");
             }
         }
     }

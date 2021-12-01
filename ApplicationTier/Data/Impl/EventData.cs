@@ -32,7 +32,7 @@ namespace ApplicationTier.Data.Impl
                     rcv = await Communicator.read();
                     Events = JsonSerializer.Deserialize<List<Event>>(rcv);
                 }
-                else throw new Exception("Wrong credentials");
+                else throw new Exception("Could not fetch events");
 
             }
             catch (Exception e)
