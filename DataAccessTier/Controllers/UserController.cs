@@ -12,13 +12,20 @@ namespace DataAccessTier.Controllers
     [Route("[controller]")]
     public class UserController : ControllerBase
     {
-        private IUserRepo db {get;set;}
+        private IUserRepo db { get; set; }
         private int userCount;
 
         public UserController(IUserRepo udb)
         {
             db = udb;
         }
+
+       /* private List<User> GetUsers()
+        {
+            return new List<User>{
+                new User{Id = 1, Username = "Yoyo", Password = "123", Email = "yoyo@gmail.com"}
+            };
+        }*/
 
         [HttpGet("GetUsers")]
         public async Task<IActionResult> Get()
@@ -27,7 +34,8 @@ namespace DataAccessTier.Controllers
             {
                 var ussers = await db.GetUsersAsync();
                 return Ok(ussers);
-            } catch(Exception e)
+            }
+            catch (Exception e)
             {
                 return StatusCode(500, e.Message);
             }
@@ -53,12 +61,22 @@ namespace DataAccessTier.Controllers
          public IActionResult Update()
          {
              return Ok();
-         }
-
-         [HttpDelete("DeleteUser{Id}")]
-         public IActionResult Delete(int id)
-         {
-             return Ok();
          }*/
+
+    
+        [HttpDelete]
+        [Route("DeleteUser/{userId:int}")]
+        public async Task<IActionResult> DeleteUser([FromRoute] int userId)
+        {
+            try
+            {
+                await db.DeleteUser(userId);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
+        }
     }
 }
