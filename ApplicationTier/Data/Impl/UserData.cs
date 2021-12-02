@@ -26,7 +26,7 @@ namespace ApplicationTier.Data.Impl
             try
             {
                 //Sending request
-                string request = "fetchusers";
+                string request = "fetchUsers";
                 await Communicator.send(request);
 
 
@@ -89,7 +89,7 @@ namespace ApplicationTier.Data.Impl
                         {
                             throw new Exception("Incorrect user");
                         } 
-                    case "Server down":
+                    case "Could not fetch users from Database":
                         {
                             throw new Exception("Server is currently unavailable. Try again later.");
                         }
@@ -112,13 +112,13 @@ namespace ApplicationTier.Data.Impl
             try
             {
                  await FetchUsers();
+                 return _users;
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
+                throw new Exception("Could not fetch users from Database");
             }
-
-            return _users;
         }
 
         public async Task<User> AddUserAsync(User user)
@@ -126,7 +126,7 @@ namespace ApplicationTier.Data.Impl
             User userToLog = new();
             try
             {
-                await Communicator.send("adduser");
+                await Communicator.send("addUser");
                 string toSend = JsonSerializer.Serialize(user);
                 await Communicator.send(toSend);
                 string rcv = await Communicator.read();
@@ -135,15 +135,11 @@ namespace ApplicationTier.Data.Impl
                     string userJson = await Communicator.read();
                     userToLog = JsonSerializer.Deserialize<User>(userJson);
                 }
-                else
-                {
-                    //
-                }
-
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
+                throw new Exception($"Could not create user {user.Id}, {user.Username} in database");
             }
             return userToLog;
         }
@@ -157,59 +153,6 @@ namespace ApplicationTier.Data.Impl
         {
             await Communicator.CloseConnection();
         }
-
-        public async Task<IList<Event>> GetEventsAsync()
-        {
-            try
-            {
-                //Sending request
-                string request = "fetchevents";
-                await Communicator.send(request);
-                
-                //Receiving message
-                String rcv = await Communicator.read();
-                if (!rcv.Equals("No events in database"))
-                {
-                    rcv = await Communicator.read();
-                    IList<Event> events = JsonSerializer.Deserialize<List<Event>>(rcv);
-                    return events;
-                }
-                else throw new Exception("Could not fetch events");
-
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-                await CloseConnection();
-            }
-            return null;
-        }
-
-        public async Task<Event> AddEventAsync(Event eventToAdd)
-        {
-            Event eventTemp = new Event();
-            try
-            {
-                await Communicator.send("addevent");
-                string toSend = JsonSerializer.Serialize(eventToAdd);
-                await Communicator.send(toSend);
-                string rcv = await Communicator.read();
-                if (rcv.Equals("Successful"))
-                {
-                    string eventJson = await Communicator.read();
-                    eventTemp = JsonSerializer.Deserialize<Event>(eventJson);
-                }
-                else
-                {
-                    //
-                }
-
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-            }
-            return eventTemp;
-        }
+        
     }
 }

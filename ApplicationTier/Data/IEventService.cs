@@ -7,8 +7,8 @@ namespace ApplicationTier.Data
 {
     public interface IEventService
     {
-        Task<IList<Event>> GetEventsAsync();
-        Task<Event> AddEventAsync(Event eventToAdd);
+        Task<IList<Event>> GetUserEventsAsync(int userId);
+        Task<Event> AddEventAsync(int userId, Event eventToAdd);
         
     }
 }
