@@ -1,7 +1,10 @@
 ﻿@page "/calendar"
 @using MudBlazor.Extensions
 @using System.Globalization
+@using ApplicationTier.Data
+@using System.Collections
 @inject IDialogService DialogService
+@inject IEventService EventService
 
 
 <MudToolBar>
@@ -15,8 +18,12 @@
     @* </MudButton> *@
 
     <MudIconButton Icon="@Icons.Material.Outlined.Edit"/>
-    <MudIconButton Icon="@Icons.Material.Outlined.Remove" Color="Color.Inherit" />
+    <MudIconButton Icon="@Icons.Material.Outlined.Remove" Color="Color.Inherit"/>
     <MudIconButton Icon="@Icons.Material.Outlined.Settings" Color="Color.Inherit"/>
+    @* <MudItem xs="12" sm="6" md="4"> *@
+    @*     <MudDatePicker PickerVariant="PickerVariant.Dialog" Label="Change Date" Date="DatePicker"/> *@
+    @* </MudItem> *@
+    
     <MudContainer>
         <MudButton Variant="Variant.Text" Size="Size.Small" Class="ma-2" @onclick="() => SwitchMonth(false)">&lt;</MudButton>
         <MudButton Variant="Variant.Text" Size="Size.Medium" Class="ma-2">@MonthNames[DisplayedMonth]</MudButton>
@@ -77,8 +84,8 @@
     <DialogContent>
         <Event/>
     </DialogContent>
-    <DialogActions>
-        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="Submit" Class="px-10">Close</MudButton>
+    <DialogActions >
+        <MudButton Variant="Variant.Filled" Color="Color.Error" OnClick="Submit" FullWidth="true" >Cancel</MudButton>
     </DialogActions>
 </MudDialog>
 
@@ -86,7 +93,9 @@
     private static readonly string[] WeekDays = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
     private static readonly string[] MonthNames = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
 
-    private DateTime SelectedDate = DateTime.Now;
+    private static DateTime SelectedDate = DateTime.Now;
+    private DateTime DatePicker = SelectedDate;
+    private IList<Models.Event> Events;
     private int DisplayedMonth = DateTime.Now.Month - 1;
     private int DisplayedYear = DateTime.Now.Year;
 
@@ -111,6 +120,7 @@
         }
         for (var i = 0; i < EndDayOfSelectedMonth; i++) Days[Days.GetLength(0) - 1, i] = DayCount++;
         for (var i = EndDayOfSelectedMonth; i < 7; i++) Days[Days.GetLength(0) - 1, i] = 0;
+        
     }
 
     private void SwitchMonth(bool GoForward)
@@ -127,10 +137,12 @@
     protected override async Task OnInitializedAsync()
     {
         UpdateCalendarView();
+        Events = await EventService.GetEventsAsync();
+
     }
 
-    private bool visible ;
-     private void OpenDialog() => visible = true;
+    private bool visible;
+    private void OpenDialog() => visible = true;
     // private void OpenDialog()
     // {
     //     DialogService.Show<EventDialog>();
@@ -138,7 +150,6 @@
     void Submit() => visible = false;
     private DialogOptions dialogOptions = new() {FullWidth = true};
 
-   
 
     // private bool showAddEvent { get; set; }
     //
