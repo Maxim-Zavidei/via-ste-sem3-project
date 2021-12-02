@@ -86,4 +86,14 @@ public class ServerCommunicator {
   {
     userCommunicator.changeSharingStatus(restTemplate, url, userId);
   }
+
+  public Event addEvent(int id, Event event)
+  {
+    return eventCommunicator.addEvent(restTemplate, url, event, id);
+  }
+
+  public Event addSharedEvent(int id, Event event, int ouId)
+  {
+    return eventCommunicator.addSharedEvent(restTemplate, url, event,id, ouId);
+  }
 }

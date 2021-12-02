@@ -48,5 +48,22 @@ namespace DataAccessTier.Controllers
                 return StatusCode(500, e.Message);
             }
         }
+
+        [HttpPost]
+        [Route("{userId:int}/AddSharedEvent/{otherUserId:int}")]
+        public async Task<IActionResult> AddSharedEvent([FromRoute] int userId, [FromRoute] int otherUserId, [FromBody] Event evt)
+        {
+            try
+            {
+                evt.UserId = otherUserId;
+                var events = await db.AddEventAsync(evt);
+                evt.UserId = userId;
+                events = await db.AddEventAsync(evt);
+                return Ok(events);
+            } catch(Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
+        }
     }
 }

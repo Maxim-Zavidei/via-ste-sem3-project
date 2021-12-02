@@ -123,6 +123,38 @@ public class CommunicationThreadHandler implements Runnable {
                         }
                         send(toSend);
                     }break;
+                    case "addEvent":{
+                        try{
+                            received = read();
+                            Event evt = gson.fromJson(received, Event.class);
+                            received = read();
+                            int userId = Integer.parseInt(received);
+                            evt = eventController.addEvent(userId, evt);
+                            toSend = gson.toJson(evt);
+                        }
+                        catch (Exception e)
+                        {
+                            toSend = e.getMessage();
+                        }
+                        send(toSend);
+                    }break;
+                    case "addSharedEvent":{
+                        try{
+                            received = read();
+                            Event evt = gson.fromJson(received, Event.class);
+                            received = read();
+                            int userId = Integer.parseInt(received);
+                            received = read();
+                            int otherUserId = Integer.parseInt(received);
+                            evt = eventController.addSharedEvent(userId, evt, otherUserId);
+                            toSend = gson.toJson(evt);
+                        }
+                        catch (Exception e)
+                        {
+                            toSend = e.getMessage();
+                        }
+                        send(toSend);
+                    }break;
                     case "close": {
                         socket.shutdownInput();
                         socket.shutdownOutput();

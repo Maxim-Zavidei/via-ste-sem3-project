@@ -21,4 +21,14 @@ public class EventController extends Controller
       throw e;
     }
   }
+
+  public Event addEvent(int id, Event evt)
+  {
+    return super.communicator.addEvent(id, evt);
+  }
+
+  public Event addSharedEvent(int id, Event evt, int ouId)
+  {
+    return super.communicator.addSharedEvent(id, evt, ouId);
+  }
 }
