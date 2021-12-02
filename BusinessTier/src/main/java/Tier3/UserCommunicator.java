@@ -21,7 +21,8 @@ public class UserCommunicator {
  * @param url
  * @return
  */
-    public ArrayList<User> getUsersFromDatabase(RestTemplate restTemplate, String url) {
+    public ArrayList<User> FetchUsersFromDatabase(RestTemplate restTemplate, String url) throws Exception
+    {
         try {
 
             ResponseEntity<User[]> responseEntity = restTemplate.getForEntity(url + "User/GetUsers", User[].class);
@@ -32,13 +33,28 @@ public class UserCommunicator {
              */
             return new ArrayList<>(Arrays.asList(users));
         } catch (Exception e) {
-            //e.printStackTrace();
+            System.out.println(e.getMessage());
+            throw new Exception("Could not fetch users from DB");
         }
-        return null;
+    }
+    public ArrayList<User> FetchUsersSharingFromDatabase(RestTemplate restTemplate, String url) throws Exception
+    {
+        try
+        {
+            ResponseEntity<User[]> responseEntity = restTemplate.getForEntity(url + "User/GetUsers", User[].class);
+            User[] tempUsers = responseEntity.getBody();
+            assert tempUsers != null;
+            return new ArrayList<>(Arrays.asList(tempUsers));
+        }
+        catch (Exception e)
+        {
+            System.out.println(e.getMessage());
+            throw new Exception("Could not fetch sharing users from DB");
+        }
     }
 
-    public User addUser(RestTemplate restTemplate, String url, User user) {
-        //Need validation if email exists (maybe email = better key than id?)
+    public User addUser(RestTemplate restTemplate, String url, User user) throws Exception
+    {
         try
         {
             ResponseEntity<String> responseEntityStr = restTemplate
@@ -48,12 +64,12 @@ public class UserCommunicator {
         }
         catch (Exception e)
         {
-
+            System.out.println(e.getMessage());
+            throw new Exception("Could not create user:{ " + user.getId() + ", " + user.getUsername() + " } in database");
         }
-        return null;
     }
 
-    public void deleteUser(RestTemplate restTemplate, String url, int userId) throws IllegalArgumentException
+    public void deleteUser(RestTemplate restTemplate, String url, int userId) throws Exception
     {
         try
         {
@@ -62,17 +78,21 @@ public class UserCommunicator {
         }
         catch (Exception e)
         {
-            throw new IllegalArgumentException("User not found in DB");
+            System.out.println(e.getMessage());
+            throw new Exception("User id " + userId + "not found in database");
         }
     }
-    public void changeSharingStatus(RestTemplate restTemplate, String url, int userId) throws IllegalArgumentException
+    public void changeSharingStatus(RestTemplate restTemplate, String url, int userId) throws Exception
     {
         try{
             restTemplate.patchForObject(url, userId+"/ChangeSharingStatus", String.class);
         }
         catch (Exception e)
         {
-            throw new IllegalArgumentException("User not found in DB");
+            System.out.println(e.getMessage());
+            throw new Exception("User id " + userId + "not found in database");
         }
     }
+
+
 }

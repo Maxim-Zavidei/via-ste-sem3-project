@@ -45,16 +45,17 @@ public class EventCommunicator {
    * }
    * }
    */
-  public Event addEvent(RestTemplate restTemplate, String url, Event evt, int id) {
+  public Event addEvent(RestTemplate restTemplate, String url, Event evt, int id) throws Exception
+  {
     try {
       ResponseEntity<String> responseEntityStr = restTemplate
           .postForEntity(url + "Event/" + id + "AddEvent", evt, String.class);
       Event u = gson.fromJson(responseEntityStr.getBody(), Event.class);
       return u;
     } catch (Exception e) {
-
+      System.out.println(e.getMessage());
+      throw new Exception("Could not add event for user id " + id);
     }
-    return null;
   }
 
   public Event addSharedEvent(RestTemplate restTemplate, String url, Event evt, int userId, int otherUserId) {

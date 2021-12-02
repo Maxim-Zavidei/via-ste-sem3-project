@@ -9,20 +9,12 @@ public class EventController extends Controller
     public EventController(){}
 
 
-  public ArrayList<Event> fetchUserEventsFromDatabase(int userId)
-      throws Exception
+  public ArrayList<Event> FetchUserEventsFromDatabase(int userId) throws Exception
   {
-    try
-    {
-      return super.communicator.fetchUserEventFromDatabase(userId);
-    }
-    catch (Exception e)
-    {
-      throw e;
-    }
+      return super.communicator.FetchUserEventFromDatabase(userId);
   }
 
-  public Event addEvent(int id, Event evt)
+  public Event addEvent(int id, Event evt) throws Exception
   {
     return super.communicator.addEvent(id, evt);
   }

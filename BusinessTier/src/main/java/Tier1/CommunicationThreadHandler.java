@@ -42,73 +42,112 @@ public class CommunicationThreadHandler implements Runnable {
                 switch(received)
                 {
                     case "login": {
-                        received = read();
-                        User user = gson.fromJson(received, User.class);
-                        toSend = userController.logIn(user);
-                        send(toSend);
-                        if(toSend.equals("Successful"))
+                        try
                         {
+                            received = read();
+                            User user = gson.fromJson(received, User.class);
+                            toSend = userController.logIn(user);
+                            send("Successful");
                             cashedUser = userController.getCashedUser();
                             toSend = gson.toJson(cashedUser);
+                        }
+                        catch (Exception e)
+                        {
+                            toSend = e.getMessage();
+                        }
+                        finally
+                        {
                             send(toSend);
                         }
                     } break;
-                    case "adduser": {
-                        received = read();
-                        User user = gson.fromJson(received, User.class);
-                        toSend = userController.addUser(user);
-                        if(toSend==null) toSend = "Could not create user";
-                        send(toSend);
-                        if(toSend.equals("Successful"))
+                    case "addUser":
+                    {
+                        try
                         {
+                            received = read();
+                            User user = gson.fromJson(received, User.class);
+                            toSend = userController.addUser(user);
+                            send(toSend);
                             cashedUser = userController.getCashedUser();
                             toSend = gson.toJson(cashedUser);
+                        }
+                        catch (Exception e)
+                        {
+                          toSend = e.getMessage();
+                        }
+                        finally
+                        {
+                            send(toSend);
+                        }
+                    } break;
+                    case "fetchUsers":{
+                      try
+                      {
+                        ArrayList<User> users = userController
+                            .FetchUsersFromDatabase();
+                          toSend = gson.toJson(users);
+                      }
+                      catch (Exception e)
+                      {
+                        toSend = e.getMessage();
+                      }
+                      finally
+                      {
+                          send(toSend);
+                      }
+                    }break;
+                    case "fetchSharingUsers":{
+                        try
+                        {
+                            ArrayList<User> users = userController.FetchUsersSharingFromDatabase();
+                            toSend = gson.toJson(users);
+                        }
+                        catch (Exception e)
+                        {
+                            toSend = e.getMessage();
+                        }
+                        finally
+                        {
                             send(toSend);
                         }
 
-                    } break;
-                    case "fetchusers":{
-                        ArrayList<User> users = userController
-                            .FetchUsersFromDatabase();
-                        if(users==null){toSend = "No users in database";
-                        }
-                        else{
-                            toSend = gson.toJson(users);
-                        }
-                        send(toSend);
-                        break;
-                    }
-                    case "deleteuser":{
+                    }break;
+                    case "deleteUser":{
                         try
                         {
                             received = read();
                             int userId = Integer.parseInt(received);
                             userController.deleteUser(userId);
-                            //Better ideas for comm flow//
+                            //Better ideas for comm flow?//
                             toSend = "Success";
                         }
                         catch (Exception e)
                         {
                             toSend = e.getMessage();
                         }
-                        send(toSend);
+                        finally
+                        {
+                            send(toSend);
+                        }
                     } break;
-                    case "getMyEvents":{
+                    case "fetchEvents":{
                         try
                         {
                             received = read();
                             ArrayList<Event> events = eventController
-                                .fetchUserEventsFromDatabase(Integer.parseInt(received));
+                                .FetchUserEventsFromDatabase(Integer.parseInt(received));
                             toSend = gson.toJson(events);
-                            send(toSend);
                         }
                         catch (Exception e)
                         {
                             toSend = e.getMessage();
+                        }
+                        finally
+                        {
                             send(toSend);
                         }
-                        break;
-                    }
+
+                    }break;
                     case "changeSharingStatus":{
                         try{
                             received = read();
@@ -121,7 +160,10 @@ public class CommunicationThreadHandler implements Runnable {
                         {
                             toSend = e.getMessage();
                         }
-                        send(toSend);
+                        finally
+                        {
+                            send(toSend);
+                        }
                     }break;
                     case "addEvent":{
                         try{
@@ -130,13 +172,17 @@ public class CommunicationThreadHandler implements Runnable {
                             received = read();
                             int userId = Integer.parseInt(received);
                             evt = eventController.addEvent(userId, evt);
+                            send("Successful");
                             toSend = gson.toJson(evt);
                         }
                         catch (Exception e)
                         {
                             toSend = e.getMessage();
                         }
-                        send(toSend);
+                        finally
+                        {
+                            send(toSend);
+                        }
                     }break;
                     case "addSharedEvent":{
                         try{
@@ -153,7 +199,10 @@ public class CommunicationThreadHandler implements Runnable {
                         {
                             toSend = e.getMessage();
                         }
-                        send(toSend);
+                        finally
+                        {
+                            send(toSend);
+                        }
                     }break;
                     case "close": {
                         socket.shutdownInput();
@@ -207,4 +256,4 @@ public class CommunicationThreadHandler implements Runnable {
     }
 
 
-}   
+}

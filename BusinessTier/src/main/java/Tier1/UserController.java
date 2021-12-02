@@ -18,49 +18,34 @@ public class UserController extends Controller {
    * UserController(UsersLogic logic, UserModelAssembler assembler) { this.logic =
    * logic; this.assembler = assembler; }
    */
-  public String logIn(User user) {
-    ArrayList<User> users = super.communicator.getUsersFromDatabase();
-    if(users == null)
+  public String logIn(User user) throws Exception
+  {
+    ArrayList<User> users = super.communicator.FetchUsersFromDatabase();
+    for (User value : users)
     {
-      return "Server down";
-    }
-    for (int i = 0; i < users.size(); i++) {
-      if (user.getUsername().equals(users.get(i).getUsername())) {
-        if (user.getPassword().equals(users.get(i).getPassword())) {
-          cashedUser = users.get(i);
-          System.out.println(users.get(i).getUsername() + ", " + users.get(i).getPassword());
+      if (user.getUsername().equals(value.getUsername()))
+      {
+        if (user.getPassword().equals(value.getPassword()))
+        {
+          cashedUser = value;
+          System.out.println(value.getUsername() + ", " + value.getPassword());
           return "Successful";
-        } else
-          return "Incorrect password";
+        }
+        else
+          throw new Exception("Incorrect password");
       }
     }
-    return "User not found";
+    throw new Exception("User not found");
   }
-  public ArrayList<User> FetchUsersFromDatabase(){
-    try
-    {
-      ArrayList<User> users = super.communicator.getUsersFromDatabase();
-      return users;
-    }
-    catch (Exception e)
-    {
-      System.out.println(e.getMessage());
-    }
-    return null;
-  }
+  public ArrayList<User> FetchUsersFromDatabase() throws Exception
+  {
+      return super.communicator.FetchUsersFromDatabase();
 
-  /*public ArrayList<Event> getUsersEventsFromDatabase(int id){
-    try
-    {
-      ArrayList<Event> events = super.communicator.getUserEventFromDatabase(id);
-      return events;
-    }
-    catch (Exception e)
-    {
-      System.out.println(e.getMessage());
-    }
-    return null;
-  }*/
+  }
+  public ArrayList<User> FetchUsersSharingFromDatabase() throws Exception
+  {
+    return super.communicator.FetchUsersSharingFromDatabase();
+  }
 
   public String addUser(User user) throws Exception
   {
@@ -69,12 +54,12 @@ public class UserController extends Controller {
     cashedUser = super.communicator.addUser(user);
     return toReturn;
   }
-  public void deleteUser(int userId) throws IllegalArgumentException
+  public void deleteUser(int userId) throws Exception
   {
     super.communicator.deleteUser(userId);
   }
 
-  public void changeSharingStatus(int userId) throws IllegalArgumentException
+  public void changeSharingStatus(int userId) throws Exception
   {
     super.communicator.changeSharingStatus(userId);
   }

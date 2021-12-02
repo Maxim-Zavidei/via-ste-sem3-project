@@ -63,31 +63,40 @@ public class ServerCommunicator {
 
   }
 
-  public ArrayList<User> getUsersFromDatabase() {
-    return userCommunicator.getUsersFromDatabase(restTemplate, url);
+  // User
+  // Methods
+  // Down
+
+  public ArrayList<User> FetchUsersFromDatabase() throws Exception
+  {
+    return userCommunicator.FetchUsersFromDatabase(restTemplate, url);
+  }
+  public ArrayList<User> FetchUsersSharingFromDatabase() throws Exception
+  {
+    return userCommunicator.FetchUsersSharingFromDatabase(restTemplate, url);
   }
 
-  public User addUser(User user) {
+  public User addUser(User user) throws Exception
+  {
     return userCommunicator.addUser(restTemplate, url, user);
   }
 
-  public ArrayList<Event> fetchUserEventFromDatabase(int id) throws Exception
-  {
-    return eventCommunicator.fetchUserEventsFromDatabase(restTemplate, url, id);
-  }
-
-
-  public void deleteUser(int userId) throws IllegalArgumentException
+  public void deleteUser(int userId) throws Exception
   {
     userCommunicator.deleteUser(restTemplate, url, userId);
   }
 
-  public void changeSharingStatus(int userId)
-  {
+  public void changeSharingStatus(int userId) throws Exception{
     userCommunicator.changeSharingStatus(restTemplate, url, userId);
   }
 
-  public Event addEvent(int id, Event event)
+
+
+  // Events
+  // Methods
+  // Down
+
+  public Event addEvent(int id, Event event) throws Exception
   {
     return eventCommunicator.addEvent(restTemplate, url, event, id);
   }
@@ -95,5 +104,10 @@ public class ServerCommunicator {
   public Event addSharedEvent(int id, Event event, int ouId)
   {
     return eventCommunicator.addSharedEvent(restTemplate, url, event,id, ouId);
+  }
+
+  public ArrayList<Event> FetchUserEventFromDatabase(int id) throws Exception
+  {
+    return eventCommunicator.fetchUserEventsFromDatabase(restTemplate, url, id);
   }
 }
