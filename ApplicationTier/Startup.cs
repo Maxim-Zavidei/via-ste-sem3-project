@@ -25,6 +25,7 @@ namespace ApplicationTier {
             services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
             //services.AddScoped<ICommunicator, Communicator>();
             services.AddScoped<IUserService, UserData>();
+            services.AddScoped<IEventService, EventData>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

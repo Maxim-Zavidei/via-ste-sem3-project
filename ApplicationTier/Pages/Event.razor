@@ -1,16 +1,22 @@
 ﻿@page "/event"
 @using InputType = MudBlazor.InputType
 @using System.ComponentModel.DataAnnotations
+@using System.Diagnostics.CodeAnalysis
+@using ApplicationTier.Data
 @using ApplicationTier.Models
 @using Authentication
+
+@inject IEventService EventService
+@inject NavigationManager NavigationManager
+
 
 <MudGrid Justify="Justify.Center">
     <MudItem Class="my-2 ">
         @* Elevation="3" *@
-        <MudPaper Class="d-flex align-center justify-center px-8 py-2">
+        <MudPaper Class="d-flex align-center mud-elevation-0 justify-center px-8 py-2">
 
 
-            <EditForm Model="@EventFormModel" OnValidSubmit="OnValidEventFormSubmit">
+            <EditForm class="" Model="@EventFormModel" OnValidSubmit="OnValidEventFormSubmit">
                 <DataAnnotationsValidator/>
                 <MudText Typo="Typo.h4" Align="Align.Center" Class="my-8 mx-5">Add an Event</MudText>
                 <MudTextField Label="Title" Class="mt-3" @bind-Value="EventFormModel.Title" For="@(() => EventFormModel.Title)" Adornment="Adornment.End" AdornmentIcon="@Icons.Filled.Title"/>
@@ -39,7 +45,7 @@
                 </MudItem>
                 <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" Class="py-2 mt-4">Add</MudButton>
 
-                <MudButton ButtonType="ButtonType.Button" Variant="Variant.Filled" Color="Color.Error" FullWidth="true" Class="py-2 mt-4">Cancel</MudButton>
+                @* <MudButton ButtonType="ButtonType.Button" Variant="Variant.Filled" Color="Color.Error" FullWidth="true" Class="py-2 mt-4">Cancel</MudButton> *@
 
                 <MudText Typo="Typo.body2" Align="Align.Center" Class="my-4" FullWidth="true" Color="Color.Error">@ErrorMessage</MudText>
 
@@ -106,6 +112,17 @@
         ErrorMessage = "";
         try
         {
+            // DateTime? StartEvent = EventFormModel.StartDate;
+            DateTime StartEvent = EventFormModel.StartDate.Value;
+            DateTime StartEventWithTime =  StartEvent.Add(EventFormModel.StartTime.Value);
+            DateTime EndEvent = EventFormModel.EndDate.Value;
+            DateTime EndEventWithTime = EndEvent.Add(EventFormModel.EndTime.Value);
+            Address address = new Address() {City = EventFormModel.City, Id = 0, Country = EventFormModel.Country, StreetName = EventFormModel.StreetName, Number = EventFormModel.Number};
+            Models.Event CreatedEvent = new Models.Event() {Address = address, Description = EventFormModel.Description, Id = 0, Title = EventFormModel.Title, StartTime = StartEventWithTime, EndTime = EndEventWithTime};
+            await EventService.AddEventAsync(CreatedEvent);
+            NavigationManager.NavigateTo("/calendar");
+
+
         }
         catch (Exception e)
         {
