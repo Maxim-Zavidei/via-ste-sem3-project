@@ -43,6 +43,20 @@ namespace DataAccessTier.Controllers
 
         }
 
+        [HttpGet("GetUsersSharing")]
+        public async Task<IActionResult> GetUsersSharing()
+        {
+            try
+            {
+                var tempUsers = await db.GetUsersSharingAsync();
+                return Ok(tempUsers);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
+        }
+
         /* [HttpGet("GetUser")]
          public IActionResult GetUser([FromQuery] string username, [Fro] string password)
          {
@@ -65,7 +79,7 @@ namespace DataAccessTier.Controllers
 
     
         [HttpDelete]
-        [Route("DeleteUser/{userId:int}")]
+        [Route("{userId:int}/DeleteUser")]
         public async Task<IActionResult> DeleteUser([FromRoute] int userId)
         {
             try

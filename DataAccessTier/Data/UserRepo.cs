@@ -1,10 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using Microsoft.EntityFrameworkCore;
 using DataAccessTier.Model;
 using System.Threading.Tasks;
 using System.Linq;
+using System.Net;
 using System.Net.Sockets;
+using Microsoft.EntityFrameworkCore.Internal;
 
 namespace DataAccessTier.Data
 {
@@ -26,19 +29,48 @@ namespace DataAccessTier.Data
             catch (Exception e)
             {
                 Console.WriteLine(e);
-                throw new Exception("No such user in DB");
+                throw new Exception($"User {userId} not found in database");
             }
         }
 
         public async Task<DbSet<User>> GetUsersAsync() {
-            return db.Users;
+            try
+            {
+                return db.Users;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw new Exception("Could not fetch users from DB");
+            }
+        }
+
+        public async Task<List<User>> GetUsersSharingAsync()
+        {
+            try
+            { 
+                return db.Users.Where(dbUser => dbUser.IsSharingCalendar).ToList();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw new Exception("Could not fetch sharing users from DB");
+            }
         }
 
         public async Task<User> AddUserAsync(User user) {
-            await db.Users.AddAsync(user);
-            await db.SaveChangesAsync();
-            User u = await db.Users.FirstAsync(us => us.Username==user.Username);
-            return u;
+            try
+            {
+                await db.Users.AddAsync(user);
+                await db.SaveChangesAsync();
+                User u = await db.Users.FirstAsync(us => us.Username == user.Username);
+                return u;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                throw new Exception($"Could not create user {user.Id}, {user.Username} in database");
+            }
         }
 
         public async Task DeleteUser(int userId)
@@ -51,7 +83,7 @@ namespace DataAccessTier.Data
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
-                throw new Exception("No such user found in DB");
+                throw new Exception($"User {userId} not found in database");
             }
         }
 
@@ -67,7 +99,7 @@ namespace DataAccessTier.Data
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
-                throw new Exception("No such user found in Database");
+                throw new Exception($"User {userId} not found in database");
             }
         }
     }

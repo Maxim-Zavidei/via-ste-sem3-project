@@ -12,7 +12,8 @@ namespace DataAccessTier.Controllers
     [Route("[controller]")]
     public class EventController : ControllerBase
     {
-        private IEventRepo db {get;set;}
+        private IEventRepo db { get; set; }
+
         public EventController(IEventRepo edb)
         {
             db = edb;
@@ -26,12 +27,11 @@ namespace DataAccessTier.Controllers
             {
                 var events = await db.GetUserEvents(id);
                 return Ok(events);
-            } catch(Exception e)
+            }
+            catch (Exception e)
             {
                 return StatusCode(500, e.Message);
             }
-
-
         }
 
         [HttpPost]
@@ -43,7 +43,8 @@ namespace DataAccessTier.Controllers
                 evt.UserId = id;
                 var events = await db.AddEventAsync(evt);
                 return Ok(events);
-            } catch(Exception e)
+            }
+            catch (Exception e)
             {
                 return StatusCode(500, e.Message);
             }
