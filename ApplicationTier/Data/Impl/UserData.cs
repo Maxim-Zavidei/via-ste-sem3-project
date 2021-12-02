@@ -157,5 +157,59 @@ namespace ApplicationTier.Data.Impl
         {
             await Communicator.CloseConnection();
         }
+
+        public async Task<IList<Event>> GetEventsAsync()
+        {
+            try
+            {
+                //Sending request
+                string request = "fetchevents";
+                await Communicator.send(request);
+                
+                //Receiving message
+                String rcv = await Communicator.read();
+                if (!rcv.Equals("No events in database"))
+                {
+                    rcv = await Communicator.read();
+                    IList<Event> events = JsonSerializer.Deserialize<List<Event>>(rcv);
+                    return events;
+                }
+                else throw new Exception("Could not fetch events");
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                await CloseConnection();
+            }
+            return null;
+        }
+
+        public async Task<Event> AddEventAsync(Event eventToAdd)
+        {
+            Event eventTemp = new Event();
+            try
+            {
+                await Communicator.send("addevent");
+                string toSend = JsonSerializer.Serialize(eventToAdd);
+                await Communicator.send(toSend);
+                string rcv = await Communicator.read();
+                if (rcv.Equals("Successful"))
+                {
+                    string eventJson = await Communicator.read();
+                    eventTemp = JsonSerializer.Deserialize<Event>(eventJson);
+                }
+                else
+                {
+                    //
+                }
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+            return eventTemp;
+        }
     }
 }

@@ -81,4 +81,9 @@ public class ServerCommunicator {
   {
     userCommunicator.deleteUser(restTemplate, url, userId);
   }
+
+  public void changeSharingStatus(int userId)
+  {
+    userCommunicator.changeSharingStatus(restTemplate, url, userId);
+  }
 }

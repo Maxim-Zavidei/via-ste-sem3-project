@@ -61,6 +61,8 @@ namespace DataAccessTier.Data
             {
                 User user = await GetUserById(userId);
                 user.IsSharingCalendar = !user.IsSharingCalendar;
+                db.Users.Update(user);
+                await db.SaveChangesAsync();
             }
             catch (Exception e)
             {

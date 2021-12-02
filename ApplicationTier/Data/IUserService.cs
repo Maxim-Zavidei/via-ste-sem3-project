@@ -12,5 +12,8 @@ namespace ApplicationTier.Data
         Task<User> AddUserAsync(User user);
         Task CloseConnection();
         Task StartConnection();
+        Task<IList<Event>> GetEventsAsync();
+        Task<Event> AddEventAsync(Event eventToAdd);
+
     }
 }

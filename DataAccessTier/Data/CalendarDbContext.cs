@@ -20,6 +20,11 @@ namespace DataAccessTier.Data
             DbPath = $"{path}{System.IO.Path.DirectorySeparatorChar}sep3.db";
         }
 */
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<User>().HasIndex(u => u.Username).IsUnique();
+            modelBuilder.Entity<User>().HasIndex(u => u.Email).IsUnique();
+        }
         public CalendarDbContext(DbContextOptions<CalendarDbContext> options)
         :base(options)
         {
