@@ -57,7 +57,12 @@ namespace ApplicationTier.Data.Impl
                     Id = 0,
                     Username = username,
                     Password = password,
-                    Email = ""
+                    Email = "",
+                    FirstName = "",
+                    LastName = "",
+                    Birthday = new DateTime(),
+                    Events = new List<Event>(),
+                    IsSharingCalendar = false
                 };
 
                 //Sending request
@@ -93,6 +98,10 @@ namespace ApplicationTier.Data.Impl
                         {
                             throw new Exception("Server is currently unavailable. Try again later.");
                         }
+                    case "User not found":
+                    {
+                        throw new Exception("No such user");
+                    }
                 }
             }
             catch (Exception e)
@@ -143,6 +152,27 @@ namespace ApplicationTier.Data.Impl
             }
             return userToLog;
         }
+
+        public async Task ChangeSharingStatus(int userId)
+        {
+            try
+            {
+                await Communicator.send("changeSharingStatus");
+                string toSend = JsonSerializer.Serialize(userId);
+                await Communicator.send(toSend);
+                string rcv = await Communicator.read();
+                if (rcv.Equals("Success"))
+                {
+                    Console.WriteLine("Status changed");
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                throw new Exception($"Could not change status");
+            }
+        }
+
         public async Task StartConnection()
     
         {

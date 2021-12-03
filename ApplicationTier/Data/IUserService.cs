@@ -10,6 +10,7 @@ namespace ApplicationTier.Data
         Task<User> ValidateUserAsync(string username, string password);
         Task<IList<User>> GetUsersAsync();
         Task<User> AddUserAsync(User user);
+        Task ChangeSharingStatus(int userId);
         Task CloseConnection();
         Task StartConnection();
     }

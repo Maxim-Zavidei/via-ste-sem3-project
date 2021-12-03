@@ -8,6 +8,8 @@
 
 @inject IEventService EventService
 @inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthenticationState
+
 
 
 <MudGrid Justify="Justify.Center">
@@ -112,14 +114,13 @@
         ErrorMessage = "";
         try
         {
-            // DateTime? StartEvent = EventFormModel.StartDate;
             DateTime StartEvent = EventFormModel.StartDate.Value;
             DateTime StartEventWithTime =  StartEvent.Add(EventFormModel.StartTime.Value);
             DateTime EndEvent = EventFormModel.EndDate.Value;
             DateTime EndEventWithTime = EndEvent.Add(EventFormModel.EndTime.Value);
             Address address = new Address() {City = EventFormModel.City, Id = 0, Country = EventFormModel.Country, StreetName = EventFormModel.StreetName, Number = EventFormModel.Number};
             Models.Event CreatedEvent = new Models.Event() {Address = address, Description = EventFormModel.Description, Id = 0, Title = EventFormModel.Title, StartTime = StartEventWithTime, EndTime = EndEventWithTime};
-            await EventService.AddEventAsync(CreatedEvent);
+            await EventService.AddEventAsync(((CustomAuthenticationStateProvider) AuthenticationState).GetCachedUser().Id,CreatedEvent);
             NavigationManager.NavigateTo("/calendar");
 
 

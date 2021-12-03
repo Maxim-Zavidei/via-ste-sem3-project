@@ -102,9 +102,18 @@ namespace Authentication
             return identity;
         }
 
+        public User GetCachedUser()
+        {
+            return cachedUser;
+        }
+
         public void StartConnection()
         {
             userService.StartConnection();
         }
+        
+        
+        
     }
+    
 }

@@ -77,7 +77,7 @@
         try {
             ((CustomAuthenticationStateProvider) AuthenticationStateProvider).StartConnection();
             await ((CustomAuthenticationStateProvider) AuthenticationStateProvider).ValidateLogin(LoginFormModel.Email, LoginFormModel.Password);
-            //NavigationManager.NavigateTo("/");
+            NavigationManager.NavigateTo("/calendar");
         } catch (Exception e) {
             ErrorMessage = e.Message;
         }
