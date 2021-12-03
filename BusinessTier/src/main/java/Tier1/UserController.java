@@ -20,7 +20,7 @@ public class UserController extends Controller {
    */
   public String logIn(User user) throws Exception
   {
-    ArrayList<User> users = super.communicator.FetchUsersFromDatabase();
+    ArrayList<User> users = super.communicator.fetchUsersFromDatabase();
     for (User value : users)
     {
       if (user.getUsername().equals(value.getUsername()))
@@ -37,22 +37,22 @@ public class UserController extends Controller {
     }
     throw new Exception("User not found");
   }
-  public ArrayList<User> FetchUsersFromDatabase() throws Exception
+  public ArrayList<User> fetchUsersFromDatabase() throws Exception
   {
-      return super.communicator.FetchUsersFromDatabase();
+      return super.communicator.fetchUsersFromDatabase();
 
   }
-  public ArrayList<User> FetchUsersSharingFromDatabase() throws Exception
+  public ArrayList<User> fetchUsersSharingFromDatabase() throws Exception
   {
-    return super.communicator.FetchUsersSharingFromDatabase();
+    return super.communicator.fetchUsersSharingFromDatabase();
   }
 
   public String addUser(User user) throws Exception
   {
-    String toReturn = validateEmail(user.getEmail());
-
+    String isExisting = chechIfExist(user.getEmail(), user.getUsername());
+    String valiedEmail = validateEmail(user.getEmail());
     cashedUser = super.communicator.addUser(user);
-    return toReturn;
+    return valiedEmail;
   }
   public void deleteUser(int userId) throws Exception
   {
@@ -68,6 +68,11 @@ public class UserController extends Controller {
     return cashedUser;
   }
 
+  /**
+   * checks for User - if email is valid and if it already exists.
+   * @return Successful if the email is valid and if the user does not exist.
+   */
+  
   private String validateEmail(String email) {
     if (!email.contains("@") || !email.substring(email.indexOf("@") + 1).contains("."))
       throw new IllegalArgumentException("Invalid email format. Email must respect user@host.domain format.");
@@ -94,6 +99,16 @@ public class UserController extends Controller {
           "The first char of the email host part has to be a letter, user@host.domain .");
     if (!emailParts[2].matches(".*[a-zA-Z]+.*"))
       throw new IllegalArgumentException("Domain part of email has to have at least one letter, user@host.domain .");
+    return "Successful";
+  }
+
+  private String chechIfExist(String email, String username) throws Exception {
+    ArrayList<User> users = communicator.fetchUsersFromDatabase();
+    for(User user: users)
+    {
+      if(user.getEmail().equals(email)) throw new Exception("Email is already in use");
+      if(user.getUsername().equals(username)) throw new Exception("Username is already in use");
+    }
     return "Successful";
   }
 

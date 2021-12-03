@@ -12,7 +12,7 @@ import java.util.ArrayList;
 
 public class CommunicationThreadHandler implements Runnable {
     private Socket socket;
-    private  String ip;
+    //private  String ip;
     private UserController userController;
     private EventController eventController;
     private Gson gson;
@@ -22,7 +22,7 @@ public class CommunicationThreadHandler implements Runnable {
 
     public CommunicationThreadHandler(Socket socket){
         this.socket = socket;
-        this.ip = socket.getInetAddress().getHostAddress();
+        //this.ip = socket.getInetAddress().getHostAddress();
         try {
             is = socket.getInputStream();
             os = socket.getOutputStream();
@@ -84,7 +84,7 @@ public class CommunicationThreadHandler implements Runnable {
                       try
                       {
                         ArrayList<User> users = userController
-                            .FetchUsersFromDatabase();
+                            .fetchUsersFromDatabase();
                           toSend = gson.toJson(users);
                       }
                       catch (Exception e)
@@ -99,7 +99,7 @@ public class CommunicationThreadHandler implements Runnable {
                     case "fetchSharingUsers":{
                         try
                         {
-                            ArrayList<User> users = userController.FetchUsersSharingFromDatabase();
+                            ArrayList<User> users = userController.fetchUsersSharingFromDatabase();
                             toSend = gson.toJson(users);
                         }
                         catch (Exception e)

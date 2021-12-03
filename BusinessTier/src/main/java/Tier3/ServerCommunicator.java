@@ -67,13 +67,13 @@ public class ServerCommunicator {
   // Methods
   // Down
 
-  public ArrayList<User> FetchUsersFromDatabase() throws Exception
+  public ArrayList<User> fetchUsersFromDatabase() throws Exception
   {
-    return userCommunicator.FetchUsersFromDatabase(restTemplate, url);
+    return userCommunicator.fetchUsersFromDatabase(restTemplate, url);
   }
-  public ArrayList<User> FetchUsersSharingFromDatabase() throws Exception
+  public ArrayList<User> fetchUsersSharingFromDatabase() throws Exception
   {
-    return userCommunicator.FetchUsersSharingFromDatabase(restTemplate, url);
+    return userCommunicator.fetchUsersSharingFromDatabase(restTemplate, url);
   }
 
   public User addUser(User user) throws Exception
@@ -101,7 +101,7 @@ public class ServerCommunicator {
     return eventCommunicator.addEvent(restTemplate, url, event, id);
   }
 
-  public Event addSharedEvent(int id, Event event, int ouId)
+  public Event addSharedEvent(int id, Event event, int ouId) throws Exception
   {
     return eventCommunicator.addSharedEvent(restTemplate, url, event,id, ouId);
   }

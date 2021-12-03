@@ -31,7 +31,7 @@ namespace ApplicationTier.Data.Impl
                     rcv = await Communicator.read();
                     IList<Event> events = JsonSerializer.Deserialize<List<Event>>(rcv);
                     return events;
-                }
+                } else throw new Exception("Server unavailable. Try again later.");
             }
             catch (Exception e)
             {
@@ -56,7 +56,7 @@ namespace ApplicationTier.Data.Impl
                 {
                     string eventJson = await Communicator.read();
                     eventTemp = JsonSerializer.Deserialize<Event>(eventJson);
-                }
+                } else throw new Exception("Server unavailable. Try again later.");
             }
             catch (Exception e)
             {

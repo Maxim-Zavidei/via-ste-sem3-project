@@ -28,4 +28,22 @@ public class Event implements Serializable {
 
     @JsonProperty("address")
     private Address Address;
+    public void setTitle(String title) {
+        Title = title;
+    }
+    public void setAddress(Address address) {
+        Address = address;
+    }
+    public void setDescription(String description) {
+        Description = description;
+    }
+    public void setEndTime(LocalDateTime endTime) {
+        EndTime = endTime;
+    }
+    public void setStartTime(LocalDateTime startTime) {
+        StartTime = startTime;
+    }
+    public void setId(int id) {
+        this.id = id;
+    }
 }

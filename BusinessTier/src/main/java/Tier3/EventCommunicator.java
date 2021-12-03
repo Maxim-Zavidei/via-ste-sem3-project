@@ -18,33 +18,14 @@ public class EventCommunicator {
 
   public ArrayList<Event> fetchUserEventsFromDatabase(RestTemplate restTemplate, String url, int id) throws Exception {
     try {
-
       ResponseEntity<Event[]> responseEntity = restTemplate.getForEntity(url + "Event/" + id + "/GetEvents",
           Event[].class);
       Event[] events = responseEntity.getBody();
       return new ArrayList<>(Arrays.asList(events));
     } catch (Exception e) {
-      System.out.println(e.getMessage());
-      throw new Exception("Could not fetch events for user id " + id);
+      throw new Exception("Could not fetch events");
     }
   }
-
-  /*
-   * public ArrayList<Event> fetchUserEventsFromDatabase(RestTemplate
-   * restTemplate, String url, int id) throws Exception
-   * {
-   * try {
-   * 
-   * ResponseEntity<Event[]> responseEntity = restTemplate.getForEntity(url +
-   * "Event/"+ id + "/GetEvents", Event[].class);
-   * Event[] events = responseEntity.getBody();
-   * return new ArrayList<>(Arrays.asList(events));
-   * } catch (Exception e) {
-   * System.out.println(e.getMessage());
-   * throw new Exception("Could not fetch events for user id " +id);
-   * }
-   * }
-   */
   public Event addEvent(RestTemplate restTemplate, String url, Event evt, int id) throws Exception
   {
     try {
@@ -53,20 +34,18 @@ public class EventCommunicator {
       Event u = gson.fromJson(responseEntityStr.getBody(), Event.class);
       return u;
     } catch (Exception e) {
-      System.out.println(e.getMessage());
-      throw new Exception("Could not add event for user id " + id);
+      throw new Exception("Could not add event");
     }
   }
 
-  public Event addSharedEvent(RestTemplate restTemplate, String url, Event evt, int userId, int otherUserId) {
+  public Event addSharedEvent(RestTemplate restTemplate, String url, Event evt, int userId, int otherUserId) throws Exception{
     try {
       ResponseEntity<String> responseEntityStr = restTemplate
           .postForEntity(url + "Event/" + userId + "/AddSharedEvent/" + otherUserId, evt, String.class);
       Event u = gson.fromJson(responseEntityStr.getBody(), Event.class);
       return u;
     } catch (Exception e) {
-
+      throw new Exception("Could not add shared event");
     }
-    return null;
   }
 }

@@ -106,8 +106,7 @@ namespace ApplicationTier.Data.Impl
             }
             catch (Exception e)
             {
-                /*if (e is IOException || e is SocketException) Console.WriteLine(e.Message);
-                else */throw new Exception("Sever is currently unavailable. Try again later.");
+                throw new Exception("Sever is currently unavailable. Try again later.");
             }
 
 
@@ -143,12 +142,14 @@ namespace ApplicationTier.Data.Impl
                 {
                     string userJson = await Communicator.read();
                     userToLog = JsonSerializer.Deserialize<User>(userJson);
+                } else {
+                    throw new Exception(rcv);
                 }
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
-                throw new Exception($"Could not create user {user.Id}, {user.Username} in database");
+                //Console.WriteLine(e.Message);
+                throw new Exception($"Server unavailable. Could not create user {user.Id}, {user.Username} in database");
             }
             return userToLog;
         }
@@ -164,7 +165,7 @@ namespace ApplicationTier.Data.Impl
                 if (rcv.Equals("Success"))
                 {
                     Console.WriteLine("Status changed");
-                }
+                } else throw new Exception("Server unavailable. Try again later.");
             }
             catch (Exception e)
             {

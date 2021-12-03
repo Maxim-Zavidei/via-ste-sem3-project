@@ -9,19 +9,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class UserCommunicator {
+    private Gson gson;
     public UserCommunicator() {
         gson = new Gson();
 
     }
 
-    private Gson gson;
-/**
- * User
- * @param restTemplate
- * @param url
- * @return
- */
-    public ArrayList<User> FetchUsersFromDatabase(RestTemplate restTemplate, String url) throws Exception
+    public ArrayList<User> fetchUsersFromDatabase(RestTemplate restTemplate, String url) throws Exception
     {
         try {
 
@@ -33,11 +27,10 @@ public class UserCommunicator {
              */
             return new ArrayList<>(Arrays.asList(users));
         } catch (Exception e) {
-            System.out.println(e.getMessage());
-            throw new Exception("Could not fetch users from DB");
+            throw new Exception("Could not fetch users from Database");
         }
     }
-    public ArrayList<User> FetchUsersSharingFromDatabase(RestTemplate restTemplate, String url) throws Exception
+    public ArrayList<User> fetchUsersSharingFromDatabase(RestTemplate restTemplate, String url) throws Exception
     {
         try
         {
@@ -48,8 +41,7 @@ public class UserCommunicator {
         }
         catch (Exception e)
         {
-            System.out.println(e.getMessage());
-            throw new Exception("Could not fetch sharing users from DB");
+            throw new Exception("Could not fetch sharing users from Database");
         }
     }
 
@@ -64,7 +56,6 @@ public class UserCommunicator {
         }
         catch (Exception e)
         {
-            System.out.println(e.getMessage());
             throw new Exception("Could not create user:{ " + user.getId() + ", " + user.getUsername() + " } in database");
         }
     }
@@ -78,7 +69,6 @@ public class UserCommunicator {
         }
         catch (Exception e)
         {
-            System.out.println(e.getMessage());
             throw new Exception("User id " + userId + "not found in database");
         }
     }
@@ -89,7 +79,6 @@ public class UserCommunicator {
         }
         catch (Exception e)
         {
-            System.out.println(e.getMessage());
             throw new Exception("User id " + userId + "not found in database");
         }
     }

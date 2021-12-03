@@ -19,7 +19,7 @@ public class EventController extends Controller
     return super.communicator.addEvent(id, evt);
   }
 
-  public Event addSharedEvent(int id, Event evt, int ouId)
+  public Event addSharedEvent(int id, Event evt, int ouId) throws Exception
   {
     return super.communicator.addSharedEvent(id, evt, ouId);
   }
