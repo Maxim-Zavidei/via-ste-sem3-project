@@ -13,5 +13,9 @@ namespace ApplicationTier.Data
         Task ChangeSharingStatus(int userId);
         Task CloseConnection();
         Task StartConnection();
+        
+        /// related to Events
+        Task<IList<Event>> GetUserEventsAsync(int userId);
+        Task<Event> AddEventAsync(int userId, Event eventToAdd);
     }
 }
