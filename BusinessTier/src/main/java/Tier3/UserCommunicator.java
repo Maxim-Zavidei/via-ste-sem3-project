@@ -85,7 +85,7 @@ public class UserCommunicator {
     public void changeSharingStatus(RestTemplate restTemplate, String url, int userId) throws Exception
     {
         try{
-            restTemplate.patchForObject(url, userId+"/ChangeSharingStatus", String.class);
+            restTemplate.patchForObject(url+"/"+userId+"/ChangeSharingStatus",userId, Integer.class);
         }
         catch (Exception e)
         {

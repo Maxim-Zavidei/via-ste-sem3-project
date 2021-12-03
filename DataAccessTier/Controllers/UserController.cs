@@ -95,7 +95,7 @@ namespace DataAccessTier.Controllers
         
         [HttpPatch]
         [Route("/{userId:int}/ChangeSharingStatus")]
-        public async Task<IActionResult> ChangeSharedStatus([FromRoute] int userId)
+        public async Task<IActionResult> ChangeSharedStatus([FromBody] int userId)
         {
             try
             {
