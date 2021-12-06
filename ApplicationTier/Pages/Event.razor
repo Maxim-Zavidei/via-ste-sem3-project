@@ -10,7 +10,8 @@
 @inject NavigationManager NavigationManager
 @inject AuthenticationStateProvider AuthenticationState
 
-
+<AuthorizeView>
+    <Authorized Context="Auth">
 
 <MudGrid Justify="Justify.Center">
     <MudItem Class="my-2 ">
@@ -56,7 +57,11 @@
         </MudPaper>
     </MudItem>
 </MudGrid>
-
+</Authorized>
+<NotAuthorized Context="NotAuth">
+    <h1>Please Login: <a href="/login">Log in</a></h1>
+</NotAuthorized>
+</AuthorizeView>
 
 @code {
 

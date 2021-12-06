@@ -239,7 +239,7 @@ namespace ApplicationTier.Data.Impl
 
         public async Task<Event> AddEventAsync(int userId, Event eventToAdd)
         {
-             Event eventTemp = new Event();
+            Event eventTemp = new Event();
             try
             {
                 await Communicator.send("addEvent");

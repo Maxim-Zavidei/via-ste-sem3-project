@@ -98,9 +98,9 @@ public class User implements Serializable
   public void setPassword(String password) throws IllegalArgumentException
   {
     if (password == null || password.isEmpty()) throw new IllegalArgumentException("Password can't be empty.");
-    if (password.length() < 8) throw new IllegalArgumentException("Password must be at least 8 characters long.");
-    if (!password.matches(".*[A-Z]+.*")) throw new IllegalArgumentException("Password must have at least one uppercase letter.");
-    if (!password.matches(".*[0-9]+.*")) throw new IllegalArgumentException("Password must have at least one digit.");
+   // if (password.length() < 8) throw new IllegalArgumentException("Password must be at least 8 characters long.");
+    //if (!password.matches(".*[A-Z]+.*")) throw new IllegalArgumentException("Password must have at least one uppercase letter.");
+    //if (!password.matches(".*[0-9]+.*")) throw new IllegalArgumentException("Password must have at least one digit.");
     this.password = password;
   }
 

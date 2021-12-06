@@ -24,4 +24,18 @@ public class Address implements Serializable
   
   @JsonProperty("country")
   private String country;
+  public void setCity(String city) {
+      this.city = city;
+  }
+  public void setCountry(String country) {
+      this.country = country;
+  }
+  public void setId(int id) {
+      this.id = id;
+  }
+  public void setNumber(String number) {
+      this.number = number;
+  }public void setStreetName(String streetName) {
+      this.streetName = streetName;
+  }
 }

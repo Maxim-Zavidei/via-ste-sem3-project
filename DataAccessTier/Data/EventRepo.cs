@@ -26,7 +26,7 @@ namespace DataAccessTier.Data
         {
             await db.Event.AddAsync(evt);
             await db.SaveChangesAsync();
-            Event u = await db.Event.Where(ev => ev.Title==evt.Title).LastAsync();
+            Event u = await db.Event.OrderBy(ev => ev.Id).LastOrDefaultAsync(ev => ev.Title==evt.Title);
             return u;
         }
     }

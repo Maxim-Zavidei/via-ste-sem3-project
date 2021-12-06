@@ -7,6 +7,8 @@
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject NavigationManager NavigationManager
 
+<AuthorizeView>
+    <NotAuthorized Context="NotAuth">
 <MudGrid Justify="Justify.Center">
     <MudItem xs="4" Class="my-8">
             <MudPaper Elevation="14" Class="d-flex align-center justify-center py-8">
@@ -36,6 +38,10 @@
         </MudPaper>
     </MudItem>
 </MudGrid>
+</NotAuthorized>
+<Authorized>
+    <h1>You are already logged in.</h1>
+</Authorized></AuthorizeView>
 
 @code {
     
