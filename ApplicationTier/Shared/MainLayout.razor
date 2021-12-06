@@ -1,4 +1,6 @@
+@using Authentication
 @inherits LayoutComponentBase
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
 <MudThemeProvider/>
 <MudDialogProvider/>
@@ -8,8 +10,15 @@
         <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => ToggleDrawerState())" />
         <MudText Typo="Typo.h5" Class="ml-3">Application</MudText>
         <MudSpacer/>
-        <MudButton Variant="Variant.Filled" StartIcon="@Icons.Filled.Login" Color="Color.Primary" Size="Size.Large" Class="ma-2" Link="/login">Login</MudButton>
-        <MudButton Variant="Variant.Filled" StartIcon="@Icons.Filled.Assignment" Color="Color.Primary" Size="Size.Large" Class="ma-2" Link="/register">Register</MudButton>
+        <AuthorizeView>
+            <NotAuthorized>
+                <MudButton Variant="Variant.Filled" StartIcon="@Icons.Filled.Login" Color="Color.Primary" Size="Size.Large" Class="ma-2" Link="/login">Login</MudButton>
+                <MudButton Variant="Variant.Filled" StartIcon="@Icons.Filled.Assignment" Color="Color.Primary" Size="Size.Large" Class="ma-2" Link="/register">Register</MudButton>
+            </NotAuthorized>
+            <Authorized>
+                <MudButton Variant="Variant.Filled" StartIcon="@Icons.Filled.Logout" Color="Color.Primary" Size="Size.Large" Class="ma-2" Link="/login" OnClick="Logout">Logout</MudButton>
+            </Authorized>
+        </AuthorizeView>
     </MudAppBar>
     <MudDrawer @bind-Open="IsDrawerOpen" ClipMode="DrawerClipMode.Always" Elevation="14">
         <NavMenu/>
@@ -24,6 +33,13 @@
     bool IsDrawerOpen = false;
     void ToggleDrawerState() {
         IsDrawerOpen = !IsDrawerOpen;
+    }
+
+    void Logout()
+    {
+        try {
+            ((CustomAuthenticationStateProvider) AuthenticationStateProvider).Logout();
+        } catch (Exception e) { }
     }
 
 }
