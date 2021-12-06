@@ -12,8 +12,14 @@ public class User implements Serializable
 {
   @JsonProperty("id")
   private int id;
+
+  @JsonProperty("username")
   private String username;
+
+  @JsonProperty("password")
   private String password;
+
+  @JsonProperty("email")
   private String email;
  // private int securityLevel;
   public User(){}
@@ -90,14 +96,14 @@ public class User implements Serializable
   public void setUsername(String username) throws IllegalArgumentException
   {
     if(username == null || username.isEmpty()) throw new IllegalArgumentException("Username cannot be empty");
-    if (username.length() <= 2) throw new IllegalArgumentException("First name can't have less then 3 characters.");
-    if (username.length() >= 16) throw new IllegalArgumentException("First name can't have more then 15 characters.");
+    if (username.length() <= 2) throw new IllegalArgumentException("First name can't have less than 3 characters.");
+    if (username.length() > 16) throw new IllegalArgumentException("First name can't have more than 16 characters.");
     this.username = username;
   }
 
   public void setPassword(String password) throws IllegalArgumentException
   {
-    if (password == null || password.isEmpty()) throw new IllegalArgumentException("Password can't be empty.");
+    if (password == null || password.isEmpty() || password.isBlank()) throw new IllegalArgumentException("Password can't be empty.");
    // if (password.length() < 8) throw new IllegalArgumentException("Password must be at least 8 characters long.");
     //if (!password.matches(".*[A-Z]+.*")) throw new IllegalArgumentException("Password must have at least one uppercase letter.");
     //if (!password.matches(".*[0-9]+.*")) throw new IllegalArgumentException("Password must have at least one digit.");
