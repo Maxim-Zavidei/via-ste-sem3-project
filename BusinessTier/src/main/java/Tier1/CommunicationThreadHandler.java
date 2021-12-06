@@ -165,6 +165,23 @@ public class CommunicationThreadHandler implements Runnable {
                             send(toSend);
                         }
                     }break;
+                    case "getSharingStatus":{
+                        try{
+                            received = read();
+                            int userId = Integer.parseInt(received);
+                            boolean sharingStatus = userController.getSharingStatus(userId);
+                            send("Successful");
+                            toSend = gson.toJson(sharingStatus);
+                        }
+                        catch (Exception e)
+                        {
+                            toSend = e.getMessage();
+                        }
+                        finally
+                        {
+                            send(toSend);
+                        }
+                    }break;
                     case "addEvent":{
                         try{
                             received = read();

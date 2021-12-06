@@ -102,6 +102,15 @@ namespace DataAccessTier.Data
                 throw new Exception($"User {userId} not found in database");
             }
         }
+
+        public async Task<bool> GetSharingStatus(int userId)
+        {
+            User user = await GetUserById(userId);
+            bool sharingStatus = user.IsSharingCalendar;
+            return sharingStatus;
+
+
+        }
     }
 
 }

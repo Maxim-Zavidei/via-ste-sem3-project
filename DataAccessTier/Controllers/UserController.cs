@@ -108,5 +108,20 @@ namespace DataAccessTier.Controllers
 
             }
         }
+        [HttpGet]
+        [Route("{userId:int}/SharingStatus")]
+        public async Task<IActionResult> GetSharedStatus([FromRoute] int userId)
+        {
+            try
+            {
+               bool sharingStatus = await db.GetSharingStatus(userId);
+                return Ok(sharingStatus);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+
+            }
+        }
     }
 }

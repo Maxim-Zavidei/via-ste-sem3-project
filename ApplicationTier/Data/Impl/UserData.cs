@@ -174,6 +174,32 @@ namespace ApplicationTier.Data.Impl
             }
         }
 
+        public async Task<bool> GetSharingStatus(int userId)
+        {
+            bool SharingStatus = false;
+            try
+            {
+                await Communicator.send("getSharingStatus");
+                string toSend = JsonSerializer.Serialize(userId);
+                await Communicator.send(toSend);
+                string rcv = await Communicator.read();
+                if (rcv.Equals("Successful"))
+                {
+                    string userSharingStatus = await Communicator.read();
+                    SharingStatus = JsonSerializer.Deserialize<bool>(userSharingStatus);
+
+                }
+                else throw new Exception("Server unavailable. Try again later.");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                throw new Exception($"Could not get status");
+            }
+
+            return SharingStatus;
+        }
+
         public async Task StartConnection()
     
         {

@@ -11,6 +11,7 @@ namespace ApplicationTier.Data
         Task<IList<User>> GetUsersAsync();
         Task<User> AddUserAsync(User user);
         Task ChangeSharingStatus(int userId);
+        Task<bool> GetSharingStatus(int userId);
         Task CloseConnection();
         Task StartConnection();
         

@@ -64,6 +64,10 @@ public class UserController extends Controller {
     super.communicator.changeSharingStatus(userId);
   }
 
+  public boolean getSharingStatus(int userId) throws Exception{
+    return super.communicator.getSharingStatus(userId);
+  }
+
   public User getCashedUser() {
     return cashedUser;
   }

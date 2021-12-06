@@ -26,7 +26,7 @@ public class ServerCommunicator {
   private static UserCommunicator userCommunicator;
   private static EventCommunicator eventCommunicator;
   private RestTemplate restTemplate;
-  private static final String url = "https://localhost:5000/";
+  private static final String url = "https://localhost:5002/";
 
   /**
    * disregards the CA in order to connect to localhost of c# Web API
@@ -88,6 +88,10 @@ public class ServerCommunicator {
 
   public void changeSharingStatus(int userId) throws Exception{
     userCommunicator.changeSharingStatus(restTemplate, url, userId);
+  }
+
+  public boolean getSharingStatus(int userId) throws Exception{
+   return   userCommunicator.getSharingStatus(restTemplate, url, userId);
   }
 
 

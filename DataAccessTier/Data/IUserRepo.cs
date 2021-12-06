@@ -19,6 +19,7 @@ namespace DataAccessTier.Data
 
         public Task DeleteUser(int userId);
         public Task ChangeSharingStatus(int userId);
+        public Task<bool> GetSharingStatus(int userId);
     }
 
 }
