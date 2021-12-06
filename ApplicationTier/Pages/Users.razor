@@ -1,8 +1,12 @@
-﻿@page "/Users"
+﻿@page "/friends"
 @using ApplicationTier.Models
-@using ApplicationTier.Data.Impl
-@inject UserData _userData
-<h3>List of Users</h3>
+@using ApplicationTier.Data
+@using Authentication
+@inject IUserService _userData
+@inject AuthenticationStateProvider AuthenticationStateProvider
+<h3>List of Users that share their calendar.</h3>
+<AuthorizeView>
+    <Authorized>
 @if (allUsers == null)
 {
     <p>Loading...</p>
@@ -16,9 +20,7 @@ else
     <table class="table">
         <thead>
         <tr>
-            <th>ID</th>
             <th>Username</th>
-            <th>Password</th>
             <th>Email</th>
         </tr>
         </thead>
@@ -26,22 +28,24 @@ else
         @foreach (var user in allUsers)
         {
             <tr>
-                <td>@user.Id</td>
                 <td>@user.Username</td>
-                <td>@user.Password</td>
                 <td>@user.Email</td>
-                <td><button><i class="oi oi-trash" style="color: red"/></button></td>
+                <td><button class="btn btn-light"><i class="oi oi-calendar"/></button></td>
+                <td><button class="btn btn-light"><i class="oi oi-trash" style="color: red"/></button></td>
             </tr>
         }
         </tbody>
     </table>
 }
+ </Authorized>
+</AuthorizeView>
 
 @code {
     private IList<User> allUsers;
     protected override async Task OnInitializedAsync()
     {
-        allUsers = await _userData.GetUsersAsync();
+        allUsers = await _userData.GetAllSharing();
+        allUsers.Remove(((CustomAuthenticationStateProvider) AuthenticationStateProvider).GetCachedUser());
     }
 
 }

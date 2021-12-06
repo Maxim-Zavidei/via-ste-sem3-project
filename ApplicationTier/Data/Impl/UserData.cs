@@ -129,6 +129,24 @@ namespace ApplicationTier.Data.Impl
             }
         }
 
+        public async Task<IList<User>> GetAllSharing()
+        {
+             try
+            {
+                 await Communicator.send("fetchSharingUsers");
+                 String usersJSON = await Communicator.read();
+                 if (!usersJSON.Equals("Could not fetch sharing users from Database"))
+                {
+                    IList<User> users = JsonSerializer.Deserialize<List<User>>(usersJSON);
+                    return users;
+                } else throw new Exception("No one is sharing.");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                throw new Exception("Could not fetch sharing users from Database");
+            }
+        }
         public async Task<User> AddUserAsync(User user)
         {
             User userToLog = new();

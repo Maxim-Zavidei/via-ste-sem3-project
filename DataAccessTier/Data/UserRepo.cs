@@ -49,7 +49,7 @@ namespace DataAccessTier.Data
         {
             try
             { 
-                return db.Users.Where(dbUser => dbUser.IsSharingCalendar).ToList();
+                return db.Users.Where(dbUser => dbUser.IsSharingCalendar == true).ToList();
             }
             catch (Exception e)
             {
