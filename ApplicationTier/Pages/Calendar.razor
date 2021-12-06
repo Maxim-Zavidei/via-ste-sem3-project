@@ -3,8 +3,11 @@
 @using System.Globalization
 @using ApplicationTier.Data
 @using System.Collections
+@using Authentication
 @inject IDialogService DialogService
 @inject IEventService EventService
+@inject IUserService UserService
+@inject AuthenticationStateProvider AuthenticationState
 
 
 <MudToolBar>
@@ -23,13 +26,27 @@
     @* <MudItem xs="12" sm="6" md="4"> *@
     @*     <MudDatePicker PickerVariant="PickerVariant.Dialog" Label="Change Date" Date="DatePicker"/> *@
     @* </MudItem> *@
-    
+
     <MudContainer>
         <MudButton Variant="Variant.Text" Size="Size.Small" Class="ma-2" @onclick="() => SwitchMonth(false)">&lt;</MudButton>
         <MudButton Variant="Variant.Text" Size="Size.Medium" Class="ma-2">@MonthNames[DisplayedMonth]</MudButton>
         <MudButton Variant="Variant.Text" Size="Size.Small" Class="ma-2" @onclick="() => SwitchMonth(true)">&gt;</MudButton>
     </MudContainer>
     <MudSpacer/>
+    @* <MudToggleIconButton Toggled="@SharingStatus" ToggledChanged="OnToggledChanged" *@
+    @*                      Icon="@Icons.Material.Filled.AlarmOff" Color="@Color.Error" Title="Off" *@
+    @*                      ToggledIcon="@Icons.Material.Filled.AlarmOn" ToggledColor="@Color.Success" ToggledTitle="On"/> *@
+    @* <MudButton Variant="Variant.Text" Size="Size.Small" Class="ma-2" @onclick="() => SwitchMonth(false)">@Proof</MudButton> *@
+    @* <MudSwitch Checked="@SharingStatus" *@
+    @*            ThumbIcon="@(SharingStatus == true ? Icons.Material.Filled.Done : Icons.Material.Filled.Close)" *@
+    @*            ThumbIconColor="@(SharingStatus == true ? Color.Success : Color.Error)" CheckedChanged="@OnToggledChanged"> *@
+    @*     Changing *@
+    @* </MudSwitch> *@
+    <MudFab Color="@(SharingStatus ? Color.Success : Color.Error)" Size="Size.Small" Icon="@(SharingStatus ? Icons.Material.Filled.Done : Icons.Material.Filled.Close)"
+            DisableElevation="true" aria-label="Sharing status" OnClick="OnToggledChanged"
+            Label="@(SharingStatus ? " Share On" : " Share Off")" IconSize="Size.Small" Style="width: 15rem"/>
+
+
     <MudIconButton Icon="@Icons.Material.Outlined.Notifications"/>
     <MudIconButton Icon="@Icons.Material.Outlined.PushPin"/>
     <MudIconButton Icon="@Icons.Material.Outlined.PeopleAlt"/>
@@ -85,7 +102,7 @@
         <Event/>
     </DialogContent>
     <DialogActions >
-        <MudButton Variant="Variant.Filled" Color="Color.Error" OnClick="Submit" FullWidth="true" >Cancel</MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Error" OnClick="Submit" FullWidth="true">Cancel</MudButton>
     </DialogActions>
 </MudDialog>
 
@@ -120,7 +137,6 @@
         }
         for (var i = 0; i < EndDayOfSelectedMonth; i++) Days[Days.GetLength(0) - 1, i] = DayCount++;
         for (var i = EndDayOfSelectedMonth; i < 7; i++) Days[Days.GetLength(0) - 1, i] = 0;
-        
     }
 
     private void SwitchMonth(bool GoForward)
@@ -137,30 +153,29 @@
     protected override async Task OnInitializedAsync()
     {
         UpdateCalendarView();
-        Events = await EventService.GetEventsAsync();
+        SharingStatus = UserService.GetSharingStatus(((CustomAuthenticationStateProvider) AuthenticationState).GetCachedUser().Id).Result ;
 
+
+    //Getting events needs more work
+    // Events = await EventService.GetUserEventsAsync(((CustomAuthenticationStateProvider) AuthenticationState).GetCachedUser().Id);
     }
 
     private bool visible;
     private void OpenDialog() => visible = true;
-    // private void OpenDialog()
-    // {
-    //     DialogService.Show<EventDialog>();
-    // }
     void Submit() => visible = false;
     private DialogOptions dialogOptions = new() {FullWidth = true};
 
+    private bool SharingStatus { get; set; }
 
-    // private bool showAddEvent { get; set; }
-    //
-    // private void DisplayEvent()
-    // {
-    //     showAddEvent = true;
-    // }
-    //
-    // private void CloseEvent()
-    // {
-    //     showAddEvent = true;
-    // }
+    private async Task OnToggledChanged()
+    {
+        await UserService.ChangeSharingStatus(((CustomAuthenticationStateProvider) AuthenticationState).GetCachedUser().Id);
+        SharingStatus = UserService.GetSharingStatus(((CustomAuthenticationStateProvider) AuthenticationState).GetCachedUser().Id).Result ;
+        await OnInitializedAsync();
+        await InvokeAsync(StateHasChanged);
+
+    }
+
+
 
 }
