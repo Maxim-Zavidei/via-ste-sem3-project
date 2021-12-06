@@ -27,7 +27,7 @@ namespace DataAccessTier.Controllers
             };
         }*/
 
-        [HttpGet("GetUsers")]
+        [HttpGet("All")]
         public async Task<IActionResult> Get()
         {
             try
@@ -43,7 +43,7 @@ namespace DataAccessTier.Controllers
 
         }
 
-        [HttpGet("GetUsersSharing")]
+        [HttpGet("AllSharing")]
         public async Task<IActionResult> GetUsersSharing()
         {
             try
@@ -64,7 +64,7 @@ namespace DataAccessTier.Controllers
              return Ok(ussers);
          }*/
 
-        [HttpPost("CreateUser")]
+        [HttpPost]
         public async Task<IActionResult> Create([FromBody] User user)
         {
             User u = await db.AddUserAsync(user);
@@ -79,7 +79,7 @@ namespace DataAccessTier.Controllers
 
     
         [HttpDelete]
-        [Route("{userId:int}/DeleteUser")]
+        [Route("{userId:int}")]
         public async Task<IActionResult> DeleteUser([FromRoute] int userId)
         {
             try
@@ -94,7 +94,7 @@ namespace DataAccessTier.Controllers
         }
         
         [HttpPatch]
-        [Route("/{userId:int}/ChangeSharingStatus")]
+        [Route("/{userId:int}/SharingStatus")]
         public async Task<IActionResult> ChangeSharedStatus([FromBody] int userId)
         {
             try

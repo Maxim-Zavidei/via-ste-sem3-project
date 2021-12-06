@@ -20,7 +20,7 @@ namespace DataAccessTier.Controllers
         }
 
         [HttpGet]
-        [Route("{id:int}/GetEvents")]
+        [Route("{id:int}")]
         public async Task<IActionResult> GetEvents([FromRoute] int id)
         {
             try
@@ -35,7 +35,7 @@ namespace DataAccessTier.Controllers
         }
 
         [HttpPost]
-        [Route("{id:int}/AddEvent")]
+        [Route("{id:int}")]
         public async Task<IActionResult> AddEvent([FromRoute] int id, [FromBody] Event evt)
         {
             try
@@ -51,7 +51,7 @@ namespace DataAccessTier.Controllers
         }
 
         [HttpPost]
-        [Route("{userId:int}/AddSharedEvent/{otherUserId:int}")]
+        [Route("{userId:int}/SharedEvent/{otherUserId:int}")]
         public async Task<IActionResult> AddSharedEvent([FromRoute] int userId, [FromRoute] int otherUserId, [FromBody] Event evt)
         {
             try

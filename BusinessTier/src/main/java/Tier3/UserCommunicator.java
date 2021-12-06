@@ -19,7 +19,7 @@ public class UserCommunicator {
     {
         try {
 
-            ResponseEntity<User[]> responseEntity = restTemplate.getForEntity(url + "User/GetUsers", User[].class);
+            ResponseEntity<User[]> responseEntity = restTemplate.getForEntity(url + "User/All", User[].class);
             User[] users = responseEntity.getBody();
             /*
              * MediaType contentType = responseEntity.getHeaders().getContentType();
@@ -34,7 +34,7 @@ public class UserCommunicator {
     {
         try
         {
-            ResponseEntity<User[]> responseEntity = restTemplate.getForEntity(url + "User/GetUsers", User[].class);
+            ResponseEntity<User[]> responseEntity = restTemplate.getForEntity(url + "User/AllSharing", User[].class);
             User[] tempUsers = responseEntity.getBody();
             assert tempUsers != null;
             return new ArrayList<>(Arrays.asList(tempUsers));
@@ -50,7 +50,7 @@ public class UserCommunicator {
         try
         {
             ResponseEntity<String> responseEntityStr = restTemplate
-                .postForEntity(url + "User/CreateUser", user, String.class);
+                .postForEntity(url + "User", user, String.class);
             User u = gson.fromJson(responseEntityStr.getBody(), User.class);
             return u;
         }
@@ -64,7 +64,7 @@ public class UserCommunicator {
     {
         try
         {
-            restTemplate.delete(url+"/"+userId);
+            restTemplate.delete(url+"User/"+userId);
 
         }
         catch (Exception e)
@@ -75,7 +75,7 @@ public class UserCommunicator {
     public void changeSharingStatus(RestTemplate restTemplate, String url, int userId) throws Exception
     {
         try{
-            restTemplate.patchForObject(url+"/"+userId+"/ChangeSharingStatus",userId, Integer.class);
+            restTemplate.patchForObject(url+"User/"+userId+"/SharingStatus",userId, Integer.class);
         }
         catch (Exception e)
         {

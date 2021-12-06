@@ -18,7 +18,7 @@ public class EventCommunicator {
 
   public ArrayList<Event> fetchUserEventsFromDatabase(RestTemplate restTemplate, String url, int id) throws Exception {
     try {
-      ResponseEntity<Event[]> responseEntity = restTemplate.getForEntity(url + "Event/" + id + "/GetEvents",
+      ResponseEntity<Event[]> responseEntity = restTemplate.getForEntity(url + "Event/" + id,
           Event[].class);
       Event[] events = responseEntity.getBody();
       return new ArrayList<>(Arrays.asList(events));
@@ -30,7 +30,7 @@ public class EventCommunicator {
   {
     try {
       ResponseEntity<String> responseEntityStr = restTemplate
-          .postForEntity(url + "Event/" + id + "AddEvent", evt, String.class);
+          .postForEntity(url + "Event/" + id, evt, String.class);
       Event u = gson.fromJson(responseEntityStr.getBody(), Event.class);
       return u;
     } catch (Exception e) {
@@ -41,7 +41,7 @@ public class EventCommunicator {
   public Event addSharedEvent(RestTemplate restTemplate, String url, Event evt, int userId, int otherUserId) throws Exception{
     try {
       ResponseEntity<String> responseEntityStr = restTemplate
-          .postForEntity(url + "Event/" + userId + "/AddSharedEvent/" + otherUserId, evt, String.class);
+          .postForEntity(url + "Event/" + userId + "/SharedEvent/" + otherUserId, evt, String.class);
       Event u = gson.fromJson(responseEntityStr.getBody(), Event.class);
       return u;
     } catch (Exception e) {
