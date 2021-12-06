@@ -12,6 +12,8 @@ namespace DataAccessTier.Model {
         public int Id {get;set;}
         [JsonIgnore]
         public int UserId {get;set;}
+         [JsonIgnore]
+        public int AddressId {get;set;}
         
         [JsonPropertyName("title")]
         public string Title { get; set; }

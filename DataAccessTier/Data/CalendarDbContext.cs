@@ -10,6 +10,7 @@ namespace DataAccessTier.Data
     {
         public  DbSet<User> Users { get; set; }
         public  DbSet<Event> Event { get; set; }
+        public DbSet<Address> Address {get;set;}
 
          /*public string DbPath { get; private set; }
 
