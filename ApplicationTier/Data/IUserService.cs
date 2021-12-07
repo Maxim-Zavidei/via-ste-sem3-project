@@ -7,6 +7,7 @@ namespace ApplicationTier.Data
 {
     public interface IUserService
     {        
+        User cashedUser {get;set;}
         Task<User> ValidateUserAsync(string username, string password);
         Task<IList<User>> GetUsersAsync();
         Task<User> AddUserAsync(User user);

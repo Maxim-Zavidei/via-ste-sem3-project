@@ -7,7 +7,7 @@ namespace ApplicationTier.Data
 {
     public interface IEventService
     {
-        Task<IList<Event>> GetUserEventsAsync(int userId);
+        Task GetUserEventsAsync(int userId);
         Task<Event> AddEventAsync(int userId, Event eventToAdd);
         Task<IList<Event>> GetEventsOnDay(DateTime onDay);
     }

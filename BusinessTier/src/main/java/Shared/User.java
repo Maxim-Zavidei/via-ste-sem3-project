@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.Entity;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Set;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Entity
@@ -21,6 +23,21 @@ public class User implements Serializable
 
   @JsonProperty("email")
   private String email;
+
+  @JsonProperty("firstName")
+  private String firstName;
+  @JsonProperty("lastName")
+  public String lastName;
+  @JsonProperty("isSharingCalendar")
+
+  public boolean isSharingCalendar;
+  @JsonProperty("birthday")
+  public String birthday;
+
+  @JsonProperty("events")
+  public ArrayList<Event> events;
+
+  
  // private int securityLevel;
   public User(){}
   public User(int userId, String username, String password, String  email)
@@ -108,6 +125,21 @@ public class User implements Serializable
     //if (!password.matches(".*[A-Z]+.*")) throw new IllegalArgumentException("Password must have at least one uppercase letter.");
     //if (!password.matches(".*[0-9]+.*")) throw new IllegalArgumentException("Password must have at least one digit.");
     this.password = password;
+  }
+  public void setBirthday(String birthday) {
+      this.birthday = birthday;
+  }
+  public void setEvents(ArrayList<Event> events) {
+      this.events = events;
+  }
+  public void setFirstName(String firstName) {
+      this.firstName = firstName;
+  }
+  public void setLastName(String lastName) {
+      this.lastName = lastName;
+  }
+  public void setSharingCalendar(boolean isSharingCalendar) {
+      this.isSharingCalendar = isSharingCalendar;
   }
 
  /* public void setSecurityLevel(int securityLevel)

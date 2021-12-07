@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -13,6 +14,7 @@ namespace ApplicationTier.Data.Impl
     public class UserData : IUserService
     {
         private IList<User> _users;
+        public User cashedUser {get;set;}
         ICommunicator Communicator { get; set; }
 
 
@@ -82,6 +84,7 @@ namespace ApplicationTier.Data.Impl
                         {
                             rcv = await Communicator.read();
                             userToReturn = JsonSerializer.Deserialize<User>(rcv);
+                            cashedUser = userToReturn;
                             Console.WriteLine(userToReturn);
                             break;
                         }
@@ -138,6 +141,8 @@ namespace ApplicationTier.Data.Impl
                  if (!usersJSON.Equals("Could not fetch sharing users from Database"))
                 {
                     IList<User> users = JsonSerializer.Deserialize<List<User>>(usersJSON);
+                    User toRemove = users.FirstOrDefault(u=>u.Id == cashedUser.Id);
+                    Console.WriteLine(users.Remove(toRemove));
                     return users;
                 } else throw new Exception("No one is sharing.");
             }
@@ -242,7 +247,7 @@ namespace ApplicationTier.Data.Impl
                 String rcv = await Communicator.read();
                 if (!rcv.Equals("Could not fetch events for user id " + userId))
                 {
-                    rcv = await Communicator.read();
+                    //rcv = await Communicator.read();
                     IList<Event> events = JsonSerializer.Deserialize<List<Event>>(rcv);
                     return events;
                 } else throw new Exception("Server unavailable. Try again later.");

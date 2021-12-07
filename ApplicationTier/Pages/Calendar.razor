@@ -88,7 +88,7 @@
                                     <MudFab Class="mb-auto" Color="Color.Secondary" Size="Size.Small" IconSize="Size.Small" Label="@Days[i1, j1].ToString()"/>
                                 </div>
                                 <div class="pb-4">
-                                    @foreach (var e in EventService.GetEventsOnDay(new DateTime(DisplayedYear, DisplayedMonth, 1)).Result) {
+                                    @foreach (var e in EventService.GetEventsOnDay(new DateTime(DisplayedYear, DisplayedMonth + 1, Days[i1, j1])).Result) {
                                         <Event EventModel="e" OnClickEventHandler="@SelectEventHandler"></Event>
                                     }
                                 </div>
@@ -169,6 +169,8 @@
         try{
         UpdateCalendarView();
         SharingStatus = UserService.GetSharingStatus(((CustomAuthenticationStateProvider) AuthenticationState).GetCachedUser().Id).Result ;
+        EventService.GetUserEventsAsync(((CustomAuthenticationStateProvider) AuthenticationState).GetCachedUser().Id);
+
         } catch(Exception e)
         {
 
