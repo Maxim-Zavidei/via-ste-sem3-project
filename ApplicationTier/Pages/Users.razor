@@ -22,6 +22,8 @@ else
         <tr>
             <th>Username</th>
             <th>Email</th>
+            <th>Calendar</th>
+            <th>Delete</th>
         </tr>
         </thead>
         <tbody>
@@ -30,22 +32,33 @@ else
             <tr>
                 <td>@user.Username</td>
                 <td>@user.Email</td>
-                <td><button class="btn btn-light"><i class="oi oi-calendar"/></button></td>
-                <td><button class="btn btn-light"><i class="oi oi-trash" style="color: red"/></button></td>
+                <td><MudIconButton Href="/calendar" Icon="@Icons.Filled.CalendarToday"></MudIconButton></td>
+                <td><MudIconButton Icon="@Icons.Filled.Delete"></MudIconButton></td>
             </tr>
         }
         </tbody>
     </table>
 }
  </Authorized>
+ <NotAuthorized>
+     <h1>Please Login: <a href="/login">Log in</a></h1>
+ </NotAuthorized>
 </AuthorizeView>
 
 @code {
     private IList<User> allUsers;
     protected override async Task OnInitializedAsync()
     {
+        try{
         allUsers = await _userData.GetAllSharing();
-        allUsers.Remove(((CustomAuthenticationStateProvider) AuthenticationStateProvider).GetCachedUser());
+        } catch(Exception e)
+        {
+
+        }
+        //allUsers.Remove(((CustomAuthenticationStateProvider) AuthenticationStateProvider).GetCachedUser());
+        /*
+                <td><button class="btn btn-light"><i class="oi oi-calendar"/></button></td>
+                <td><button class="btn btn-light"><i class="oi oi-trash" style="color: red"/></button></td>*/
     }
 
 }

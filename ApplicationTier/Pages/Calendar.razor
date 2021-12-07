@@ -166,9 +166,13 @@
 
     protected override async Task OnInitializedAsync()
     {
+        try{
         UpdateCalendarView();
         SharingStatus = UserService.GetSharingStatus(((CustomAuthenticationStateProvider) AuthenticationState).GetCachedUser().Id).Result ;
+        } catch(Exception e)
+        {
 
+        }
 
     //Getting events needs more work
     // Events = await EventService.GetUserEventsAsync(((CustomAuthenticationStateProvider) AuthenticationState).GetCachedUser().Id);
