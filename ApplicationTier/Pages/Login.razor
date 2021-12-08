@@ -83,7 +83,7 @@
         try {
             ((CustomAuthenticationStateProvider) AuthenticationStateProvider).StartConnection();
             await ((CustomAuthenticationStateProvider) AuthenticationStateProvider).ValidateLogin(LoginFormModel.Email, LoginFormModel.Password);
-            NavigationManager.NavigateTo("/calendar");
+            NavigationManager.NavigateTo($"/calendar/{((CustomAuthenticationStateProvider) AuthenticationStateProvider).GetCachedUser().Id}");
         } catch (Exception e) {
             ErrorMessage = e.Message;
         }

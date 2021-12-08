@@ -32,7 +32,7 @@ else
             <tr>
                 <td>@user.Username</td>
                 <td>@user.Email</td>
-                <td><MudIconButton Href="/calendar" Icon="@Icons.Filled.CalendarToday"></MudIconButton></td>
+                <td><MudIconButton Link=@($"/calendar/{user.Id}") Icon="@Icons.Filled.CalendarToday"></MudIconButton></td>
                 <td><MudIconButton Icon="@Icons.Filled.Delete"></MudIconButton></td>
             </tr>
         }

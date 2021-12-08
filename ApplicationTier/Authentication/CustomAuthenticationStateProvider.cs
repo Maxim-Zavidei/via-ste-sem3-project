@@ -32,7 +32,7 @@ namespace Authentication
             var identity = new ClaimsIdentity();
             if (cachedUser == null)
             {
-                string userAsJson = await jsRuntime.InvokeAsync<string>("sessionStorage.getItem", "currentUser");
+                string userAsJson = await jsRuntime.InvokeAsync<string>("sessionStorage.getItem", "currentUSer");
                 if (!string.IsNullOrEmpty(userAsJson))
                 {
                     cachedUser = JsonSerializer.Deserialize<User>(userAsJson);

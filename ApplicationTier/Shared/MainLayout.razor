@@ -7,7 +7,7 @@
 
 <MudLayout>
     <MudAppBar Elevation="3">
-        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => ToggleDrawerState())" />
+        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => IsDrawerOpen = !IsDrawerOpen)"/>
         <MudText Typo="Typo.h5" Class="ml-3">Application</MudText>
         <MudSpacer/>
         <AuthorizeView>
@@ -29,11 +29,7 @@
 </MudLayout>
 
 @code {
-
     bool IsDrawerOpen = false;
-    void ToggleDrawerState() {
-        IsDrawerOpen = !IsDrawerOpen;
-    }
 
     void Logout()
     {
