@@ -10,17 +10,7 @@ import Shared.Address;
 import Shared.Event;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import java.text.DateFormat;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.Month;
 import java.util.ArrayList;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
-import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 
 //@SpringBootTest
@@ -47,8 +37,6 @@ public class ServerCommunicatorTest {
             e.printStackTrace();
         }
     }
-
-    
     @Test  
     void testGetUsers() {
         try {
@@ -95,6 +83,41 @@ public class ServerCommunicatorTest {
             Event responce = serverCommunicator.addEvent(1, evt);
             System.out.println(responce.toString());
             assertEquals("m", responce);
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+    }
+
+        @Test  
+    void testEditEvent() {
+        try {
+            Event evt = new Event();
+            evt.setId(5);
+            evt.setTitle("String");
+            evt.setDescription("String");
+            evt.setStartTime("2021-12-08T11:10:05");
+            evt.setEndTime("2021-12-08T11:10:05");
+            Address address = new Address();
+            address.setCity("String");
+            address.setCountry("String");
+            address.setId(6);
+            address.setStreetName("String");
+            address.setNumber("string");
+            evt.setAddress(address);
+            Event responce = serverCommunicator.editEvent(1, evt);
+            System.out.println(responce.toString());
+            assertEquals(evt.toString(), responce.toString());
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }  
+    }
+    @Test
+    void testRemoveEvet(){
+        try{
+            serverCommunicator.removeEvent(5);
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

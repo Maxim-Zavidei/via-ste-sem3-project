@@ -23,4 +23,12 @@ public class EventController extends Controller
   {
     return super.communicator.addSharedEvent(id, evt, ouId);
   }
+  public Event editEvent(int id, Event evt) throws Exception
+  {
+    return super.communicator.editEvent(id, evt);
+  }
+  public void removeEvent(int evtId) throws Exception
+  {
+    super.communicator.removeEvent(evtId);
+  }
 }

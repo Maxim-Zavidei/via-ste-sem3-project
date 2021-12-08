@@ -31,6 +31,10 @@ public class Event implements Serializable {
 
     public Event(){}
 
+    public int getId() {
+        return id;
+    }
+
     public void setTitle(String title) throws IllegalArgumentException
     {
         if(title == null || title.isBlank() || title.isEmpty()) throw new IllegalArgumentException("Event title cannot be null");

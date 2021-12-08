@@ -1,6 +1,9 @@
 package Tier3;
 
 import Shared.Event;
+
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 import com.google.gson.Gson;
@@ -46,6 +49,28 @@ public class EventCommunicator {
       return u;
     } catch (Exception e) {
       throw new Exception("Could not add shared event");
+    }
+  }
+
+  public Event editEvent(RestTemplate restTemplate, String url, Event evt, int id) throws Exception
+  {
+    try {
+      restTemplate.patchForObject (url + "Event/" + id, evt, Event.class);
+      //Event u = gson.fromJson(responseEntityStr.getBody(), Event.class);
+      return evt;
+    } catch (Exception e) {
+      throw new Exception("Could not edit event");
+    }
+  }
+
+  public void removeEvent(RestTemplate restTemplate, String url, int evtId) throws Exception
+  {
+    try {
+      restTemplate.delete(url + "Event/" + evtId);
+      //Event u = gson.fromJson(responseEntityStr.getBody(), Event.class);
+      //return u;
+    } catch (Exception e) {
+      throw new Exception("Could not delete event");
     }
   }
 }
