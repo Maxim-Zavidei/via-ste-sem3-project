@@ -26,7 +26,7 @@ public class ServerCommunicator {
   private static UserCommunicator userCommunicator;
   private static EventCommunicator eventCommunicator;
   private RestTemplate restTemplate;
-  private static final String url = "https://localhost:5002/";
+  private static final String url = "https://localhost:5000/";
 
   /**
    * disregards the CA in order to connect to localhost of c# Web API
@@ -113,5 +113,13 @@ public class ServerCommunicator {
   public ArrayList<Event> FetchUserEventFromDatabase(int id) throws Exception
   {
     return eventCommunicator.fetchUserEventsFromDatabase(restTemplate, url, id);
+  }
+  public Event editEvent(int id, Event evt) throws Exception
+  {
+    return  eventCommunicator.editEvent(restTemplate, url, evt, id);
+  }
+  public void removeEvent(Event evt) throws Exception
+  {
+    eventCommunicator.removeEvent(restTemplate, url, evt);
   }
 }
