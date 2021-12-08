@@ -43,15 +43,28 @@ namespace DataAccessTier.Data
 
         public async Task<Event> EditEvent(Event evt)
         {
-            db.Event.Update(evt);
-            await db.SaveChangesAsync();
-            return evt;
+             db.Event.Update(evt);
+             await db.SaveChangesAsync();
+             return evt;
+            /*
+            Event anotherEvent = await db.Event.FindAsync(evt.Id);
+            try
+            {
+                db.Entry(anotherEvent).CurrentValues.SetValues(evt);
+                await db.SaveChangesAsync();
+                return evt;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                throw new Exception($"Could not find event with such id {evt.Id}");
+            }*/
         }
 
         public async Task RemoveEvent(int id)
         {
-            Event evt = await db.Event.FirstOrDefaultAsync(e => e.Id == id);
-            db.Event.Remove(evt);
+            Event eventToRemove = db.Event.Where(event1 => event1.Id == id).Include(event2 => event2.Address).First();
+            db.Event.Remove(eventToRemove);
             await db.SaveChangesAsync();
         }
     }

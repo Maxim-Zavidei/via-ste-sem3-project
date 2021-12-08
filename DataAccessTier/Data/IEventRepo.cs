@@ -12,6 +12,6 @@ namespace DataAccessTier.Data
         public Task<IList<Event>> GetUserEvents(int userId); 
         public Task<Event> AddEventAsync(Event evt);
         public Task<Event> EditEvent(Event evt);
-        public Task RemoveEvent(int id);
+        public Task RemoveEvent(int eventId);
     }
 }

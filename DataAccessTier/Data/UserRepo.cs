@@ -20,18 +20,7 @@ namespace DataAccessTier.Data
             db = calendarDbContext;
         }
 
-        public async Task<User> GetUserById(int userId)
-        {
-            try
-            {
-                return db.Users.FirstOrDefault(user => user.Id == userId);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                throw new Exception($"User {userId} not found in database");
-            }
-        }
+        
 
         public async Task<DbSet<User>> GetUsersAsync() {
             try
@@ -77,7 +66,8 @@ namespace DataAccessTier.Data
         {
             try
             {
-                db.Users.Remove(await GetUserById(userId));
+                User userToRemove = db.Users.Where(user1 => user1.Id == userId).Include(k => k.Events).First();
+                db.Users.Remove(userToRemove);
                 await db.SaveChangesAsync();
             }
             catch (Exception e)
@@ -91,7 +81,7 @@ namespace DataAccessTier.Data
         {
             try
             {
-                User user = await GetUserById(userId);
+                User user = await db.Users.FindAsync(userId);
                 user.IsSharingCalendar = !user.IsSharingCalendar;
                 db.Users.Update(user);
                 await db.SaveChangesAsync();
@@ -105,7 +95,7 @@ namespace DataAccessTier.Data
 
         public async Task<bool> GetSharingStatus(int userId)
         {
-            User user = await GetUserById(userId);
+            User user = await db.Users.FindAsync(userId);
             bool sharingStatus = user.IsSharingCalendar;
             return sharingStatus;
 
