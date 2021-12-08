@@ -85,11 +85,12 @@ namespace DataAccessTier.Controllers
 
 
         [HttpDelete]
-        public async Task<IActionResult> RemoveEvent([FromBody] Event evt)
+        [Route("{id:int}")]
+        public async Task<IActionResult> RemoveEvent([FromRoute] int id)
         {
             try
             {
-                await db.RemoveEvent(evt);
+                await db.RemoveEvent(id);
                 return Ok();
             }
             catch (Exception e)

@@ -1,6 +1,9 @@
 package Tier3;
 
 import Shared.Event;
+
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 import com.google.gson.Gson;
@@ -60,10 +63,10 @@ public class EventCommunicator {
     }
   }
 
-  public void removeEvent(RestTemplate restTemplate, String url, Event evt) throws Exception
+  public void removeEvent(RestTemplate restTemplate, String url, int evtId) throws Exception
   {
     try {
-      restTemplate.delete(url + "Event/",  evt);
+      restTemplate.delete(url + "Event/" + evtId);
       //Event u = gson.fromJson(responseEntityStr.getBody(), Event.class);
       //return u;
     } catch (Exception e) {

@@ -27,8 +27,8 @@ public class EventController extends Controller
   {
     return super.communicator.editEvent(id, evt);
   }
-  public void removeEvent(Event evt) throws Exception
+  public void removeEvent(int evtId) throws Exception
   {
-    super.communicator.removeEvent(evt);
+    super.communicator.removeEvent(evtId);
   }
 }

@@ -244,10 +244,9 @@ public class CommunicationThreadHandler implements Runnable {
                     case "removeEvent":{
                         try{
                             received = read();
-                            Event evt = gson.fromJson(received, Event.class);
-                            eventController.removeEvent(evt);
+                            int evtId = Integer.parseInt(received);
+                            eventController.removeEvent(evtId);
                             send("Successful");
-                            toSend = gson.toJson(evt);
                         }
                         catch (Exception e)
                         {

@@ -48,8 +48,9 @@ namespace DataAccessTier.Data
             return evt;
         }
 
-        public async Task RemoveEvent(Event evt)
+        public async Task RemoveEvent(int id)
         {
+            Event evt = await db.Event.FirstOrDefaultAsync(e => e.Id == id);
             db.Event.Remove(evt);
             await db.SaveChangesAsync();
         }

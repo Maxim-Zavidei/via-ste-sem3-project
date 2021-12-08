@@ -118,8 +118,8 @@ public class ServerCommunicator {
   {
     return  eventCommunicator.editEvent(restTemplate, url, evt, id);
   }
-  public void removeEvent(Event evt) throws Exception
+  public void removeEvent(int evtId) throws Exception
   {
-    eventCommunicator.removeEvent(restTemplate, url, evt);
+    eventCommunicator.removeEvent(restTemplate, url, evtId);
   }
 }
