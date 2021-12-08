@@ -6,7 +6,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import javax.persistence.Entity;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Set;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Entity
@@ -152,5 +151,11 @@ public class User implements Serializable
     setUsername(this.username);
     setPassword(this.password);
     setEmail(this.email);
+  }
+
+  public String toString()
+  {
+    return String.format("USER : {id : %s, username : %s, password : %s, email : %s, firstName : %s, lastName : %s, isSharingCalendar : %s, "
+        + "birthday :  %s, events : %s", id, username, password, email, firstName, lastName, isSharingCalendar, birthday, events);
   }
 }

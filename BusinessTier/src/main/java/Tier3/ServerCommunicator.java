@@ -26,7 +26,7 @@ public class ServerCommunicator {
   private static UserCommunicator userCommunicator;
   private static EventCommunicator eventCommunicator;
   private RestTemplate restTemplate;
-  private static final String url = "https://localhost:5000/";
+  private static final String url = "https://localhost:5003/";
 
   /**
    * disregards the CA in order to connect to localhost of c# Web API
@@ -91,7 +91,7 @@ public class ServerCommunicator {
   }
 
   public boolean getSharingStatus(int userId) throws Exception{
-   return   userCommunicator.getSharingStatus(restTemplate, url, userId);
+   return userCommunicator.getSharingStatus(restTemplate, url, userId);
   }
 
 
@@ -100,23 +100,25 @@ public class ServerCommunicator {
   // Methods
   // Down
 
-  public Event addEvent(int id, Event event) throws Exception
+  public Event addEvent(int userId, Event event) throws Exception
   {
-    return eventCommunicator.addEvent(restTemplate, url, event, id);
+    return eventCommunicator.addEvent(restTemplate, url, event, userId);
   }
 
-  public Event addSharedEvent(int id, Event event, int ouId) throws Exception
+  public Event addSharedEvent(int userId, Event event, int otherUserId) throws Exception
   {
-    return eventCommunicator.addSharedEvent(restTemplate, url, event,id, ouId);
+    return eventCommunicator.addSharedEvent(restTemplate, url, event, userId,
+        otherUserId);
   }
 
-  public ArrayList<Event> FetchUserEventFromDatabase(int id) throws Exception
+  public ArrayList<Event> FetchUserEventFromDatabase(int userId) throws Exception
   {
-    return eventCommunicator.fetchUserEventsFromDatabase(restTemplate, url, id);
+    return eventCommunicator.fetchUserEventsFromDatabase(restTemplate, url,
+        userId);
   }
-  public Event editEvent(int id, Event evt) throws Exception
+  public Event editEvent(int userId, Event evt) throws Exception
   {
-    return  eventCommunicator.editEvent(restTemplate, url, evt, id);
+    return eventCommunicator.editEvent(restTemplate, url, evt, userId);
   }
   public void removeEvent(int evtId) throws Exception
   {

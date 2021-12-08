@@ -1,12 +1,9 @@
 package Tier3;
 
 import Shared.Event;
-
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
+import com.google.gson.Gson;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
-import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,9 +16,9 @@ public class EventCommunicator {
 
   private Gson gson;
 
-  public ArrayList<Event> fetchUserEventsFromDatabase(RestTemplate restTemplate, String url, int id) throws Exception {
+  public ArrayList<Event> fetchUserEventsFromDatabase(RestTemplate restTemplate, String url, int userId) throws Exception {
     try {
-      ResponseEntity<Event[]> responseEntity = restTemplate.getForEntity(url + "Event/" + id,
+      ResponseEntity<Event[]> responseEntity = restTemplate.getForEntity(url + "Event/" + userId,
           Event[].class);
       Event[] events = responseEntity.getBody();
       return new ArrayList<>(Arrays.asList(events));
@@ -29,11 +26,11 @@ public class EventCommunicator {
       throw new Exception("Could not fetch events");
     }
   }
-  public Event addEvent(RestTemplate restTemplate, String url, Event evt, int id) throws Exception
+  public Event addEvent(RestTemplate restTemplate, String url, Event evt, int userId) throws Exception
   {
     try {
       ResponseEntity<String> responseEntityStr = restTemplate
-          .postForEntity(url + "Event/" + id, evt, String.class);
+          .postForEntity(url + "Event/" + userId, evt, String.class);
       Event u = gson.fromJson(responseEntityStr.getBody(), Event.class);
       return u;
     } catch (Exception e) {
@@ -52,10 +49,10 @@ public class EventCommunicator {
     }
   }
 
-  public Event editEvent(RestTemplate restTemplate, String url, Event evt, int id) throws Exception
+  public Event editEvent(RestTemplate restTemplate, String url, Event evt, int userId) throws Exception
   {
     try {
-      restTemplate.patchForObject (url + "Event/" + id, evt, Event.class);
+      restTemplate.patchForObject (url + "Event/" + userId, evt, Event.class);
       //Event u = gson.fromJson(responseEntityStr.getBody(), Event.class);
       return evt;
     } catch (Exception e) {

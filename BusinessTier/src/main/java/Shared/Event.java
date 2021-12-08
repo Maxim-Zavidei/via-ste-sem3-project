@@ -35,6 +35,31 @@ public class Event implements Serializable {
         return id;
     }
 
+    public String getTitle()
+    {
+        return title;
+    }
+
+    public String getDescription()
+    {
+        return description;
+    }
+
+    public Address getAddress()
+    {
+        return address;
+    }
+
+    public String getStartTime()
+    {
+        return startTime;
+    }
+
+    public String getEndTime()
+    {
+        return endTime;
+    }
+
     public void setTitle(String title) throws IllegalArgumentException
     {
         if(title == null || title.isBlank() || title.isEmpty()) throw new IllegalArgumentException("Event title cannot be null");
@@ -74,5 +99,11 @@ public class Event implements Serializable {
         setStartTime(this.startTime);
         setEndTime(this.endTime);
         setAddress(this.address);
+    }
+
+    public String toString()
+    {
+        return String.format("EVENT {id : %s, title : %s, description : %s, startTime : %s, endTime : %s, %s}"
+            , id, title, description, startTime, endTime, address);
     }
 }

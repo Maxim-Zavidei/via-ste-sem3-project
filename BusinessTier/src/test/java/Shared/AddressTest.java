@@ -68,8 +68,7 @@ public class AddressTest
     assertThrows(IllegalArgumentException.class, () -> address.setStreetName("k"));
 
     /** Street number */
-    assertThrows(IllegalArgumentException.class, () -> address.setNumber("1"));
-    assertThrows(IllegalArgumentException.class, () -> address.setNumber("0"));
+    // No test cases //
   }
   @Test
   void setMany()

@@ -11,7 +11,7 @@ import java.io.Serializable;
 public class Address implements Serializable
 {
   @JsonProperty("id")
-  private int id;
+  private int addressId;
   @JsonProperty("streetName")
   private String streetName;
 
@@ -38,9 +38,9 @@ public class Address implements Serializable
     if (country.length() > 32) throw new IllegalArgumentException("Address country cannot have more than 32 characters.");*/
       this.country = country;
   }
-  public void setId(int id) throws IllegalArgumentException {
-    if(id < 0) throw new IllegalArgumentException("Address ID cannot be less than 0!");
-      this.id = id;
+  public void setId(int Id) throws IllegalArgumentException {
+    if(Id < 0) throw new IllegalArgumentException("Address ID cannot be less than 0!");
+      this.addressId = Id;
   }
   public void setNumber(String number) throws IllegalArgumentException {
    /* if(number == null || number.isBlank() || number.isEmpty()) throw new IllegalArgumentException("Address number cannot be null");
@@ -55,7 +55,7 @@ public class Address implements Serializable
 
   public int getId()
   {
-    return id;
+    return addressId;
   }
 
   public String getCountry()
@@ -80,10 +80,15 @@ public class Address implements Serializable
 
   public void runChecks() throws Exception
   {
-    setId(this.id);
+    setId(this.addressId);
     setCity(this.city);
     setCountry(this.country);
     setNumber(this.number);
     setStreetName(this.streetName);
+  }
+  public String toString()
+  {
+    return String.format("address {addressId : %s, country : %s, city : %s, streetName : %s, streetNumber : %s}",
+        addressId, country, city, streetName, number );
   }
 }

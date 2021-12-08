@@ -1,17 +1,14 @@
 package Tier3;
 
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.support.AnnotationConfigContextLoader;
-
 import Shared.Address;
 import Shared.Event;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import java.util.ArrayList;
+import Shared.User;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import java.util.ArrayList;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 //@SpringBootTest
 public class ServerCommunicatorTest {
@@ -23,10 +20,44 @@ public class ServerCommunicatorTest {
 	{
 		//assertEquals("[]", sCommunicator.fetchUserEventFromDatabase(2));
 	}*/
+
 	@Test
 	void contextLoads() {
 	}
     ServerCommunicator serverCommunicator;
+    Event evt = new Event();
+    User user = new User();
+
+    void addEvent (int userId) throws Exception
+    {
+    evt.setId(0);
+    evt.setTitle("String");
+    evt.setDescription("String");
+    evt.setStartTime("2021-12-08T11:10:05");
+    evt.setEndTime("2021-12-08T11:10:05");
+    Address address = new Address();
+    address.setCity("String");
+    address.setCountry("Strin");
+    address.setId(0);
+    address.setStreetName("Stringche");
+    address.setNumber("string");
+    evt.setAddress(address);
+    evt = serverCommunicator.addEvent(userId, evt);
+  }
+
+    void addUser () throws Exception
+    {
+      user.setId(0);
+      user.setUsername("string123");
+      user.setPassword("string321");
+      user.setEmail("email@domain.com");
+      user.setBirthday("0001-01-01T00:00:00");
+      user.setFirstName("string");
+      user.setLastName("string");
+      user.setSharingCalendar(true);
+      user.setEvents(null);
+      user = serverCommunicator.addUser(user);
+    }
 
     @BeforeEach                                         
     void setUp()  {
@@ -37,90 +68,173 @@ public class ServerCommunicatorTest {
             e.printStackTrace();
         }
     }
+
+    /* User Methods */
+
     @Test  
     void testGetUsers() {
         try {
-            assertEquals(2, serverCommunicator.fetchUsersFromDatabase().size());
+            ArrayList<User> usersTest =  serverCommunicator.fetchUsersFromDatabase();
+          System.out.println(usersTest);
         
         } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            fail(e.getMessage());
         }  
     }
+    
+    @Test 
+    void testGetUsersSharing(){
+      try {
+        ArrayList<User> usersTest =  serverCommunicator.fetchUsersSharingFromDatabase();
+        System.out.println(usersTest);
+
+      } catch (Exception e) {
+        fail(e.getMessage());
+      }
+    }
+    
+    @Test
+    void testAddUser()
+    {
+      try
+      {
+        addUser();
+        serverCommunicator.deleteUser(user.getId());
+      }
+      catch (Exception e)
+      {
+        fail(e.getMessage());
+      }
+    }
+    
+    @Test 
+    void testChangeSharingStatus()
+    {
+      try{
+        addUser();
+        serverCommunicator.changeSharingStatus(user.getId());
+        testDeleteUser();
+      }
+      catch (Exception e)
+      {
+        fail(e.getMessage());
+      }
+    }
+    
+    @Test
+    void TestGetSharingStatus()
+    {
+      try{
+        addUser();
+        user.setSharingCalendar(true);
+        assertTrue(user.isSharingCalendar);
+        user.setSharingCalendar(false);
+        assertFalse(user.isSharingCalendar);
+        testDeleteUser();
+      }
+      catch (Exception e)
+      {
+        fail(e.getMessage());
+      }
+    }
+    
+  @Test void testDeleteUser()
+  {
+    try
+    {
+      addUser();
+      serverCommunicator.deleteUser(user.getId());
+    }
+    catch (Exception e)
+    {
+      fail(e.getMessage());
+    }
+  }
+    
+    /* Event Methods */
 
     @Test  
     void testGetEvents() {
         try {
             ArrayList<Event> events = serverCommunicator.FetchUserEventFromDatabase(1);
             System.out.println(events.toString());
-            assertEquals(2, serverCommunicator.FetchUserEventFromDatabase(1).size());
 
         } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            fail(e.getMessage());
         }  
     }
 
     @Test  
     void testAddEvents() {
         try {
-            Event evt = new Event();
-            evt.setId(0);
-            evt.setTitle("SEP");
-            evt.setDescription("SEP3 Project");
-            evt.setStartTime("2021-12-07T00:00:00");
-            evt.setEndTime("2021-12-17T13:00:00");
-            Address address = new Address();
-            address.setCity("Horsens");
-            address.setCountry("Denmark");
-            address.setId(0);
-            address.setStreetName("VIA UC");
-            address.setNumber("2");
-            evt.setAddress(address);
+            addEvent(1);
            // JSONObject jo = new JSONObject(evt);
             //Gson gson = new GsonBuilder().setDateFormat("EEE, dd MMMM yyyy HH:mm:ss zzz").create();
            // String responce = gson.toJson(evt);
-            Event responce = serverCommunicator.addEvent(1, evt);
-            System.out.println(responce.toString());
-            assertEquals("m", responce);
+            serverCommunicator.removeEvent(evt.getId());
+            //assertEquals("m", responce);
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        
     }
+    //TODO
+    @Test
+    void testAddSharedEvent() throws Exception
+    {
+      User user2 = new User();
+      try{
+        addUser();
+        addEvent(user.getId());
 
-        @Test  
+        user2.setId(0);
+        user2.setUsername("string2");
+        user2.setPassword("string2");
+        user2.setEmail("email@domain.com");
+        user2.setBirthday("0001-01-01T00:00:00");
+        user2.setFirstName("string");
+        user2.setLastName("string");
+        user2.setSharingCalendar(true);
+        user2.setEvents(null);
+        user2 = serverCommunicator.addUser(user2);
+        System.out.printf("userId : %s, user2Id : %s, evtId : %s",
+            user.getId(), user2.getId(), evt.getId());
+        serverCommunicator.addSharedEvent(user.getId(), evt, user2.getId());
+
+      }
+      catch (Exception e)
+      {
+        fail(e.getMessage());
+      }
+      finally
+      {
+        testRemoveEvet();
+        testDeleteUser();
+        serverCommunicator.deleteUser(user2.getId());
+      }
+    }  
+
+    @Test
     void testEditEvent() {
         try {
-            Event evt = new Event();
-            evt.setId(5);
-            evt.setTitle("String");
-            evt.setDescription("String");
-            evt.setStartTime("2021-12-08T11:10:05");
-            evt.setEndTime("2021-12-08T11:10:05");
-            Address address = new Address();
-            address.setCity("String");
-            address.setCountry("String");
-            address.setId(6);
-            address.setStreetName("String");
-            address.setNumber("string");
-            evt.setAddress(address);
-            Event responce = serverCommunicator.editEvent(1, evt);
-            System.out.println(responce.toString());
-            assertEquals(evt.toString(), responce.toString());
+            addEvent(1);
+            evt.setTitle("Changed event");
+            Event response = serverCommunicator.editEvent(1, evt);
+            serverCommunicator.removeEvent(evt.getId());
+            System.out.println(response.toString());
         } catch (Exception e) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
-        }  
+            fail(e.getMessage());
+        }
     }
     @Test
     void testRemoveEvet(){
         try{
-            serverCommunicator.removeEvent(5);
+            addEvent(1);
+            serverCommunicator.removeEvent(evt.getId());
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
-        }  
+        }
     }
 }

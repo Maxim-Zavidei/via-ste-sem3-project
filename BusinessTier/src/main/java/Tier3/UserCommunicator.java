@@ -58,7 +58,7 @@ public class UserCommunicator {
             restTemplate.delete(url + "User/" + userId);
 
         } catch (Exception e) {
-            throw new Exception("User id " + userId + "not found in database");
+            throw new Exception("User id " + userId + " not found in database");
         }
     }
 
@@ -66,7 +66,7 @@ public class UserCommunicator {
         try {
             restTemplate.patchForObject(url + "User/" + userId + "/SharingStatus", userId, Integer.class);
         } catch (Exception e) {
-            throw new Exception("User id " + userId + "not found in database");
+            throw new Exception("User id " + userId + " not found in database");
         }
     }
 
