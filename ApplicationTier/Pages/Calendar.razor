@@ -1,4 +1,5 @@
-﻿@page "/calendar/{UserId:int}"
+﻿@page "/calendar"
+@page "/calendar/{UserId:int}"
 @using MudBlazor.Extensions
 @using System.Globalization
 @using ApplicationTier.Data
@@ -18,28 +19,30 @@
             <MudButton Variant="Variant.Text" Size="Size.Small" @onclick="() => SwitchMonth(true)">&gt;</MudButton>
 
             <MudTooltip Text="Add Event" Color="Color.Secondary" Placement="Placement.Bottom">
-                <MudIconButton Icon="@Icons.Material.Outlined.Add" OnClick="@(() => { SelectedEvent = null; EventManagementDialog.ToggleVisibility(); })"/>
+                <MudIconButton Icon="@Icons.Material.Outlined.Add"
+                    OnClick="@(() => { SelectedEvent = null; EventManagementDialog.ToggleVisibility(); })" />
             </MudTooltip>
             <MudTooltip Text="Edit Selected Event" Color="Color.Secondary" Placement="Placement.Bottom">
-                <MudIconButton Icon="@Icons.Material.Outlined.Edit" OnClick="@EventManagementDialog.ToggleVisibility"/>
+                <MudIconButton Icon="@Icons.Material.Outlined.Edit" OnClick="@EventManagementDialog.ToggleVisibility" />
             </MudTooltip>
             <MudTooltip Text="Remove Selected Event" Color="Color.Secondary" Placement="Placement.Bottom">
-                <MudIconButton Icon="@Icons.Material.Outlined.Remove"/>
+                <MudIconButton Icon="@Icons.Material.Outlined.Remove" />
             </MudTooltip>
 
-            <MudSpacer/>
-            
+            <MudSpacer />
+
             <div hidden="@(UserId != ((CustomAuthenticationStateProvider) AuthenticationState).GetCachedUser().Id)">
-                <MudFab Color="@(SharingStatus ? Color.Success : Color.Error)" Size="Size.Small" Icon="@(SharingStatus ? Icons.Material.Filled.Done : Icons.Material.Filled.Close)"
-                                    DisableElevation="true" aria-label="Sharing status" OnClick="OnToggledChanged"
-                                    Label="@(SharingStatus ? " Share On" : " Share Off")" IconSize="Size.Small" Style="width: 15rem"/>
+                <MudFab Color="@(SharingStatus ? Color.Success : Color.Error)" Size="Size.Small"
+                    Icon="@(SharingStatus ? Icons.Material.Filled.Done : Icons.Material.Filled.Close)"
+                    DisableElevation="true" aria-label="Sharing status" OnClick="OnToggledChanged"
+                    Label="@(SharingStatus ? " Share On" : " Share Off")" IconSize="Size.Small" Style="width: 15rem" />
             </div>
 
 
-            <MudIconButton Icon="@Icons.Material.Outlined.Notifications"/>
-            <MudIconButton Icon="@Icons.Material.Outlined.PushPin"/>
-            <MudIconButton Icon="@Icons.Material.Outlined.PeopleAlt"/>
-            <MudIconButton Icon="@Icons.Material.Outlined.MoreVert" Color="Color.Inherit"/>
+            <MudIconButton Icon="@Icons.Material.Outlined.Notifications" />
+            <MudIconButton Icon="@Icons.Material.Outlined.PushPin" />
+            <MudIconButton Icon="@Icons.Material.Outlined.PeopleAlt" />
+            <MudIconButton Icon="@Icons.Material.Outlined.MoreVert" Color="Color.Inherit" />
         </MudToolBar>
 
         <div class="container">
@@ -47,51 +50,59 @@
                 <div class="col">
                     <table class="table">
                         <thead>
-                        <tr>
-                            @foreach (var day in WeekDays) {
-                                <th class="text-center">
-                                    @day
-                                </th>
-                            }
-                        </tr>
-                        </thead>
-                        <tbody>
-                        @for (var i = 0; i < Days.GetLength(0); i++) {
                             <tr>
-                                @for (var j = 0; j < 7; j++) {
-                                    <td>
-                                        @{
-                                            var i1 = i;
-                                            var j1 = j;
-                                        }
-                                        @if (@Days[i1, j1] == 0) {
-                                            <MudPaper Elevation="3" Style="background-color: grey">
-
-                                            </MudPaper>
-                                        }
-                                        else {
-                                            <div class="d-flex flex-column mud-elevation-3 p-2">
-                                                <div class="d-flex justify-content-center">
-                                                    <MudFab Class="mb-auto" Color="Color.Secondary" Size="Size.Small" IconSize="Size.Small" Label="@Days[i1, j1].ToString()"/>
-                                                </div>
-                                                <div class="pb-4">
-                                                    @foreach (var e in EventService.GetEventsOnDay(new DateTime(DisplayedYear, DisplayedMonth + 1, Days[i1, j1])).Result) {
-                                                        <Event EventModel="e" OnClickEventHandler="@SelectEventHandler"></Event>
-                                                    }
-                                                </div>
-                                            </div>
-                                        }
-                                    </td>
+                                @foreach (var day in WeekDays)
+                                {
+                                    <th class="text-center">
+                                        @day
+                                    </th>
                                 }
                             </tr>
-                        }
+                        </thead>
+                        <tbody>
+                            @for (var i = 0; i < Days.GetLength(0); i++)
+                            {
+                                <tr>
+                                    @for (var j = 0; j < 7; j++)
+                                    {
+                                        <td>
+                                            @{
+                                                var i1 = i;
+                                                var j1 = j;
+                                            }
+                                            @if (@Days[i1, j1] == 0)
+                                            {
+                                                <MudPaper Elevation="3" Style="background-color: grey">
+
+                                                </MudPaper>
+                                            }
+                                            else
+                                            {
+                                                <div class="d-flex flex-column mud-elevation-3 p-2">
+                                                    <div class="d-flex justify-content-center">
+                                                        <MudFab Class="mb-auto" Color="Color.Secondary" Size="Size.Small"
+                                                IconSize="Size.Small" Label="@Days[i1, j1].ToString()" />
+                                                    </div>
+                                                    <div class="pb-4">
+                                                        @foreach (var e in EventService.GetEventsOnDay(new DateTime(DisplayedYear,
+                                                       DisplayedMonth + 1, Days[i1, j1])).Result)
+                                                        {
+                                                            <Event EventModel="e" OnClickEventHandler="@SelectEventHandler"></Event>
+                                                        }
+                                                    </div>
+                                                </div>
+                                            }
+                                        </td>
+                                    }
+                                </tr>
+                            }
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
 
-        <EventManagementDialog @ref="EventManagementDialog" SelectedEventModel="@(SelectedEvent?.EventModel)"/>
+        <EventManagementDialog @ref="EventManagementDialog" SelectedEventModel="@(SelectedEvent?.EventModel)" />
 
     </Authorized>
     <NotAuthorized>
@@ -101,72 +112,91 @@
 
 
 @code {
-    private static readonly string[] WeekDays = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
-    private static readonly string[] MonthNames = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
+    private static readonly string[] WeekDays = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday",
+"Sunday"};
+    private static readonly string[] MonthNames = {"January", "February", "March", "April", "May", "June", "July", "August",
+"September", "October", "November", "December"};
 
     private int DisplayedMonth = DateTime.Now.Month - 1;
     private int DisplayedYear = DateTime.Now.Year;
     private int[,] Days;
-    
+
     private Event SelectedEvent;
     private EventManagementDialog EventManagementDialog;
-    
+
     [Parameter]
     public int UserId { get; set; }
 
-    private void SelectEventHandler(Event Event) {
+    private void SelectEventHandler(Event Event)
+    {
         if (SelectedEvent != null) SelectedEvent.EventCss = "background-color: white;";
         SelectedEvent = Event;
         SelectedEvent.EventCss = "background-color: red";
         InvokeAsync(StateHasChanged);
     }
 
-    private void UpdateCalendarView() {
+    private void UpdateCalendarView()
+    {
         var DisplayedDate = new DateTime(DisplayedYear, DisplayedMonth + 1, 1);
-        var StartDayOfSelectedMonth = (int) DisplayedDate.StartOfMonth(CultureInfo.InvariantCulture).DayOfWeek;
+        var StartDayOfSelectedMonth = (int)DisplayedDate.StartOfMonth(CultureInfo.InvariantCulture).DayOfWeek;
         StartDayOfSelectedMonth += StartDayOfSelectedMonth == 0 ? 7 : 0;
-        var EndDayOfSelectedMonth = (int) DisplayedDate.EndOfMonth(CultureInfo.InvariantCulture).DayOfWeek;
+        var EndDayOfSelectedMonth = (int)DisplayedDate.EndOfMonth(CultureInfo.InvariantCulture).DayOfWeek;
         EndDayOfSelectedMonth += EndDayOfSelectedMonth == 0 ? 7 : 0;
-        var WeeksToDisplay = (StartDayOfSelectedMonth + DateTime.DaysInMonth(DisplayedDate.Year, DisplayedDate.Month) + (7 - EndDayOfSelectedMonth) - 1) / 7;
+        var WeeksToDisplay = (StartDayOfSelectedMonth + DateTime.DaysInMonth(DisplayedDate.Year, DisplayedDate.Month) + (7 -
+        EndDayOfSelectedMonth) - 1) / 7;
         var DayCount = 1;
         Days = new int[WeeksToDisplay, 7];
 
         for (var i = 0; i < StartDayOfSelectedMonth; i++) Days[0, i] = 0;
         for (var i = StartDayOfSelectedMonth - 1; i < 7; i++) Days[0, i] = DayCount++;
-        for (var j = 1; j < WeeksToDisplay - 1; j++) {
+        for (var j = 1; j < WeeksToDisplay - 1; j++)
+        {
             for (var i = 0; i < 7; i++) Days[j, i] = DayCount++;
         }
         for (var i = 0; i < EndDayOfSelectedMonth; i++) Days[Days.GetLength(0) - 1, i] = DayCount++;
         for (var i = EndDayOfSelectedMonth; i < 7; i++) Days[Days.GetLength(0) - 1, i] = 0;
     }
 
-    private void SwitchMonth(bool GoForward) {
+    private void SwitchMonth(bool GoForward)
+    {
         DisplayedMonth += GoForward ? 1 : -1;
-        if (DisplayedMonth is -1 or 12) {
+        if (DisplayedMonth is -1 or 12)
+        {
             DisplayedYear += DisplayedMonth % 11;
             DisplayedMonth = (DisplayedMonth % 12 + 12) % 12;
         }
         UpdateCalendarView();
     }
 
-    protected override async Task OnInitializedAsync() {
-        try {
+    protected override async Task OnParametersSetAsync()
+    {
+        await EventService.GetUserEventsAsync(UserId);
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
             UpdateCalendarView();
-            SharingStatus = UserService.GetSharingStatus(((CustomAuthenticationStateProvider) AuthenticationState).GetCachedUser().Id).Result;
-            EventService.GetUserEventsAsync(UserId);
+            SharingStatus = UserService.GetSharingStatus(((CustomAuthenticationStateProvider)
+            AuthenticationState).GetCachedUser().Id).Result;
         }
-        catch (Exception e) {
+        catch (Exception e)
+        {
         }
 
-    //Getting events needs more work
-    // Events = await EventService.GetUserEventsAsync(((CustomAuthenticationStateProvider) AuthenticationState).GetCachedUser().Id);
+        //Getting events needs more work
+        // Events = await EventService.GetUserEventsAsync(((CustomAuthenticationStateProvider)
+        //AuthenticationState).GetCachedUser().Id);
     }
 
     private bool SharingStatus { get; set; }
 
-    private async Task OnToggledChanged() {
-        await UserService.ChangeSharingStatus(((CustomAuthenticationStateProvider) AuthenticationState).GetCachedUser().Id);
-        SharingStatus = UserService.GetSharingStatus(((CustomAuthenticationStateProvider) AuthenticationState).GetCachedUser().Id).Result;
+    private async Task OnToggledChanged()
+    {
+        await UserService.ChangeSharingStatus(((CustomAuthenticationStateProvider)AuthenticationState).GetCachedUser().Id);
+        SharingStatus = UserService.GetSharingStatus(((CustomAuthenticationStateProvider)
+        AuthenticationState).GetCachedUser().Id).Result;
         await OnInitializedAsync();
         await InvokeAsync(StateHasChanged);
     }

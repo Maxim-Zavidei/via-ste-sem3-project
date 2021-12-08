@@ -167,10 +167,9 @@
             }
             else
             {
-                await EventService.AddEventAsync(((CustomAuthenticationStateProvider)
-                AuthenticationState).GetCachedUser().Id, CreatedEvent);
+                await EventService.AddEventAsync(((CustomAuthenticationStateProvider)AuthenticationState).GetCachedUser().Id, CreatedEvent);
             }
-            NavigationManager.NavigateTo("/calendar");
+            NavigationManager.NavigateTo("/calendar/");
 
 
         }

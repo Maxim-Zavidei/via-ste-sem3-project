@@ -16,15 +16,16 @@ namespace Authentication
     {
         private readonly IJSRuntime jsRuntime;
         private readonly IUserService userService;
-        public delegate void Del(String name);
-        Del handler;
+       public delegate void Del(String name);
+       public delegate void Del1(int id);
+       public Del handler {get;set;}
+     public Del1 handler1 {get;set;}
 
         private User cachedUser;
         public CustomAuthenticationStateProvider(IJSRuntime jsRuntime, IUserService userService)
         {
             this.jsRuntime = jsRuntime;
             this.userService = userService;
-            handler = NavMenu.ChangeName;
         }
 
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
@@ -60,7 +61,8 @@ namespace Authentication
                 string serilializedData = JsonSerializer.Serialize(user);
                 await jsRuntime.InvokeVoidAsync("sessionStorage.getItem", "currentUSer", serilializedData);
                 cachedUser = user;
-                handler(user.FirstName + " " +user.LastName);
+                handler1.Invoke(cachedUser.Id);
+                handler.Invoke(user.FirstName + " " +user.LastName);
             }
             catch (Exception e)
             {
@@ -97,7 +99,8 @@ namespace Authentication
             var user = new ClaimsPrincipal(new ClaimsIdentity());
             await jsRuntime.InvokeVoidAsync("sessionStorage.getItem", "currentUSer", "");
             NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(user)));
-            handler("Anonymous");
+            handler.Invoke("Anonymous");
+            handler1.Invoke(0);
         }
 
         private ClaimsIdentity SetupClaimsForUser(User user)

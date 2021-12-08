@@ -2,13 +2,13 @@
 @using ApplicationTier.Models
 @inject AuthenticationStateProvider AuthenticationStateProvider
 <MudNavMenu>
-    
-    @* <MudTextField Typo="Typo.h6" Class="px-4" ReadOnly="true" @bind-Value="FullName" @onchange="StateHasChanged" ></MudTextField> *@
+
+    <MudTextField Typo="Typo.h6" Class="px-4" ReadOnly="true" @bind-Value="FullName"></MudTextField>
     <MudText Typo="Typo.body2" Class="px-4 mud-text-secondary">Control Panel</MudText>
 
-    <MudDivider Class="my-2"/>
-    
-    <MudNavLink Href="/calendar" Icon="@Icons.Filled.CalendarToday">Calendar</MudNavLink>
+    <MudDivider Class="my-2" />
+
+    <MudNavLink Href=@link Icon="@Icons.Filled.CalendarToday" onprogress="GetLink">Calendar</MudNavLink>
     <MudNavLink Href="/friends" Icon="@Icons.Filled.People">Friends</MudNavLink>
     <MudNavGroup Title="Settings" Icon="@Icons.Filled.Settings" Expanded="false">
         <MudNavLink Href="/sharing" Icon="@Icons.Filled.Share" IconColor="Color.Success">Sharing</MudNavLink>
@@ -18,21 +18,34 @@
 </MudNavMenu>
 
 
-@code{
-    public  static String FullName {get;set;} = "Anonymous";
+@code {
+    public String FullName { get; set; } = "Anonymous";
+    public static String link { get; set; } = "/calendar/";
 
     protected override async Task OnInitializedAsync()
     {
-
+        ((CustomAuthenticationStateProvider)AuthenticationStateProvider).handler += ChangeName;
+        ((CustomAuthenticationStateProvider)AuthenticationStateProvider).handler1 += LoggedIn;
     }
-        public static void ChangeName( String name)
-        {
-            FullName = name;
-            System.Console.WriteLine(FullName);
-        }
+    public void ChangeName(String name)
+    {
+        FullName = name;
+        InvokeAsync(StateHasChanged);
+        System.Console.WriteLine(FullName);
+    }
 
-        public void ChangedState(){
-            StateHasChanged();
-        }
+    public  void LoggedIn(int id)
+    {
+        if(id == 0) link = "/calendar/";
+        else link += id;
+        InvokeAsync(StateHasChanged);
+        System.Console.WriteLine(link);
+    }
+
+
+    public void ChangedState()
+    {
+        InvokeAsync(StateHasChanged);
+    }
 
 }
