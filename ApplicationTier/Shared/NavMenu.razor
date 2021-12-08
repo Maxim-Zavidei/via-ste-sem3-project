@@ -3,7 +3,7 @@
 @inject AuthenticationStateProvider AuthenticationStateProvider
 <MudNavMenu>
     
-    <MudTextField Typo="Typo.h6" Class="px-4" ReadOnly="true" @bind-Value="FullName"></MudTextField>
+    <MudTextField Typo="Typo.h6" Class="px-4" ReadOnly="true" @bind-Value="FullName" @onchange="StateHasChanged" ></MudTextField>
     <MudText Typo="Typo.body2" Class="px-4 mud-text-secondary">Control Panel</MudText>
 
     <MudDivider Class="my-2"/>
@@ -19,17 +19,20 @@
 
 
 @code{
-    [Parameter]
-    public String FullName {get;set;}
+    public  static String FullName {get;set;} = "Anonymous";
 
-        protected override void OnParametersSet()
+    protected override async Task OnInitializedAsync()
+    {
+
+    }
+        public static void ChangeName( String name)
         {
-            try{
-            User user = ((CustomAuthenticationStateProvider) AuthenticationStateProvider).GetCachedUser();
-            FullName = user.FirstName + " " + user.LastName;
-            } catch(Exception e)
-            {
-                FullName = "Anonymous";
-            }
+            FullName = name;
+            System.Console.WriteLine(FullName);
         }
+
+        public void ChangedState(){
+            StateHasChanged();
+        }
+
 }

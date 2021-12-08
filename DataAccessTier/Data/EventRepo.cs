@@ -40,6 +40,19 @@ namespace DataAccessTier.Data
             Event u = await db.Event.Include(e => e.Address).OrderBy(ev => ev.Id).LastOrDefaultAsync(ev => ev.Title == evt.Title);
             return u;
         }
+
+        public async Task<Event> EditEvent(Event evt)
+        {
+            db.Event.Update(evt);
+            await db.SaveChangesAsync();
+            return evt;
+        }
+
+        public async Task RemoveEvent(Event evt)
+        {
+            db.Event.Remove(evt);
+            await db.SaveChangesAsync();
+        }
     }
 
 }

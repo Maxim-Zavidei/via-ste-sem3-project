@@ -8,27 +8,31 @@ using System.Collections.Generic;
 using ApplicationTier.Data;
 using ApplicationTier.Models;
 using ApplicationTier.Data.Impl;
+using ApplicationTier.Shared;
 
 namespace Authentication
 {
-    public class CustomAuthenticationStateProvider: AuthenticationStateProvider
+    public class CustomAuthenticationStateProvider : AuthenticationStateProvider
     {
         private readonly IJSRuntime jsRuntime;
         private readonly IUserService userService;
+        public delegate void Del(String name);
+        Del handler;
 
         private User cachedUser;
         public CustomAuthenticationStateProvider(IJSRuntime jsRuntime, IUserService userService)
         {
             this.jsRuntime = jsRuntime;
             this.userService = userService;
+            handler = NavMenu.ChangeName;
         }
 
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
-           var identity = new ClaimsIdentity();
+            var identity = new ClaimsIdentity();
             if (cachedUser == null)
             {
-                string userAsJson =  await jsRuntime.InvokeAsync<string>("sessionStorage.getItem", "currentUser");
+                string userAsJson = await jsRuntime.InvokeAsync<string>("sessionStorage.getItem", "currentUser");
                 if (!string.IsNullOrEmpty(userAsJson))
                 {
                     cachedUser = JsonSerializer.Deserialize<User>(userAsJson);
@@ -42,20 +46,23 @@ namespace Authentication
             ClaimsPrincipal cachedClaimsPrincipal = new ClaimsPrincipal(identity);
             return await Task.FromResult(new AuthenticationState(cachedClaimsPrincipal));
         }
-        
+
         public async Task ValidateLogin(string username, string pass)
         {
-            if(string.IsNullOrEmpty(username)) throw new Exception("Enter username");
-            if(string.IsNullOrEmpty(pass)) throw new Exception("Enter pass");
+            if (string.IsNullOrEmpty(username)) throw new Exception("Enter username");
+            if (string.IsNullOrEmpty(pass)) throw new Exception("Enter pass");
 
             ClaimsIdentity identity = new ClaimsIdentity();
-            try{
+            try
+            {
                 User user = await userService.ValidateUserAsync(username, pass);
                 identity = SetupClaimsForUser(user);
                 string serilializedData = JsonSerializer.Serialize(user);
-                jsRuntime.InvokeVoidAsync("sessionStorage.getItem", "currentUSer", serilializedData);
+                await jsRuntime.InvokeVoidAsync("sessionStorage.getItem", "currentUSer", serilializedData);
                 cachedUser = user;
-            } catch(Exception e)
+                handler(user.FirstName + " " +user.LastName);
+            }
+            catch (Exception e)
             {
                 throw e;
             }
@@ -90,13 +97,14 @@ namespace Authentication
             var user = new ClaimsPrincipal(new ClaimsIdentity());
             await jsRuntime.InvokeVoidAsync("sessionStorage.getItem", "currentUSer", "");
             NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(user)));
+            handler("Anonymous");
         }
 
         private ClaimsIdentity SetupClaimsForUser(User user)
         {
             List<Claim> claims = new List<Claim>();
             claims.Add(new Claim(ClaimTypes.Name, user.Username));
-           // claims.Add(new Claim("Role", user.Role));
+            // claims.Add(new Claim("Role", user.Role));
 
             ClaimsIdentity identity = new ClaimsIdentity(claims, "apiauth_type");
             return identity;
@@ -111,9 +119,6 @@ namespace Authentication
         {
             userService.StartConnection();
         }
-        
-        
-        
     }
-    
+
 }

@@ -7,52 +7,73 @@
 @inject NavigationManager NavigationManager
 @inject IEventService EventService
 
-<MudDialog @bind-IsVisible="IsVisible" Options="@(new DialogOptions {FullWidth = true})" Class="DialogColors" NoHeader="true" DisableSidePadding="true">
+<MudDialog @bind-IsVisible="IsVisible" Options="@(new DialogOptions {FullWidth = true})" Class="DialogColors"
+    NoHeader="true" DisableSidePadding="true">
     <DialogContent>
         <EditForm class="p-5" Model="@EventManagementFormModel" OnValidSubmit="OnValidEventFormSubmit">
-            <DataAnnotationsValidator/>
+            <DataAnnotationsValidator />
 
             <MudText Typo="Typo.h4" Align="Align.Center" Class="my-8 mx-5">Add an Event</MudText>
-            <MudTextField Label="Title" Class="mt-3" @bind-Value="EventManagementFormModel.Title" For="@(() => EventManagementFormModel.Title)" Adornment="Adornment.End" AdornmentIcon="@Icons.Filled.Title"/>
-            <MudTextField Label="Description" Class="mt-3" @bind-Value="EventManagementFormModel.Description" For="@(() => EventManagementFormModel.Description)" Adornment="Adornment.End" AdornmentIcon="@Icons.Filled.ShortText"/>
+            <MudTextField Label="Title" Class="mt-3" @bind-Value="EventManagementFormModel.Title"
+                For="@(() => EventManagementFormModel.Title)" Adornment="Adornment.End"
+                AdornmentIcon="@Icons.Filled.Title" />
+            <MudTextField Label="Description" Class="mt-3" @bind-Value="EventManagementFormModel.Description"
+                For="@(() => EventManagementFormModel.Description)" Adornment="Adornment.End"
+                AdornmentIcon="@Icons.Filled.ShortText" />
 
             <MudItem Class="d-flex justify-space-between">
-                <MudDatePicker Label="Start date" class="mr-16" @bind-Date="EventManagementFormModel.StartDate" DateFormat="dd/MM/yyyy"/>
-                <MudTimePicker Label="Start time" @bind-Time="EventManagementFormModel.StartTime" TimeEditMode="TimeEditMode.Normal"/>
+                <MudDatePicker Label="Start date" class="mr-16" @bind-Date="EventManagementFormModel.StartDate"
+                    DateFormat="dd/MM/yyyy" />
+                <MudTimePicker Label="Start time" @bind-Time="EventManagementFormModel.StartTime"
+                    TimeEditMode="TimeEditMode.Normal" />
             </MudItem>
 
             <MudItem Class="d-flex justify-space-between">
-                <MudDatePicker Label="End date" class="mr-16" @bind-Date="EventManagementFormModel.EndDate" DateFormat="dd/MM/yyyy"/>
-                <MudTimePicker Label="End time" @bind-Time="EventManagementFormModel.EndTime" TimeEditMode="TimeEditMode.Normal"/>
+                <MudDatePicker Label="End date" class="mr-16" @bind-Date="EventManagementFormModel.EndDate"
+                    DateFormat="dd/MM/yyyy" />
+                <MudTimePicker Label="End time" @bind-Time="EventManagementFormModel.EndTime"
+                    TimeEditMode="TimeEditMode.Normal" />
             </MudItem>
 
             <MudItem Class="d-flex justify-space-between">
-                <MudTextField Label="Street name" Class="mt-3 mr-16" @bind-Value="EventManagementFormModel.StreetName" For="@(() => EventManagementFormModel.StreetName)" Adornment="Adornment.End" AdornmentIcon="@Icons.Filled.Apartment"/>
-                <MudTextField Label="Street Number" Class="mt-3" @bind-Value="EventManagementFormModel.Number" For="@(() => EventManagementFormModel.Number)" Adornment="Adornment.End" AdornmentIcon="@Icons.Filled.Bathtub" AdornmentColor="Color.Info"/>
+                <MudTextField Label="Street name" Class="mt-3 mr-16" @bind-Value="EventManagementFormModel.StreetName"
+                    For="@(() => EventManagementFormModel.StreetName)" Adornment="Adornment.End"
+                    AdornmentIcon="@Icons.Filled.Apartment" />
+                <MudTextField Label="Street Number" Class="mt-3" @bind-Value="EventManagementFormModel.Number"
+                    For="@(() => EventManagementFormModel.Number)" Adornment="Adornment.End"
+                    AdornmentIcon="@Icons.Filled.Bathtub" AdornmentColor="Color.Info" />
             </MudItem>
 
             <MudItem Class="d-flex justify-space-between ">
-                <MudTextField Label="City" Class="mt-3 " @bind-Value="EventManagementFormModel.City" For="@(() => EventManagementFormModel.City)" Adornment="Adornment.End" AdornmentIcon="@Icons.Filled.LocationCity"/>
-                <MudTextField Label="Country" Class="mt-3 ml-16" @bind-Value="EventManagementFormModel.Country" For="@(() => EventManagementFormModel.Country)" Adornment="Adornment.End" AdornmentIcon="@Icons.Filled.Flag"/>
+                <MudTextField Label="City" Class="mt-3 " @bind-Value="EventManagementFormModel.City"
+                    For="@(() => EventManagementFormModel.City)" Adornment="Adornment.End"
+                    AdornmentIcon="@Icons.Filled.LocationCity" />
+                <MudTextField Label="Country" Class="mt-3 ml-16" @bind-Value="EventManagementFormModel.Country"
+                    For="@(() => EventManagementFormModel.Country)" Adornment="Adornment.End"
+                    AdornmentIcon="@Icons.Filled.Flag" />
             </MudItem>
 
-            <MudText Typo="Typo.body2" Align="Align.Center" Class="my-2" FullWidth="true" Color="Color.Error">@ErrorMessage</MudText>
+            <MudText Typo="Typo.body2" Align="Align.Center" Class="my-2" FullWidth="true" Color="Color.Error">
+                @ErrorMessage</MudText>
         </EditForm>
     </DialogContent>
     <DialogActions>
         <div class="d-flex align-content-start flex-column flex-grow-1">
-            <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="my-2">Add</MudButton>
-            <MudButton Variant="Variant.Filled" Color="Color.Error" Class="mb-2" OnClick="ToggleVisibility">Cancel</MudButton>
+            <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="my-2">Add
+            </MudButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Error" Class="mb-2" OnClick="ToggleVisibility">Cancel
+            </MudButton>
         </div>
     </DialogActions>
 </MudDialog>
 
 @code {
-    
+
     [Parameter] public Models.Event? SelectedEventModel { get; set; }
-    
-    public class EventManagementForm {
-        
+
+    public class EventManagementForm
+    {
+
         [Required]
         [StringLength(50, ErrorMessage = "Title name must be at least 2 characters long.", MinimumLength = 2)]
         public string Title { get; set; }
@@ -83,7 +104,7 @@
         [Required]
         [StringLength(50, ErrorMessage = "City must be at least 2 characters long.", MinimumLength = 2)]
         public string City { get; set; }
-        
+
         [Required]
         [StringLength(50, ErrorMessage = "Country must be at least 2 characters long.", MinimumLength = 2)]
         public string Country { get; set; }
@@ -91,10 +112,12 @@
 
     private readonly EventManagementForm EventManagementFormModel = new();
     private string ErrorMessage;
-    
+
     private bool IsVisible;
-    public void ToggleVisibility() {
-        if (SelectedEventModel != null) {
+    public void ToggleVisibility()
+    {
+        if (SelectedEventModel != null)
+        {
             EventManagementFormModel.Title = SelectedEventModel.Title;
             EventManagementFormModel.Description = SelectedEventModel.Description;
             EventManagementFormModel.StartDate = SelectedEventModel.StartTime;
@@ -109,22 +132,50 @@
         IsVisible = !IsVisible;
     }
 
-    private async Task OnValidEventFormSubmit(EditContext context) {
+    private async Task OnValidEventFormSubmit(EditContext context)
+    {
         Console.WriteLine("Adding event");
         ErrorMessage = "";
-        try {
+        try
+        {
             DateTime StartEvent = EventManagementFormModel.StartDate.Value;
             DateTime StartEventWithTime = StartEvent.Add(EventManagementFormModel.StartTime.Value);
             DateTime EndEvent = EventManagementFormModel.EndDate.Value;
             DateTime EndEventWithTime = EndEvent.Add(EventManagementFormModel.EndTime.Value);
-            Address address = new Address() {City = EventManagementFormModel.City, Id = 0, Country = EventManagementFormModel.Country, StreetName = EventManagementFormModel.StreetName, Number = EventManagementFormModel.Number};
-            Models.Event CreatedEvent = new Models.Event() {Address = address, Description = EventManagementFormModel.Description, Id = 0, Title = EventManagementFormModel.Title, StartTime = StartEventWithTime, EndTime = EndEventWithTime};
-            await EventService.AddEventAsync(((CustomAuthenticationStateProvider) AuthenticationState).GetCachedUser().Id,CreatedEvent);
+            Address address = new Address()
+            {
+                City = EventManagementFormModel.City,
+                Id = 0,
+                Country =
+            EventManagementFormModel.Country,
+                StreetName = EventManagementFormModel.StreetName,
+                Number =
+            EventManagementFormModel.Number
+            };
+            Models.Event CreatedEvent = new Models.Event()
+            {
+                Address = address,
+                Description = EventManagementFormModel.Description,
+                Id = 0,
+                Title = EventManagementFormModel.Title,
+                StartTime = StartEventWithTime,
+                EndTime = EndEventWithTime
+            };
+            if (SelectedEventModel != null)
+            {
+                //call edit event
+            }
+            else
+            {
+                await EventService.AddEventAsync(((CustomAuthenticationStateProvider)
+                AuthenticationState).GetCachedUser().Id, CreatedEvent);
+            }
             NavigationManager.NavigateTo("/calendar");
 
 
         }
-        catch (Exception e) {
+        catch (Exception e)
+        {
             ErrorMessage = ErrorMessage = e.Message;
         }
     }

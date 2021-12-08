@@ -66,5 +66,36 @@ namespace DataAccessTier.Controllers
                 return StatusCode(500, e.Message);
             }
         }
+
+        [HttpPatch]
+        [Route("{id:int}")]
+        public async Task<IActionResult> EditEvent([FromRoute] int id, [FromBody] Event evt)
+        {
+            try
+            {
+                evt.UserId = id;
+                var events = await db.EditEvent(evt);
+                return Ok(events);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
+        }
+
+
+        [HttpDelete]
+        public async Task<IActionResult> RemoveEvent([FromBody] Event evt)
+        {
+            try
+            {
+                await db.RemoveEvent(evt);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
+        }
     }
 }
