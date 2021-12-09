@@ -8,8 +8,7 @@ namespace DataAccessTier.Data
 {
     public interface IUserRepo
     {
-
-        public Task<User> GetUserById(int userId);
+        
         ///<sumary>Actions related to <c>User</c> table</sumary>
         public Task<DbSet<User>> GetUsersAsync();
 

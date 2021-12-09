@@ -20,12 +20,12 @@ namespace DataAccessTier.Controllers
         }
 
         [HttpGet]
-        [Route("{id:int}")]
-        public async Task<IActionResult> GetEvents([FromRoute] int id)
+        [Route("{userId:int}")]
+        public async Task<IActionResult> GetEvents([FromRoute] int userId)
         {
             try
             {
-                var events = await db.GetUserEvents(id);
+                var events = await db.GetUserEvents(userId);
                 return Ok(events);
             }
             catch (Exception e)
@@ -35,12 +35,12 @@ namespace DataAccessTier.Controllers
         }
 
         [HttpPost]
-        [Route("{id:int}")]
-        public async Task<IActionResult> AddEvent([FromRoute] int id, [FromBody] Event evt)
+        [Route("{userId:int}")]
+        public async Task<IActionResult> AddEvent([FromRoute] int userId, [FromBody] Event evt)
         {
             try
             {
-                evt.UserId = id;
+                evt.UserId = userId;
                 var events = await db.AddEventAsync(evt);
                 return Ok(events);
             }
@@ -50,6 +50,7 @@ namespace DataAccessTier.Controllers
             }
         }
 
+        //Needs modifying//
         [HttpPost]
         [Route("{userId:int}/SharedEvent/{otherUserId:int}")]
         public async Task<IActionResult> AddSharedEvent([FromRoute] int userId, [FromRoute] int otherUserId, [FromBody] Event evt)
@@ -68,12 +69,12 @@ namespace DataAccessTier.Controllers
         }
 
         [HttpPatch]
-        [Route("{id:int}")]
-        public async Task<IActionResult> EditEvent([FromRoute] int id, [FromBody] Event evt)
+        [Route("{userId:int}")]
+        public async Task<IActionResult> EditEvent([FromRoute] int userId, [FromBody] Event evt)
         {
             try
             {
-                evt.UserId = id;
+                evt.UserId = userId;
                 var events = await db.EditEvent(evt);
                 return Ok(events);
             }
@@ -85,12 +86,12 @@ namespace DataAccessTier.Controllers
 
 
         [HttpDelete]
-        [Route("{id:int}")]
-        public async Task<IActionResult> RemoveEvent([FromRoute] int id)
+        [Route("{eventId:int}")]
+        public async Task<IActionResult> RemoveEvent([FromRoute] int eventId)
         {
             try
             {
-                await db.RemoveEvent(id);
+                await db.RemoveEvent(eventId);
                 return Ok();
             }
             catch (Exception e)
