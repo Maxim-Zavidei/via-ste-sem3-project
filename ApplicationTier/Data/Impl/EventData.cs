@@ -8,7 +8,7 @@ namespace ApplicationTier.Data.Impl
     public class EventData : IEventService
     {
         private IList<Event> _events;
-         Dictionary<DateTime, IList<Event>> filteredEvents {get;set;}
+        Dictionary<DateTime, IList<Event>> filteredEvents {get;set;}
         IUserService UserService { get; set; }
 
         public EventData(IUserService userService) { UserService = userService; }
@@ -28,7 +28,10 @@ namespace ApplicationTier.Data.Impl
 
         public async Task<Event> AddEventAsync(int userId, Event eventToAdd)
         {
-            return await UserService.AddEventAsync(userId, eventToAdd);
+            Event evt = await UserService.AddEventAsync(userId, eventToAdd);
+            if(filteredEvents.ContainsKey(evt.StartTime.Date)) filteredEvents.GetValueOrDefault(evt.StartTime.Date).Add(evt);
+            else filteredEvents.Add(evt.StartTime.Date, new List<Event>(){evt});
+            return evt;
         }
 
 
@@ -36,6 +39,11 @@ namespace ApplicationTier.Data.Impl
         {
             if(filteredEvents.ContainsKey(onDay.Date)) return filteredEvents.GetValueOrDefault(onDay);
             return new List<Event>();
+        }
+
+        public Dictionary<DateTime, IList<Event>> GetFilteredByDate()
+        {
+            return filteredEvents;
         }
     }
 }

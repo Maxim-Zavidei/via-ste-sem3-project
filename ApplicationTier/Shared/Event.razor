@@ -2,6 +2,8 @@
 
  @code {
      [Parameter] public Models.Event EventModel { get; set; }
+     [Parameter] public int UserId {get;set;}
+
      [Parameter] public Action<Event> OnClickEventHandler { get; set; }
      public string EventCss { get; set; }
 

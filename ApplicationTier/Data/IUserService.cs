@@ -1,12 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using ApplicationTier.Data.Impl;
 using ApplicationTier.Models;
+using ApplicationTier.Pages;
 
 namespace ApplicationTier.Data
 {
     public interface IUserService
-    {        
+    {  
+        Delegates GetDelegates();
         User cashedUser {get;set;}
         Task<User> ValidateUserAsync(string username, string password);
         Task<IList<User>> GetUsersAsync();

@@ -16,10 +16,11 @@ namespace ApplicationTier.Data.Impl
         private IList<User> _users;
         public User cashedUser { get; set; }
         ICommunicator Communicator { get; set; }
-
+        Delegates delegates {get;set;}
 
         public UserData()
         {
+            delegates = new Delegates();
             // Communicator = communicator;
         }
 
@@ -84,8 +85,9 @@ namespace ApplicationTier.Data.Impl
                     userToReturn = JsonSerializer.Deserialize<User>(rcv);
                     cashedUser = userToReturn;
                     Console.WriteLine(userToReturn);
-                } else throw new Exception(rcv);
-                
+                }
+                else throw new Exception(rcv);
+
             }
             catch (Exception e)
             {
@@ -229,7 +231,7 @@ namespace ApplicationTier.Data.Impl
 
                 //Receiving message
                 String rcv = await Communicator.read();
-                if (!rcv.Equals("Could not fetch events for user id " + userId))
+                if (!rcv.Equals("Could not fetch events"))
                 {
                     //rcv = await Communicator.read();
                     IList<Event> events = JsonSerializer.Deserialize<List<Event>>(rcv);
@@ -260,6 +262,7 @@ namespace ApplicationTier.Data.Impl
                 {
                     string eventJson = await Communicator.read();
                     eventTemp = JsonSerializer.Deserialize<Event>(eventJson);
+                    delegates.handler.Invoke();
                 }
                 else throw new Exception("Server unavailable. Try again later.");
             }
@@ -269,6 +272,11 @@ namespace ApplicationTier.Data.Impl
                 throw new Exception($"Could not add event for user {userId}");
             }
             return eventTemp;
+        }
+
+        public Delegates GetDelegates()
+        {
+            return delegates;
         }
     }
 }

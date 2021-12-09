@@ -1,6 +1,7 @@
 @using System.ComponentModel.DataAnnotations
 @using ApplicationTier.Data
 @using ApplicationTier.Models
+@using ApplicationTier.Pages;
 @using Authentication
 @inject AuthenticationStateProvider AuthenticationState
 
@@ -69,8 +70,9 @@
 
 @code {
 
-private string EditForm = "EditForm";
+    private string EditForm = "EditForm";
     [Parameter] public Models.Event? SelectedEventModel { get; set; }
+    [Parameter] public int UserId {get;set;}
 
     public class EventManagementForm
     {
@@ -180,7 +182,7 @@ private string EditForm = "EditForm";
             }
             else
             {
-                await EventService.AddEventAsync(((CustomAuthenticationStateProvider)AuthenticationState).GetCachedUser().Id, CreatedEvent);
+                await EventService.AddEventAsync(UserId, CreatedEvent);
             }
             //NavigationManager.NavigateTo("/calendar/");
 

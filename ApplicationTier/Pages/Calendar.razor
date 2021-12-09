@@ -84,11 +84,12 @@
                                                 IconSize="Size.Small" Label="@Days[i1, j1].ToString()" />
                                                     </div>
                                                     <div class="pb-4">
-                                                        @foreach (var e in EventService.GetEventsOnDay(new DateTime(DisplayedYear,
-                                                       DisplayedMonth + 1, Days[i1, j1])).Result)
+                                                        @if(eventsByDate.ContainsKey((new DateTime(DisplayedYear, DisplayedMonth + 1, Days[i1, j1])).Date))
+                                                       {
+                                                        @foreach (var e in eventsByDate.GetValueOrDefault((new DateTime(DisplayedYear, DisplayedMonth + 1, Days[i1, j1]))))
                                                         {
                                                             <Event EventModel="e" OnClickEventHandler="@SelectEventHandler"></Event>
-                                                        }
+                                                        }}
                                                     </div>
                                                 </div>
                                             }
@@ -102,7 +103,7 @@
             </div>
         </div>
 
-        <EventManagementDialog @ref="EventManagementDialog" SelectedEventModel="@(SelectedEvent?.EventModel)" />
+        <EventManagementDialog @ref="EventManagementDialog" SelectedEventModel="@(SelectedEvent?.EventModel)" UserId=UserId />
 
     </Authorized>
     <NotAuthorized>
@@ -123,9 +124,20 @@
 
     private Event SelectedEvent;
     private EventManagementDialog EventManagementDialog;
+    private Dictionary<DateTime, IList<Models.Event>> eventsByDate {get;set;}
 
     [Parameter]
     public int UserId { get; set; }
+
+    public Dictionary<DateTime, IList<Models.Event>> GetEventsByDate(){
+        return EventService.GetFilteredByDate();
+    }
+
+    public void UpdateEvents()
+    {
+        eventsByDate = GetEventsByDate();
+        InvokeAsync(StateHasChanged);
+    }
 
     private void SelectEventHandler(Event Event)
     {
@@ -134,7 +146,6 @@
             SelectedEvent.EventCss = "background-color: white;";
             SelectedEvent = null;
             EventManagementDialog.SelectedEventModel = null;
-            InvokeAsync(StateHasChanged);
         }
         else{ if (SelectedEvent != null) SelectedEvent.EventCss = "background-color: white;";
         SelectedEvent = Event;
@@ -178,7 +189,10 @@
     protected override async Task OnParametersSetAsync()
     {
         try{
+
         await EventService.GetUserEventsAsync(UserId);
+        eventsByDate = GetEventsByDate();
+
         }
         catch(Exception e)
         {
@@ -193,6 +207,8 @@
             UpdateCalendarView();
             SharingStatus = UserService.GetSharingStatus(((CustomAuthenticationStateProvider)
             AuthenticationState).GetCachedUser().Id).Result;
+            UserService.GetDelegates().handler += UpdateEvents;
+            //EventManagementDialog.setId(UserId);
         }
         catch (Exception e)
         {
