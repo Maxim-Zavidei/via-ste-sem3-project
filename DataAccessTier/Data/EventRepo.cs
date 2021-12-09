@@ -43,9 +43,27 @@ namespace DataAccessTier.Data
 
         public async Task<Event> EditEvent(Event evt)
         {
-             db.Event.Update(evt);
-             await db.SaveChangesAsync();
-             return evt;
+            Address address = await db.Address.FirstOrDefaultAsync(ad => ad.StreetName == evt.Address.StreetName && ad.Number == evt.Address.Number && ad.City == evt.Address.City && ad.Country == evt.Address.Country);
+            if (address == null)
+            {
+                db.Address.Add(evt.Address);
+                address = db.Address.OrderBy(ad => ad.Id).Last();
+
+            }
+            evt.Address = null;
+            evt.AddressId = address.Id;
+            try
+            {
+                db.Event.Update(evt);
+                await db.SaveChangesAsync();
+
+            }
+            catch (Exception e)
+            {
+
+            }
+            return evt;
+
             /*
             Event anotherEvent = await db.Event.FindAsync(evt.Id);
             try
