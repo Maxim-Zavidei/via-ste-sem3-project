@@ -14,13 +14,13 @@ namespace ApplicationTier.Data.Impl
     public class UserData : IUserService
     {
         private IList<User> _users;
-        public User cashedUser {get;set;}
+        public User cashedUser { get; set; }
         ICommunicator Communicator { get; set; }
 
 
         public UserData()
         {
-           // Communicator = communicator;
+            // Communicator = communicator;
         }
 
         public async Task FetchUsers()
@@ -78,34 +78,14 @@ namespace ApplicationTier.Data.Impl
 
                 //Receiving
                 String rcv = await Communicator.read();
-                switch (rcv)
+                if (rcv.Equals("Successful"))
                 {
-                    case "Successful":
-                        {
-                            rcv = await Communicator.read();
-                            userToReturn = JsonSerializer.Deserialize<User>(rcv);
-                            cashedUser = userToReturn;
-                            Console.WriteLine(userToReturn);
-                            break;
-                        }
-                    case "Incorrect password":
-                        {
-                            throw new Exception("Incorrect password");
-                            
-                        }
-                    case "Incorrect user":
-                        {
-                            throw new Exception("Incorrect user");
-                        } 
-                    case "Could not fetch users from Database":
-                        {
-                            throw new Exception("Server is currently unavailable. Try again later.");
-                        }
-                    case "User not found":
-                    {
-                        throw new Exception("No such user");
-                    }
-                }
+                    rcv = await Communicator.read();
+                    userToReturn = JsonSerializer.Deserialize<User>(rcv);
+                    cashedUser = userToReturn;
+                    Console.WriteLine(userToReturn);
+                } else throw new Exception(rcv);
+                
             }
             catch (Exception e)
             {
@@ -119,11 +99,11 @@ namespace ApplicationTier.Data.Impl
         //TODO
         public async Task<IList<User>> GetUsersAsync()
         {
-            
+
             try
             {
-                 await FetchUsers();
-                 return _users;
+                await FetchUsers();
+                return _users;
             }
             catch (Exception e)
             {
@@ -134,17 +114,18 @@ namespace ApplicationTier.Data.Impl
 
         public async Task<IList<User>> GetAllSharing()
         {
-             try
+            try
             {
-                 await Communicator.send("fetchSharingUsers");
-                 String usersJSON = await Communicator.read();
-                 if (!usersJSON.Equals("Could not fetch sharing users from Database"))
+                await Communicator.send("fetchSharingUsers");
+                String usersJSON = await Communicator.read();
+                if (!usersJSON.Equals("Could not fetch sharing users from Database"))
                 {
                     IList<User> users = JsonSerializer.Deserialize<List<User>>(usersJSON);
-                    User toRemove = users.FirstOrDefault(u=>u.Id == cashedUser.Id);
+                    User toRemove = users.FirstOrDefault(u => u.Id == cashedUser.Id);
                     Console.WriteLine(users.Remove(toRemove));
                     return users;
-                } else throw new Exception("No one is sharing.");
+                }
+                else throw new Exception("No one is sharing.");
             }
             catch (Exception e)
             {
@@ -165,7 +146,9 @@ namespace ApplicationTier.Data.Impl
                 {
                     string userJson = await Communicator.read();
                     userToLog = JsonSerializer.Deserialize<User>(userJson);
-                } else {
+                }
+                else
+                {
                     throw new Exception(rcv);
                 }
             }
@@ -188,7 +171,8 @@ namespace ApplicationTier.Data.Impl
                 if (rcv.Equals("Success"))
                 {
                     Console.WriteLine("Status changed");
-                } else throw new Exception("Server unavailable. Try again later.");
+                }
+                else throw new Exception("Server unavailable. Try again later.");
             }
             catch (Exception e)
             {
@@ -224,7 +208,7 @@ namespace ApplicationTier.Data.Impl
         }
 
         public async Task StartConnection()
-    
+
         {
             Communicator = new Communicator();
             await Communicator.StartConnection();
@@ -242,7 +226,7 @@ namespace ApplicationTier.Data.Impl
                 await Communicator.send(request);
                 request = userId + "";
                 await Communicator.send(request);
-                
+
                 //Receiving message
                 String rcv = await Communicator.read();
                 if (!rcv.Equals("Could not fetch events for user id " + userId))
@@ -250,7 +234,8 @@ namespace ApplicationTier.Data.Impl
                     //rcv = await Communicator.read();
                     IList<Event> events = JsonSerializer.Deserialize<List<Event>>(rcv);
                     return events;
-                } else throw new Exception("Server unavailable. Try again later.");
+                }
+                else throw new Exception("Server unavailable. Try again later.");
             }
             catch (Exception e)
             {
@@ -275,7 +260,8 @@ namespace ApplicationTier.Data.Impl
                 {
                     string eventJson = await Communicator.read();
                     eventTemp = JsonSerializer.Deserialize<Event>(eventJson);
-                } else throw new Exception("Server unavailable. Try again later.");
+                }
+                else throw new Exception("Server unavailable. Try again later.");
             }
             catch (Exception e)
             {

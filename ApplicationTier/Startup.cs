@@ -23,7 +23,6 @@ namespace ApplicationTier {
             services.AddServerSideBlazor();
             services.AddMudServices();
             services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
-            //services.AddScoped<ICommunicator, Communicator>();
             services.AddScoped<IUserService, UserData>();
             services.AddScoped<IEventService, EventData>();
         }

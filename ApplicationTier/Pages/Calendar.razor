@@ -129,9 +129,16 @@
 
     private void SelectEventHandler(Event Event)
     {
-        if (SelectedEvent != null) SelectedEvent.EventCss = "background-color: white;";
+        if(SelectedEvent == Event)
+        {
+            SelectedEvent.EventCss = "background-color: white;";
+            SelectedEvent = null;
+            EventManagementDialog.SelectedEventModel = null;
+            InvokeAsync(StateHasChanged);
+        }
+        else{ if (SelectedEvent != null) SelectedEvent.EventCss = "background-color: white;";
         SelectedEvent = Event;
-        SelectedEvent.EventCss = "background-color: red";
+        SelectedEvent.EventCss = "background-color: red";}
         InvokeAsync(StateHasChanged);
     }
 
@@ -170,7 +177,13 @@
 
     protected override async Task OnParametersSetAsync()
     {
+        try{
         await EventService.GetUserEventsAsync(UserId);
+        }
+        catch(Exception e)
+        {
+            
+        }
     }
 
     protected override async Task OnInitializedAsync()

@@ -10,7 +10,7 @@
 <MudDialog @bind-IsVisible="IsVisible" Options="@(new DialogOptions {FullWidth = true})" Class="DialogColors"
     NoHeader="true" DisableSidePadding="true">
     <DialogContent>
-        <EditForm class="p-5" Model="@EventManagementFormModel" OnValidSubmit="OnValidEventFormSubmit">
+        <EditForm id="@EditForm" class="p-5" Model="@EventManagementFormModel" OnValidSubmit="@OnValidEventFormSubmit">
             <DataAnnotationsValidator />
 
             <MudText Typo="Typo.h4" Align="Align.Center" Class="my-8 mx-5">Add an Event</MudText>
@@ -59,7 +59,7 @@
     </DialogContent>
     <DialogActions>
         <div class="d-flex align-content-start flex-column flex-grow-1">
-            <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="my-2">Add
+            <MudButton ButtonType="ButtonType.Submit" Form="@EditForm" Variant="Variant.Filled" Color="Color.Primary" Class="my-2">Add
             </MudButton>
             <MudButton Variant="Variant.Filled" Color="Color.Error" Class="mb-2" OnClick="ToggleVisibility">Cancel
             </MudButton>
@@ -69,6 +69,7 @@
 
 @code {
 
+private string EditForm = "EditForm";
     [Parameter] public Models.Event? SelectedEventModel { get; set; }
 
     public class EventManagementForm
@@ -128,11 +129,23 @@
             EventManagementFormModel.Number = SelectedEventModel.Address.Number;
             EventManagementFormModel.City = SelectedEventModel.Address.City;
             EventManagementFormModel.Country = SelectedEventModel.Address.Country;
+        } else {
+            EventManagementFormModel.Title = null;
+            EventManagementFormModel.Description = null;
+            EventManagementFormModel.StartDate = null;
+            EventManagementFormModel.EndDate = null;
+            EventManagementFormModel.StartTime = null;
+            EventManagementFormModel.EndTime = null;
+            EventManagementFormModel.StreetName = null;
+            EventManagementFormModel.Number = null;
+            EventManagementFormModel.City = null;
+            EventManagementFormModel.Country = null;
         }
         IsVisible = !IsVisible;
+        InvokeAsync(StateHasChanged);
     }
 
-    private async Task OnValidEventFormSubmit(EditContext context)
+    public async Task OnValidEventFormSubmit()
     {
         Console.WriteLine("Adding event");
         ErrorMessage = "";
@@ -169,7 +182,7 @@
             {
                 await EventService.AddEventAsync(((CustomAuthenticationStateProvider)AuthenticationState).GetCachedUser().Id, CreatedEvent);
             }
-            NavigationManager.NavigateTo("/calendar/");
+            //NavigationManager.NavigateTo("/calendar/");
 
 
         }
