@@ -48,8 +48,30 @@ namespace ApplicationTier.Data.Impl
 
         public async Task RemoveEventAsync(Event eventToRemove)
         {
-            await UserService.RemoveEventAsync(eventToRemove);
+            string rcv = await UserService.RemoveEventAsync(eventToRemove);
+            if(rcv.Equals("Successful")) filteredEvents.GetValueOrDefault(eventToRemove.StartTime.Date).Remove(eventToRemove);
 
+        }
+
+        public async Task EditEventAsync(int UserId, Event eventToEdit)
+        {
+             Event evt = await UserService.EditEventAsync(UserId,  eventToEdit);
+             foreach(var e in filteredEvents.GetValueOrDefault(evt.StartTime.Date))
+             {
+                 if(e.Id == evt.Id)
+                 {
+                     filteredEvents.GetValueOrDefault(evt.StartTime.Date).Remove(e);
+                     filteredEvents.GetValueOrDefault(evt.StartTime.Date).Add(evt);
+                     break;
+                 }
+             }
+        }
+
+        public async Task AddSharedEvent(int cashedId, int userId, Event sharedEvent)
+        {
+            Event evt = await UserService.AddSharedEvent( cashedId,  userId,  sharedEvent);
+            if(filteredEvents.ContainsKey(evt.StartTime.Date)) filteredEvents.GetValueOrDefault(evt.StartTime.Date).Add(evt);
+            else filteredEvents.Add(evt.StartTime.Date, new List<Event>(){evt});
         }
     }
 }

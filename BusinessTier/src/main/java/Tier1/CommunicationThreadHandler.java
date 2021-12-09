@@ -211,6 +211,7 @@ public class CommunicationThreadHandler implements Runnable {
                             received = read();
                             int otherUserId = Integer.parseInt(received);
                             evt = eventController.addSharedEvent(userId, evt, otherUserId);
+                            send("Successful");
                             toSend = gson.toJson(evt);
                         }
                         catch (Exception e)

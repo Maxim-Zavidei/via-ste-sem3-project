@@ -285,7 +285,7 @@ namespace ApplicationTier.Data.Impl
             return delegates;
         }
 
-        public async Task RemoveEventAsync(Event eventToRemove)
+        public async Task<string> RemoveEventAsync(Event eventToRemove)
         {
             try
             {
@@ -299,7 +299,9 @@ namespace ApplicationTier.Data.Impl
                 String rcv = await Communicator.read();
                 if (rcv.Equals("Successful"))
                 {
+                    delegates.handler.Invoke();
                     Console.WriteLine("Event removed");
+                    return(rcv);
                 }
                 else
                     throw new Exception("Server unavailable. Try again later.");
@@ -309,6 +311,64 @@ namespace ApplicationTier.Data.Impl
                 Console.WriteLine(e.Message);
                 throw new Exception($"Could not remove Event");
             }
+        }
+
+        public async Task<Event> EditEventAsync(int UserId, Event eventToEdit)
+        {
+            Event eventTemp = new Event();
+            try
+            {
+                await Communicator.send("editEvent");
+                string toSend = JsonSerializer.Serialize(eventToEdit);
+                await Communicator.send(toSend);
+                toSend = UserId + "";
+                await Communicator.send(toSend);
+                string rcv = await Communicator.read();
+                if (rcv.Equals("Successful"))
+                {
+                    string eventJson = await Communicator.read();
+                    eventTemp = JsonSerializer.Deserialize<Event>(eventJson);
+                    delegates.handler.Invoke();
+                }
+                else throw new Exception("Server unavailable. Try again later.");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                throw new Exception($"Could not add event for user {UserId}");
+            }
+
+            return eventTemp;
+        }
+
+        public async Task<Event> AddSharedEvent(int cashedId, int userId, Event sharedEvent)
+        {
+            Event eventTemp = new Event();
+            try
+            {
+                await Communicator.send("addSharedEvent");
+                string toSend = JsonSerializer.Serialize(sharedEvent);
+                await Communicator.send(toSend);
+                toSend = cashedId + "";
+                await Communicator.send(toSend);
+                 toSend = userId + "";
+                await Communicator.send(toSend);
+                string rcv = await Communicator.read();
+                if (rcv.Equals("Successful"))
+                {
+                    string eventJson = await Communicator.read();
+                    eventTemp = JsonSerializer.Deserialize<Event>(eventJson);
+                    delegates.handler.Invoke();
+                }
+                else throw new Exception("Server unavailable. Try again later.");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                throw new Exception($"Could not add event for user {userId}");
+            }
+
+            return eventTemp;
         }
     }
 }

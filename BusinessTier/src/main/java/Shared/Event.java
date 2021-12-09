@@ -64,7 +64,7 @@ public class Event implements Serializable {
     {
         if(title == null || title.isBlank() || title.isEmpty()) throw new IllegalArgumentException("Event title cannot be null");
         if(title.length() <= 2) throw new IllegalArgumentException("Event title cannot have less than 3 characters.");
-        if (title.length() > 16) throw new IllegalArgumentException("Event title cannot have more than 16 characters.");
+        //if (title.length() > 16) throw new IllegalArgumentException("Event title cannot have more than 16 characters.");
         this.title = title;
     }
     public void setAddress(Address address) throws Exception

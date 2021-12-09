@@ -115,6 +115,7 @@
 
     private readonly EventManagementForm EventManagementFormModel = new();
     private string ErrorMessage;
+    private bool isEdit {get;set;}
 
     private bool IsVisible;
     public void ToggleVisibility()
@@ -131,6 +132,7 @@
             EventManagementFormModel.Number = SelectedEventModel.Address.Number;
             EventManagementFormModel.City = SelectedEventModel.Address.City;
             EventManagementFormModel.Country = SelectedEventModel.Address.Country;
+            isEdit = true;
         } else {
             EventManagementFormModel.Title = null;
             EventManagementFormModel.Description = null;
@@ -142,6 +144,7 @@
             EventManagementFormModel.Number = null;
             EventManagementFormModel.City = null;
             EventManagementFormModel.Country = null;
+            isEdit = false;
         }
         IsVisible = !IsVisible;
         InvokeAsync(StateHasChanged);
@@ -178,14 +181,18 @@
             };
             if (SelectedEventModel != null)
             {
-                //call edit event
+                CreatedEvent.Id = SelectedEventModel.Id;
+                CreatedEvent.Address.Id = SelectedEventModel.Address.Id;
+                await EventService.EditEventAsync(UserId, CreatedEvent);
             }
             else
             {
-                await EventService.AddEventAsync(UserId, CreatedEvent);
+                int cashedId = ((CustomAuthenticationStateProvider) AuthenticationState).GetCachedUser().Id;
+                if(UserId != cashedId) await EventService.AddSharedEvent(cashedId, UserId, CreatedEvent);
+                else await EventService.AddEventAsync(UserId, CreatedEvent);
             }
             IsVisible = false;
-            await EventService.GetUserEventsAsync(((CustomAuthenticationStateProvider) AuthenticationState).GetCachedUser().Id);
+            //await EventService.GetUserEventsAsync(((CustomAuthenticationStateProvider) AuthenticationState).GetCachedUser().Id);
             await InvokeAsync(StateHasChanged);
 
 

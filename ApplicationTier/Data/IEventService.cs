@@ -12,6 +12,8 @@ namespace ApplicationTier.Data
         Task<Event> AddEventAsync(int userId, Event eventToAdd);
         Task<IList<Event>> GetEventsOnDay(DateTime onDay);
         Task RemoveEventAsync( Event eventToRemove);
+        Task EditEventAsync(int UserId, Event eventToEdit);
+        Task AddSharedEvent(int cashedId, int userId, Event sharedEvent);
 
     }
 }
