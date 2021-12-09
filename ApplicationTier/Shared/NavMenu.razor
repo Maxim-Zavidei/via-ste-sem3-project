@@ -1,6 +1,8 @@
 @using Authentication
 @using ApplicationTier.Models
+@using ApplicationTier.Data
 @inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IUserService UserService
 <MudNavMenu>
 
     <MudTextField Typo="Typo.h6" Class="px-4" ReadOnly="true" @bind-Value="FullName"></MudTextField>
@@ -25,7 +27,7 @@
     protected override async Task OnInitializedAsync()
     {
         ((CustomAuthenticationStateProvider)AuthenticationStateProvider).handler += ChangeName;
-        ((CustomAuthenticationStateProvider)AuthenticationStateProvider).handler1 += LoggedIn;
+        UserService.GetDelegates().handleId += LoggedIn;
     }
     public void ChangeName(String name)
     {

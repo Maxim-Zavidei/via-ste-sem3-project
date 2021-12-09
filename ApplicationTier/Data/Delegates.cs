@@ -11,5 +11,8 @@ namespace ApplicationTier.Data
     {  
         public delegate void Del();
         public Del handler { get; set; }
+
+        public delegate void Del1(int id);
+        public Del1 handleId {get;set;}
     }
 }

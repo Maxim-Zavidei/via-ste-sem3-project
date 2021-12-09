@@ -247,7 +247,7 @@ public class CommunicationThreadHandler implements Runnable {
                             received = read();
                             int evtId = Integer.parseInt(received);
                             eventController.removeEvent(evtId);
-                            send("Successful");
+                            toSend = "Successful";
                         }
                         catch (Exception e)
                         {

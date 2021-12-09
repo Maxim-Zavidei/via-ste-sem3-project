@@ -84,6 +84,7 @@ namespace ApplicationTier.Data.Impl
                     rcv = await Communicator.read();
                     userToReturn = JsonSerializer.Deserialize<User>(rcv);
                     cashedUser = userToReturn;
+                    delegates.handleId.Invoke(userToReturn.Id);
                     Console.WriteLine(userToReturn);
                 }
                 else throw new Exception(rcv);
@@ -221,6 +222,8 @@ namespace ApplicationTier.Data.Impl
         public async Task CloseConnection()
         {
             await Communicator.CloseConnection();
+            
+            delegates.handleId.Invoke(0);
         }
 
         public async Task<IList<Event>> GetUserEventsAsync(int userId)
