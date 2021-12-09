@@ -22,10 +22,10 @@ namespace DataAccessTier.Data
 
         
 
-        public async Task<DbSet<User>> GetUsersAsync() {
+        public async Task<List<User>> GetUsersAsync() {
             try
             {
-                return db.Users;
+                return db.Users.OrderBy(u => u.Id).ToList();
             }
             catch (Exception e)
             {
@@ -38,7 +38,7 @@ namespace DataAccessTier.Data
         {
             try
             { 
-                return db.Users.Where(dbUser => dbUser.IsSharingCalendar == true).ToList();
+                return db.Users.Where(dbUser => dbUser.IsSharingCalendar == true).OrderBy(u => u.Id).ToList();
             }
             catch (Exception e)
             {

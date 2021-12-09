@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using DataAccessTier.Model;
 using System.Threading.Tasks;
 using System.Linq;
+using System.Runtime.InteropServices.ComTypes;
 
 namespace DataAccessTier.Data
 {
@@ -15,30 +16,39 @@ namespace DataAccessTier.Data
         {
             db = calendarDbContext;
         }
-        public async Task<IList<Event>> GetUserEvents(int userId)
+        public async Task<List<Event>> GetUserEvents(int userId)
         {
-
-            return db.Event.Include(e => e.Address)
-            .Where(e => e.UserId == userId).ToList<Event>();
+            List<Event> events = db.Event.Include(e => e.Address)
+                    .Where(e => e.UserId == userId).OrderByDescending(e => e.Id).ToList();
+                return events;
         }
 
         public async Task<Event> AddEventAsync(Event evt)
         {
-            Address address = await db.Address.FirstOrDefaultAsync(ad => ad.StreetName == evt.Address.StreetName && ad.Number == evt.Address.Number && ad.City == evt.Address.City && ad.Country == evt.Address.Country);
-            if (address != null)
+            try
             {
-                evt.Address = null;
-                evt.AddressId = address.Id;
+                Address address = await db.Address.FirstOrDefaultAsync(ad =>
+                    ad.StreetName == evt.Address.StreetName && ad.Number == evt.Address.Number &&
+                    ad.City == evt.Address.City && ad.Country == evt.Address.Country);
+                if (address != null)
+                {
+                    evt.Address = address;
+                    //evt.AddressId = address.Id;
+                }
+                
+                evt.Id = await db.Event.MaxAsync(e => e.Id) + 1;
                 await db.Event.AddAsync(evt);
                 await db.SaveChangesAsync();
+                return evt;
+                    
+                /*Event u = await db.Event.Include(e => e.Address).OrderByDescending(ev => ev.Id).FirstOrDefaultAsync(ev => ev.Title == evt.Title);
+                return u;*/
             }
-            else
+            catch (Exception e)
             {
-                await db.Event.AddAsync(evt);
-                await db.SaveChangesAsync();
+                Console.WriteLine(e.Message);
+                throw;
             }
-            Event u = await db.Event.Include(e => e.Address).OrderBy(ev => ev.Id).LastOrDefaultAsync(ev => ev.Title == evt.Title);
-            return u;
         }
 
         public async Task<Event> EditEvent(Event evt)
@@ -63,20 +73,6 @@ namespace DataAccessTier.Data
 
             }
             return evt;
-
-            /*
-            Event anotherEvent = await db.Event.FindAsync(evt.Id);
-            try
-            {
-                db.Entry(anotherEvent).CurrentValues.SetValues(evt);
-                await db.SaveChangesAsync();
-                return evt;
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-                throw new Exception($"Could not find event with such id {evt.Id}");
-            }*/
         }
 
         public async Task RemoveEvent(int id)

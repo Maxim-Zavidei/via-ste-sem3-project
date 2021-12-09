@@ -32,8 +32,8 @@ namespace DataAccessTier.Controllers
         {
             try
             {
-                var ussers = await db.GetUsersAsync();
-                return Ok(ussers);
+                var users = await db.GetUsersAsync();
+                return Ok(users);
             }
             catch (Exception e)
             {
@@ -95,7 +95,7 @@ namespace DataAccessTier.Controllers
         
         [HttpPatch]
         [Route("{userId:int}/SharingStatus")]
-        public async Task<IActionResult> ChangeSharedStatus([FromBody] int userId)
+        public async Task<IActionResult> ChangeSharedStatus([FromRoute] int userId)
         {
             try
             {

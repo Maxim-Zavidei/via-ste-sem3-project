@@ -57,11 +57,15 @@ namespace DataAccessTier.Controllers
         {
             try
             {
-                evt.UserId = otherUserId;
-                var events = await db.AddEventAsync(evt);
+                Event tempEvent = evt;
                 evt.UserId = userId;
-                events = await db.AddEventAsync(evt);
-                return Ok(events);
+                Event event1 = await db.AddEventAsync(evt);
+                
+                tempEvent.UserId = otherUserId;
+                Event event2 = await db.AddEventAsync(tempEvent);
+                
+                Console.WriteLine($"\n user1: {userId}, {event1} \n\n user2: {otherUserId}, {event2}");
+                return Ok(event2);
             } catch(Exception e)
             {
                 return StatusCode(500, e.Message);

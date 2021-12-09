@@ -10,7 +10,7 @@ namespace DataAccessTier.Data
     {
         
         ///<sumary>Actions related to <c>User</c> table</sumary>
-        public Task<DbSet<User>> GetUsersAsync();
+        public Task<List<User>> GetUsersAsync();
 
         public Task<List<User>> GetUsersSharingAsync();
 
