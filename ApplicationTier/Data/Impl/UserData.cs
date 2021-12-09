@@ -102,7 +102,6 @@ namespace ApplicationTier.Data.Impl
         //TODO
         public async Task<IList<User>> GetUsersAsync()
         {
-
             try
             {
                 await FetchUsers();
@@ -136,6 +135,7 @@ namespace ApplicationTier.Data.Impl
                 throw new Exception("Could not fetch sharing users from Database");
             }
         }
+
         public async Task<User> AddUserAsync(User user)
         {
             User userToLog = new();
@@ -158,8 +158,10 @@ namespace ApplicationTier.Data.Impl
             catch (Exception e)
             {
                 //Console.WriteLine(e.Message);
-                throw new Exception($"Server unavailable. Could not create user {user.Id}, {user.Username} in database");
+                throw new Exception(
+                    $"Server unavailable. Could not create user {user.Id}, {user.Username} in database");
             }
+
             return userToLog;
         }
 
@@ -197,7 +199,6 @@ namespace ApplicationTier.Data.Impl
                 {
                     string userSharingStatus = await Communicator.read();
                     SharingStatus = JsonSerializer.Deserialize<bool>(userSharingStatus);
-
                 }
                 else throw new Exception("Server unavailable. Try again later.");
             }
@@ -216,10 +217,12 @@ namespace ApplicationTier.Data.Impl
             Communicator = new Communicator();
             await Communicator.StartConnection();
         }
+
         public async Task CloseConnection()
         {
             await Communicator.CloseConnection();
         }
+
         public async Task<IList<Event>> GetUserEventsAsync(int userId)
         {
             try
@@ -245,6 +248,7 @@ namespace ApplicationTier.Data.Impl
                 Console.WriteLine(e.Message);
                 throw new Exception($"Could not fetch events for user {userId} ");
             }
+
             return null;
         }
 
@@ -272,12 +276,39 @@ namespace ApplicationTier.Data.Impl
                 Console.WriteLine(e.Message);
                 throw new Exception($"Could not add event for user {userId}");
             }
+
             return eventTemp;
         }
 
         public Delegates GetDelegates()
         {
             return delegates;
+        }
+
+        public async Task RemoveEventAsync(Event eventToRemove)
+        {
+            try
+            {
+                //Sending request
+                string request = "removeEvent";
+                await Communicator.send(request);
+                request = eventToRemove.Id + "";
+                await Communicator.send(request);
+
+                //Receiving message
+                String rcv = await Communicator.read();
+                if (rcv.Equals("Successful"))
+                {
+                    Console.WriteLine("Event removed");
+                }
+                else
+                    throw new Exception("Server unavailable. Try again later.");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                throw new Exception($"Could not remove Event");
+            }
         }
     }
 }

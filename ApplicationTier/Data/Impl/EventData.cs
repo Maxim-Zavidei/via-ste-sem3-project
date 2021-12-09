@@ -45,5 +45,11 @@ namespace ApplicationTier.Data.Impl
         {
             return filteredEvents;
         }
+
+        public async Task RemoveEventAsync(Event eventToRemove)
+        {
+            await UserService.RemoveEventAsync(eventToRemove);
+
+        }
     }
 }

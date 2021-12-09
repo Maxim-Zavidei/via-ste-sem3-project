@@ -26,7 +26,7 @@
                 <MudIconButton Icon="@Icons.Material.Outlined.Edit" OnClick="@EventManagementDialog.ToggleVisibility" />
             </MudTooltip>
             <MudTooltip Text="Remove Selected Event" Color="Color.Secondary" Placement="Placement.Bottom">
-                <MudIconButton Icon="@Icons.Material.Outlined.Remove" />
+                <MudIconButton Icon="@Icons.Material.Outlined.Remove" OnClick="@(() => { if (SelectedEvent != null) EventService.RemoveEventAsync(SelectedEvent.EventModel);})"/>
             </MudTooltip>
 
             <MudSpacer />

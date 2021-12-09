@@ -23,5 +23,7 @@ namespace ApplicationTier.Data
         /// related to Events
         Task<IList<Event>> GetUserEventsAsync(int userId);
         Task<Event> AddEventAsync(int userId, Event eventToAdd);
+        Task RemoveEventAsync( Event eventToRemove);
+
     }
 }
