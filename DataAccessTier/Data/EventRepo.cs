@@ -63,7 +63,7 @@ namespace DataAccessTier.Data
 
         public async Task RemoveEvent(int id)
         {
-            Event eventToRemove = db.Event.Where(event1 => event1.Id == id).Include(event2 => event2.Address).First();
+            Event eventToRemove = db.Event.First(event1 => event1.Id == id);
             db.Event.Remove(eventToRemove);
             await db.SaveChangesAsync();
         }
