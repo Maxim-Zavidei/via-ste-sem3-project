@@ -20,7 +20,7 @@
 
             <MudTooltip Text="Add Event" Color="Color.Secondary" Placement="Placement.Bottom">
                 <MudIconButton Icon="@Icons.Material.Outlined.Add"
-                    OnClick="@(() => { SelectedEvent = null; EventManagementDialog.ToggleVisibility(); })" />
+                    OnClick="@(() => { SelectedEvent = null; EventManagementDialog.ToggleVisibility();})" />
             </MudTooltip>
             <MudTooltip Text="Edit Selected Event" Color="Color.Secondary" Placement="Placement.Bottom">
                 <MudIconButton Icon="@Icons.Material.Outlined.Edit" OnClick="@EventManagementDialog.ToggleVisibility" />
@@ -193,6 +193,7 @@
         await EventService.GetUserEventsAsync(UserId);
         eventsByDate = GetEventsByDate();
 
+            await InvokeAsync(StateHasChanged);
         }
         catch(Exception e)
         {

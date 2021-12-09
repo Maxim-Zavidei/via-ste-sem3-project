@@ -78,11 +78,11 @@
     {
 
         [Required]
-        [StringLength(50, ErrorMessage = "Title name must be at least 2 characters long.", MinimumLength = 2)]
+        [StringLength(50, ErrorMessage = "Title name must be at least 3 characters long.", MinimumLength = 3)]
         public string Title { get; set; }
 
         [Required]
-        [StringLength(50, ErrorMessage = "Description must be at least 2 characters long.", MinimumLength = 2)]
+        [StringLength(50, ErrorMessage = "Description must be at least 3 characters long.", MinimumLength = 3)]
         public string Description { get; set; }
 
         [Required]
@@ -184,7 +184,9 @@
             {
                 await EventService.AddEventAsync(UserId, CreatedEvent);
             }
-            //NavigationManager.NavigateTo("/calendar/");
+            IsVisible = false;
+            await EventService.GetUserEventsAsync(((CustomAuthenticationStateProvider) AuthenticationState).GetCachedUser().Id);
+            await InvokeAsync(StateHasChanged);
 
 
         }
