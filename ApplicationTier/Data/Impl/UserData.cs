@@ -89,7 +89,8 @@ namespace ApplicationTier.Data.Impl
             }
             catch (Exception e)
             {
-                throw new Exception("Sever is currently unavailable. Try again later.");
+                Console.WriteLine(e.Message);
+                throw new Exception("Server is currently unavailable. Try again later.");
             }
 
 
