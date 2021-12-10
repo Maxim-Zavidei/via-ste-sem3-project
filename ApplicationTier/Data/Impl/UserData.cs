@@ -140,10 +140,20 @@ namespace ApplicationTier.Data.Impl
         public async Task<User> AddUserAsync(User user)
         {
             User userToLog = new();
+            User userToSend = new(){
+                Id = 0,
+                Username = user.Username,
+                Password = user.Password,
+                Email = user.Email,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Birthday = new DateTime(),
+                IsSharingCalendar = false
+            };
             try
             {
                 await Communicator.send("addUser");
-                string toSend = JsonSerializer.Serialize(user);
+                string toSend = JsonSerializer.Serialize(userToSend);
                 await Communicator.send(toSend);
                 string rcv = await Communicator.read();
                 if (rcv.Equals("Successful"))
