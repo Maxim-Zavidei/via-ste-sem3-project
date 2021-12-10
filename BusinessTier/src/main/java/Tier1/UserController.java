@@ -52,7 +52,7 @@ public class UserController extends Controller {
     String isExisting = chechIfExist(user.getEmail(), user.getUsername());
     user.runChecks();
     cashedUser = super.communicator.addUser(user);
-    return user.getEmail();
+    return isExisting;
   }
   public void deleteUser(int userId) throws Exception
   {
