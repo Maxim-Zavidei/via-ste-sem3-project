@@ -34,8 +34,8 @@ namespace DataAccessTier.Data
 
         // The following configures EF to create a Sqlite database file in the
         // special "local" folder for your platform.
-      /* protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-            => optionsBuilder.UseNpgsql("Host=localhost;Database=sep3;Username=postgres;Password=6364");*/
+      protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+            => optionsBuilder.UseBatchEF_Npgsql();
     }
 
 }

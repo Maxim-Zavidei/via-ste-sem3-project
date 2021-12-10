@@ -60,17 +60,26 @@ namespace DataAccessTier.Data
                 address = db.Address.OrderBy(ad => ad.Id).Last();
 
             }
-            evt.Address = null;
+
+            evt.Address = address;
             evt.AddressId = address.Id;
             try
             {
-                db.Event.Update(evt);
+                await db.BatchUpdate<Event>()
+                    .Set(b => b.Title, b => evt.Title)
+                    .Set(b => b.Description, b => evt.Description)
+                    .Set(b => b.StartTime, b => evt.StartTime)
+                    .Set(b => b.EndTime, b => evt.EndTime)
+                    .Where(b => b.StartTime == evt.StartTime && b.EndTime == evt.EndTime)
+                    .ExecuteAsync();
+                //db.Event.Update(evt);
                 await db.SaveChangesAsync();
 
             }
             catch (Exception e)
             {
-
+                Console.WriteLine(e.Message);
+                Console.WriteLine(e.StackTrace);
             }
             return evt;
         }
@@ -78,7 +87,9 @@ namespace DataAccessTier.Data
         public async Task RemoveEvent(int id)
         {
             Event eventToRemove = db.Event.First(event1 => event1.Id == id);
-            db.Event.Remove(eventToRemove);
+            //db.Event.Remove(eventToRemove);
+            await db.DeleteRangeAsync<Event>(e => e.Title == eventToRemove.Title && e.Description == eventToRemove.Description
+            && e.StartTime == eventToRemove.StartTime && e.EndTime == eventToRemove.EndTime);
             await db.SaveChangesAsync();
         }
     }
