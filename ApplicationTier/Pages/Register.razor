@@ -11,54 +11,58 @@
 
 <AuthorizeView>
     <NotAuthorized Context="NotAuth">
-<MudGrid Justify="Justify.Center">
-    <MudItem xs="5" Class="my-8">
-            <MudPaper Elevation="14" Class="d-flex align-center justify-center py-8">
-            <table>
-                <tr>
-                    <td>
-                        <MudText Typo="Typo.h4" Align="Align.Center" Class="ma-5">Register an account</MudText>
-                        <img class="profile-img" src="https://lh5.googleusercontent.com/-b0-k99FZlyE/AAAAAAAAAAI/AAAAAAAAAAA/eu7opA4byxI/photo.jpg?sz=120" alt="Profile Image">
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <EditForm Model="@RegisterFormModel" OnValidSubmit="OnValidRegisterFormSubmit">
-                            <DataAnnotationsValidator/>
-                
-                            <MudTextField Label="Email" Class="mt-3" @bind-Value="RegisterFormModel.Email" For="@(() => RegisterFormModel.Email)" Adornment="Adornment.End" AdornmentIcon="@Icons.Filled.AlternateEmail"/>
-                            <MudTextField Label="First Name" Class="mt-3" @bind-Value="RegisterFormModel.FirstName" For="@(() => RegisterFormModel.FirstName)" Adornment="Adornment.End" AdornmentIcon="@Icons.Filled.AccountBox"/>
-                            <MudTextField Label="Last Name" Class="mt-3" @bind-Value="RegisterFormModel.LastName" For="@(() => RegisterFormModel.LastName)" Adornment="Adornment.End" AdornmentIcon="@Icons.Filled.AccountBox"/>
-                            <MudTextField Label="Password" Class="mt-3" @bind-Value="RegisterFormModel.Password" For="@(() => RegisterFormModel.Password)" InputType="@PasswordInputType" Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon" OnAdornmentClick="TogglePasswordVisibilityState"/>
-                            <MudTextField Label="Retype Password" Class="mt-3" InputType="InputType.Password" @bind-Value="RegisterFormModel.PasswordConfirmation" For="@(() => RegisterFormModel.PasswordConfirmation)" Adornment="Adornment.End" AdornmentIcon="@Icons.Outlined.Lock"/>
-                            <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" Class="py-2 mt-4">Register</MudButton>
+        <MudGrid Justify="Justify.Center">
+            <MudItem xs="5" Class="my-8">
+                <MudPaper Elevation="14" Class="d-flex align-center justify-center py-8">
+                    <table>
+                        <tr>
+                            <td>
+                                <MudText Typo="Typo.h4" Align="Align.Center" Class="ma-5">Register an account</MudText>
+                                <img class="profile-img" src="https://lh5.googleusercontent.com/-b0-k99FZlyE/AAAAAAAAAAI/AAAAAAAAAAA/eu7opA4byxI/photo.jpg?sz=120" alt="Profile Image">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <EditForm Model="@RegisterFormModel" OnValidSubmit="OnValidRegisterFormSubmit">
+                                    <DataAnnotationsValidator/>
+                                    <MudTextField Label="Username" Class="mt-3" @bind-Value="RegisterFormModel.Username" For="@(() => RegisterFormModel.Username)" Adornment="Adornment.End" AdornmentIcon="@Icons.Filled.Person"/>
+                                    <MudTextField Label="Email" Class="mt-3" @bind-Value="RegisterFormModel.Email" For="@(() => RegisterFormModel.Email)" Adornment="Adornment.End" AdornmentIcon="@Icons.Filled.AlternateEmail"/>
+                                    <MudTextField Label="First Name" Class="mt-3" @bind-Value="RegisterFormModel.FirstName" For="@(() => RegisterFormModel.FirstName)" Adornment="Adornment.End" AdornmentIcon="@Icons.Filled.AccountBox"/>
+                                    <MudTextField Label="Last Name" Class="mt-3" @bind-Value="RegisterFormModel.LastName" For="@(() => RegisterFormModel.LastName)" Adornment="Adornment.End" AdornmentIcon="@Icons.Filled.AccountBox"/>
+                                    <MudTextField Label="Password" Class="mt-3" @bind-Value="RegisterFormModel.Password" For="@(() => RegisterFormModel.Password)" InputType="@PasswordInputType" Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon" OnAdornmentClick="TogglePasswordVisibilityState"/>
+                                    <MudTextField Label="Retype Password" Class="mt-3" InputType="InputType.Password" @bind-Value="RegisterFormModel.PasswordConfirmation" For="@(() => RegisterFormModel.PasswordConfirmation)" Adornment="Adornment.End" AdornmentIcon="@Icons.Outlined.Lock"/>
+                                    <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" Class="py-2 mt-4">Register</MudButton>
 
-                            <MudText Typo="Typo.body2" Align="Align.Center" Class="my-4" FullWidth="true" Color="Color.Error">@ErrorMessage</MudText>
-                            <MudDivider/>
-                            <a href="/login" class="text-center login-href">Already have an account? Sign in</a>
-                        </EditForm>
-                    </td>
-                </tr>
-            </table>
-        </MudPaper>
-    </MudItem>
-</MudGrid>
-</NotAuthorized>
+                                    <MudText Typo="Typo.body2" Align="Align.Center" Class="my-4" FullWidth="true" Color="Color.Error">@ErrorMessage</MudText>
+                                    <MudDivider/>
+                                    <a href="/login" class="text-center login-href">Already have an account? Sign in</a>
+                                </EditForm>
+                            </td>
+                        </tr>
+                    </table>
+                </MudPaper>
+            </MudItem>
+        </MudGrid>
+    </NotAuthorized>
 </AuthorizeView>
 
 @code {
-    
+
     // Variables for handling the state and behaviour of the show password button.
     private InputType PasswordInputType = InputType.Password;
     private string PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
     private bool IsPasswordVisible;
 
-    private void TogglePasswordVisibilityState() {
-        if (IsPasswordVisible) {
+    private void TogglePasswordVisibilityState()
+    {
+        if (IsPasswordVisible)
+        {
             IsPasswordVisible = false;
             PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
             PasswordInputType = InputType.Password;
-        } else {
+        }
+        else
+        {
             IsPasswordVisible = true;
             PasswordInputIcon = Icons.Material.Filled.Visibility;
             PasswordInputType = InputType.Text;
@@ -66,11 +70,15 @@
     }
 
     // Class that contains the input data of the register form.
-    public class RegisterForm {
-
+    public class RegisterForm
+    {
         [Required]
         [EmailAddress]
         public string Email { get; set; }
+
+        [Required]
+        [StringLength(50, ErrorMessage = "Username must be at least 3 characters long.", MinimumLength = 3)]
+        public string Username { get; set; }
 
         [Required]
         [StringLength(50, ErrorMessage = "First name must be at least 2 characters long.", MinimumLength = 2)]
@@ -87,24 +95,27 @@
         [Required]
         [StringLength(30, ErrorMessage = "Password must be at least 8 characters long.", MinimumLength = 8)]
         public string PasswordConfirmation { get; set; }
-        
     }
 
     private readonly RegisterForm RegisterFormModel = new();
     private string ErrorMessage;
 
-    private async Task OnValidRegisterFormSubmit(EditContext context) {
+    private async Task OnValidRegisterFormSubmit(EditContext context)
+    {
         Console.WriteLine("Registering User");
         ErrorMessage = "";
         try
         {
-            User user = new User(){Email = RegisterFormModel.Email, Id = 0, Password = RegisterFormModel.Password, Username = RegisterFormModel.LastName};
+            User user = new User() {Email = RegisterFormModel.Email, Id = 0, Password = RegisterFormModel.Password, Username = RegisterFormModel.Username, FirstName = RegisterFormModel.FirstName, LastName = RegisterFormModel.LastName};
             if (RegisterFormModel.Password != RegisterFormModel.PasswordConfirmation) throw new Exception("Both passwords must be identical");
             ((CustomAuthenticationStateProvider) AuthenticationStateProvider).StartConnection();
             await ((CustomAuthenticationStateProvider) AuthenticationStateProvider).ValidateRegister(user);
-            //NavigationManager.NavigateTo();
-        } catch(Exception e) {
+            NavigationManager.NavigateTo($"/calendar/{((CustomAuthenticationStateProvider) AuthenticationStateProvider).GetCachedUser().Id}");
+        }
+        catch (Exception e)
+        {
             ErrorMessage = ErrorMessage = e.Message;
         }
     }
+
 }

@@ -24,7 +24,7 @@
                         <EditForm Model="@LoginFormModel" OnValidSubmit="OnValidLoginFormSubmit">
                             <DataAnnotationsValidator/>
                 
-                            <MudTextField Label="Email" Class="mt-3" @bind-Value="LoginFormModel.Email" For="@(() => LoginFormModel.Email)" Adornment="Adornment.End" AdornmentIcon="@Icons.Filled.AlternateEmail"/>
+                            <MudTextField Label="Username" Class="mt-3" @bind-Value="LoginFormModel.Username" For="@(() => LoginFormModel.Username)" Adornment="Adornment.End" AdornmentIcon="@Icons.Filled.Person"/>
                             <MudTextField Label="Password" Class="mt-3" @bind-Value="LoginFormModel.Password" For="@(() => LoginFormModel.Password)" InputType="@PasswordInputType" Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon" OnAdornmentClick="TogglePasswordVisibiltyState"/>
                             <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" Class="py-2 mt-4">Login</MudButton>
 
@@ -67,7 +67,7 @@
 
         [Required]
         //[EmailAddress]
-        public string Email { get; set; }
+        public string Username { get; set; }
 
         [Required]
         //[StringLength(30, ErrorMessage = "Password must be at least 8 characters long.", MinimumLength = 8)]
@@ -82,7 +82,7 @@
         ErrorMessage = "";
         try {
             ((CustomAuthenticationStateProvider) AuthenticationStateProvider).StartConnection();
-            await ((CustomAuthenticationStateProvider) AuthenticationStateProvider).ValidateLogin(LoginFormModel.Email, LoginFormModel.Password);
+            await ((CustomAuthenticationStateProvider) AuthenticationStateProvider).ValidateLogin(LoginFormModel.Username, LoginFormModel.Password);
             NavigationManager.NavigateTo($"/calendar/{((CustomAuthenticationStateProvider) AuthenticationStateProvider).GetCachedUser().Id}");
         } catch (Exception e) {
             ErrorMessage = e.Message;

@@ -148,7 +148,9 @@ namespace ApplicationTier.Data.Impl
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 Birthday = new DateTime(),
-                IsSharingCalendar = false
+                IsSharingCalendar = false,
+                Events = new List<Event>()
+                
             };
             try
             {
