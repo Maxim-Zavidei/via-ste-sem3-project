@@ -1,11 +1,11 @@
-﻿<div class="flex-grow-1 mt-2 mud-elevation-1" @onclick="@InvokeOnClickEventHandler" style="@EventCss">@EventModel.Title</div>
+﻿<div class="flex-grow-1 mt-2 mud-elevation-1 text-center"  @onclick="@InvokeOnClickEventHandler" style="@EventCss">@EventModel.Title</div>
 
  @code {
      [Parameter] public Models.Event EventModel { get; set; }
      [Parameter] public int UserId {get;set;}
 
      [Parameter] public Action<Event> OnClickEventHandler { get; set; }
-     public string EventCss { get; set; }
+     public string EventCss { get; set; } = "border-radius: 5px";
 
      private void InvokeOnClickEventHandler() {
          OnClickEventHandler?.Invoke(this);
