@@ -29,7 +29,6 @@ namespace DataAccessTier {
                 c.SwaggerDoc("v1", new OpenApiInfo {Title = "DataAccessTier", Version = "v1"});
             });
             services.AddDbContext<CalendarDbContext>(options => options.UseNpgsql(Configuration.GetConnectionString("CalendarDatabase")));
-            //services.AddDbContext<CalendarDbContext>());
             services.AddScoped<IUserRepo, UserRepo>();
             services.AddScoped<IEventRepo, EventRepo>();
         }

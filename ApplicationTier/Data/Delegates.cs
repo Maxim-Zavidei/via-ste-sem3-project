@@ -10,9 +10,9 @@ namespace ApplicationTier.Data
     public class Delegates
     {  
         public delegate void Del();
-        public Del handler { get; set; }
+        public Del EventChangeHandler { get; set; }
 
         public delegate void Del1(int id);
-        public Del1 handleId {get;set;}
+        public Del1 IdChangeHandler {get;set;}
     }
 }

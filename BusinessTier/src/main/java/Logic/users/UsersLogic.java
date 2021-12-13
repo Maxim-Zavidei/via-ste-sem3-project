@@ -14,7 +14,6 @@ public class UsersLogic
 {
   
   public static void main(String[] args) throws Exception {
-    //ClientCommunicator clientCommunicator = new ClientCommunicator(8080);
     SpringApplication.run(UsersLogic.class, args);
   }
   @Bean

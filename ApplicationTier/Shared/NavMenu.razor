@@ -26,8 +26,8 @@
 
     protected override async Task OnInitializedAsync()
     {
-        ((CustomAuthenticationStateProvider)AuthenticationStateProvider).handler += ChangeName;
-        UserService.GetDelegates().handleId += LoggedIn;
+        ((CustomAuthenticationStateProvider)AuthenticationStateProvider).NameChangeHnadler += ChangeName;
+        UserService.GetDelegates().IdChangeHandler += LoggedIn;
     }
     public void ChangeName(String name)
     {

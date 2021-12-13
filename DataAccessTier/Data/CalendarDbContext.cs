@@ -1,8 +1,5 @@
-using System;
-using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using DataAccessTier.Model;
-using System.Threading.Tasks;
 
 namespace DataAccessTier.Data
 {
@@ -11,16 +8,6 @@ namespace DataAccessTier.Data
         public  DbSet<User> Users { get; set; }
         public  DbSet<Event> Event { get; set; }
         public DbSet<Address> Address {get;set;}
-
-         /*public string DbPath { get; private set; }
-
-       public CalendarDbContext()
-        {
-            var folder = Environment.SpecialFolder.LocalApplicationData;
-            var path = Environment.GetFolderPath(folder);
-            DbPath = $"{path}{System.IO.Path.DirectorySeparatorChar}sep3.db";
-        }
-*/
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<User>().HasIndex(u => u.Username).IsUnique();
@@ -32,10 +19,9 @@ namespace DataAccessTier.Data
         
         }
 
-        // The following configures EF to create a Sqlite database file in the
-        // special "local" folder for your platform.
-      protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-            => optionsBuilder.UseBatchEF_Npgsql();
+        // The following configures EF to use a special Postgres library, that enables to update multiple rows in the database
+      //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+            //=> optionsBuilder.UseBatchEF_Npgsql();
     }
 
 }

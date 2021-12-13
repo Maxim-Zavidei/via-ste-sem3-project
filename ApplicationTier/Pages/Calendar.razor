@@ -206,16 +206,12 @@
             UpdateCalendarView();
             SharingStatus = UserService.GetSharingStatus(((CustomAuthenticationStateProvider)
             AuthenticationState).GetCachedUser().Id).Result;
-            UserService.GetDelegates().handler += UpdateEvents;
-            //EventManagementDialog.setId(UserId);
+            UserService.GetDelegates().EventChangeHandler += UpdateEvents;
         }
         catch (Exception e)
         {
-        }
 
-        //Getting events needs more work
-        // Events = await EventService.GetUserEventsAsync(((CustomAuthenticationStateProvider)
-        //AuthenticationState).GetCachedUser().Id);
+        }
     }
 
     private bool SharingStatus { get; set; }

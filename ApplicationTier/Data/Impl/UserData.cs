@@ -84,7 +84,7 @@ namespace ApplicationTier.Data.Impl
                     rcv = await Communicator.read();
                     userToReturn = JsonSerializer.Deserialize<User>(rcv);
                     cashedUser = userToReturn;
-                    delegates.handleId.Invoke(userToReturn.Id);
+                    delegates.IdChangeHandler.Invoke(userToReturn.Id);
                     Console.WriteLine(userToReturn);
                 }
                 else throw new Exception(rcv);
@@ -235,7 +235,7 @@ namespace ApplicationTier.Data.Impl
         {
             await Communicator.CloseConnection();
             
-            delegates.handleId.Invoke(0);
+            delegates.IdChangeHandler.Invoke(0);
         }
 
         public async Task<IList<Event>> GetUserEventsAsync(int userId)
@@ -282,7 +282,7 @@ namespace ApplicationTier.Data.Impl
                 {
                     string eventJson = await Communicator.read();
                     eventTemp = JsonSerializer.Deserialize<Event>(eventJson);
-                    delegates.handler.Invoke();
+                    delegates.EventChangeHandler.Invoke();
                 }
                 else throw new Exception("Server unavailable. Try again later.");
             }
@@ -314,7 +314,7 @@ namespace ApplicationTier.Data.Impl
                 String rcv = await Communicator.read();
                 if (rcv.Equals("Successful"))
                 {
-                    delegates.handler.Invoke();
+                    delegates.EventChangeHandler.Invoke();
                     Console.WriteLine("Event removed");
                     return(rcv);
                 }
@@ -343,7 +343,7 @@ namespace ApplicationTier.Data.Impl
                 {
                     string eventJson = await Communicator.read();
                     eventTemp = JsonSerializer.Deserialize<Event>(eventJson);
-                    delegates.handler.Invoke();
+                    delegates.EventChangeHandler.Invoke();
                 }
                 else throw new Exception("Server unavailable. Try again later.");
             }
@@ -373,7 +373,7 @@ namespace ApplicationTier.Data.Impl
                 {
                     string eventJson = await Communicator.read();
                     eventTemp = JsonSerializer.Deserialize<Event>(eventJson);
-                    delegates.handler.Invoke();
+                    delegates.EventChangeHandler.Invoke();
                 }
                 else throw new Exception("Server unavailable. Try again later.");
             }

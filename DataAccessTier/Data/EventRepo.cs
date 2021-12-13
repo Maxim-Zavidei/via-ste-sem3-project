@@ -62,7 +62,7 @@ namespace DataAccessTier.Data
 
         public async Task<Event> EditEvent(Event evt)
         {
-            Address address = await db.Address.FirstOrDefaultAsync(ad => ad.StreetName == evt.Address.StreetName && ad.Number == evt.Address.Number && ad.City == evt.Address.City && ad.Country == evt.Address.Country);
+           /* Address address = await db.Address.FirstOrDefaultAsync(ad => ad.StreetName == evt.Address.StreetName && ad.Number == evt.Address.Number && ad.City == evt.Address.City && ad.Country == evt.Address.Country);
             if (address == null)
             {
                 evt.Address.Id = await db.Address.MaxAsync(a => a.Id + 1);
@@ -73,7 +73,7 @@ namespace DataAccessTier.Data
 
             }
 
-            evt.Address = address;
+            //evt.Address = address;
             evt.AddressId = address.Id;
             try
             {
@@ -87,15 +87,15 @@ namespace DataAccessTier.Data
                     .Where(b => b.StartTime == evt.StartTime && b.EndTime == evt.EndTime)
                     .ExecuteAsync();
                 //db.Event.Update(evt);
-                /*
-                     await db.BatchUpdate<Address>()
-                    .Set(a => a.Country, a => address.Country)
-                    .Set(a => a.City, a => address.City)
-                    .Set(a => a.StreetName, a => address.StreetName)
-                    .Set(a => a.Number, a => address.Number)
-                    .Where(a => a.Id == address.Id)
-                    .ExecuteAsync();
-                 */
+                //
+                //     await db.BatchUpdate<Address>()
+                //    .Set(a => a.Country, a => address.Country)
+                //    .Set(a => a.City, a => address.City)
+                //    .Set(a => a.StreetName, a => address.StreetName)
+                //    .Set(a => a.Number, a => address.Number)
+                //    .Where(a => a.Id == address.Id)
+                //    .ExecuteAsync();
+                 
                 await db.SaveChangesAsync();
 
             }
@@ -103,15 +103,38 @@ namespace DataAccessTier.Data
             {
                 Console.WriteLine(e.Message);
             }
+            return evt;*/
+             Address address = await db.Address.FirstOrDefaultAsync(ad => ad.StreetName == evt.Address.StreetName && ad.Number == evt.Address.Number && ad.City == evt.Address.City && ad.Country == evt.Address.Country);
+            if (address == null)
+            {
+                db.Address.Add(evt.Address);
+                address = db.Address.OrderBy(ad => ad.Id).Last();
+
+            }
+            evt.Address = null;
+            evt.AddressId = address.Id;
+            try
+            {
+                db.Event.Update(evt);
+                await db.SaveChangesAsync();
+
+            }
+            catch (Exception e)
+            {
+
+            }
             return evt;
         }
 
         public async Task RemoveEvent(int id)
         {
-            Event eventToRemove = db.Event.First(event1 => event1.Id == id);
+            /*Event eventToRemove = db.Event.First(event1 => event1.Id == id);
             //db.Event.Remove(eventToRemove);
             await db.DeleteRangeAsync<Event>(e => e.Title == eventToRemove.Title && e.Description == eventToRemove.Description
             && e.StartTime == eventToRemove.StartTime && e.EndTime == eventToRemove.EndTime);
+            await db.SaveChangesAsync();*/
+            Event eventToRemove = db.Event.First(event1 => event1.Id == id);
+            db.Event.Remove(eventToRemove);
             await db.SaveChangesAsync();
         }
     }

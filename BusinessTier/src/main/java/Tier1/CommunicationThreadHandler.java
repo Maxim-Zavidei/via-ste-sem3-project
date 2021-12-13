@@ -3,7 +3,6 @@ package Tier1;
 import Shared.Event;
 import Shared.User;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,7 +28,7 @@ public class CommunicationThreadHandler implements Runnable {
             os = socket.getOutputStream();
             userController = new UserController();
             eventController = new EventController();
-            gson = new Gson();//.setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS").create();
+            gson = new Gson();
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
