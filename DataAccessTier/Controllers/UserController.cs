@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using DataAccessTier.Model;
@@ -12,12 +10,12 @@ namespace DataAccessTier.Controllers
     [Route("[controller]")]
     public class UserController : ControllerBase
     {
-        private IUserRepo db { get; set; }
+        private IUserRepo UserRepo { get; set; }
         private int userCount;
 
-        public UserController(IUserRepo udb)
+        public UserController(IUserRepo userRepo)
         {
-            db = udb;
+            this.UserRepo = userRepo;
         }
 
        /* private List<User> GetUsers()
@@ -32,7 +30,7 @@ namespace DataAccessTier.Controllers
         {
             try
             {
-                var users = await db.GetUsersAsync();
+                var users = await UserRepo.GetUsersAsync();
                 return Ok(users);
             }
             catch (Exception e)
@@ -48,7 +46,7 @@ namespace DataAccessTier.Controllers
         {
             try
             {
-                var tempUsers = await db.GetUsersSharingAsync();
+                var tempUsers = await UserRepo.GetUsersSharingAsync();
                 return Ok(tempUsers);
             }
             catch (Exception e)
@@ -67,7 +65,7 @@ namespace DataAccessTier.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] User user)
         {
-            User u = await db.AddUserAsync(user);
+            User u = await UserRepo.AddUserAsync(user);
             return Ok(u);
         }
 
@@ -84,7 +82,7 @@ namespace DataAccessTier.Controllers
         {
             try
             {
-                await db.DeleteUser(userId);
+                await UserRepo.DeleteUser(userId);
                 return Ok();
             }
             catch (Exception e)
@@ -99,7 +97,7 @@ namespace DataAccessTier.Controllers
         {
             try
             {
-                await db.ChangeSharingStatus(userId);
+                await UserRepo.ChangeSharingStatus(userId);
                 return Ok();
             }
             catch (Exception e)
@@ -114,7 +112,7 @@ namespace DataAccessTier.Controllers
         {
             try
             {
-               bool sharingStatus = await db.GetSharingStatus(userId);
+               bool sharingStatus = await UserRepo.GetSharingStatus(userId);
                 return Ok(sharingStatus);
             }
             catch (Exception e)

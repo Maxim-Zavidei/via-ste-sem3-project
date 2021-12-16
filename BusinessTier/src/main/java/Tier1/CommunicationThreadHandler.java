@@ -12,7 +12,7 @@ import java.util.ArrayList;
 
 public class CommunicationThreadHandler implements Runnable {
     private Socket socket;
-    //private  String ip;
+    private  String ip;
     private UserController userController;
     private EventController eventController;
     private Gson gson;
@@ -22,7 +22,7 @@ public class CommunicationThreadHandler implements Runnable {
 
     public CommunicationThreadHandler(Socket socket){
         this.socket = socket;
-        //this.ip = socket.getInetAddress().getHostAddress();
+        this.ip = socket.getInetAddress().getHostAddress();
         try {
             is = socket.getInputStream();
             os = socket.getOutputStream();

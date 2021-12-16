@@ -12,11 +12,11 @@ namespace DataAccessTier.Controllers
     [Route("[controller]")]
     public class EventController : ControllerBase
     {
-        private IEventRepo db { get; set; }
+        private IEventRepo EventRepo { get; set; }
 
-        public EventController(IEventRepo edb)
+        public EventController(IEventRepo eventRepo)
         {
-            db = edb;
+            EventRepo = eventRepo;
         }
 
         [HttpGet]
@@ -25,7 +25,7 @@ namespace DataAccessTier.Controllers
         {
             try
             {
-                var events = await db.GetUserEvents(userId);
+                var events = await EventRepo.GetUserEvents(userId);
                 return Ok(events);
             }
             catch (Exception e)
@@ -41,7 +41,7 @@ namespace DataAccessTier.Controllers
             try
             {
                 evt.UserId = userId;
-                var events = await db.AddEventAsync(evt);
+                var events = await EventRepo.AddEventAsync(evt);
                 return Ok(events);
             }
             catch (Exception e)
@@ -59,10 +59,10 @@ namespace DataAccessTier.Controllers
             {
                 Event tempEvent = evt;
                 evt.UserId = userId;
-                Event event1 = await db.AddEventAsync(evt);
+                Event event1 = await EventRepo.AddEventAsync(evt);
                 
                 tempEvent.UserId = otherUserId;
-                Event event2 = await db.AddEventAsync(tempEvent);
+                Event event2 = await EventRepo.AddEventAsync(tempEvent);
                 
                 Console.WriteLine($"\n user1: {userId}, {event1} \n\n user2: {otherUserId}, {event2}");
                 return Ok(event2);
@@ -79,7 +79,7 @@ namespace DataAccessTier.Controllers
             try
             {
                 evt.UserId = userId;
-                var events = await db.EditEvent(evt);
+                var events = await EventRepo.EditEvent(evt);
                 return Ok(events);
             }
             catch (Exception e)
@@ -95,7 +95,7 @@ namespace DataAccessTier.Controllers
         {
             try
             {
-                await db.RemoveEvent(eventId);
+                await EventRepo.RemoveEvent(eventId);
                 return Ok();
             }
             catch (Exception e)

@@ -26,8 +26,7 @@ public class ServerCommunicator {
   private static UserCommunicator userCommunicator;
   private static EventCommunicator eventCommunicator;
   private RestTemplate restTemplate;
-  private static final String url = "https://localhost:5003/";
-
+  private static final String url = "https://localhost:5002/";
   /**
    * disregards the CA in order to connect to localhost of c# Web API
    */

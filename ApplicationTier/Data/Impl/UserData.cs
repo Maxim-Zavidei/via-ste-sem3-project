@@ -93,7 +93,9 @@ namespace ApplicationTier.Data.Impl
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
-                throw new Exception("Server is currently unavailable. Try again later.");
+                if(e.Message.Equals("Could not fetch users from Database"))
+                {throw new Exception("Server is currently unavailable. Try again later.");}
+                throw e;//new Exception("Server is currently unavailable. Try again later.");
             }
 
 
@@ -111,7 +113,7 @@ namespace ApplicationTier.Data.Impl
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
-                throw new Exception("Could not fetch users from Database");
+                throw new Exception("Server is currently unavailable. Try again later.");
             }
         }
 
@@ -133,7 +135,10 @@ namespace ApplicationTier.Data.Impl
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
-                throw new Exception("Could not fetch sharing users from Database");
+                if(e.Message.Equals("Could not fetch sharing users from Database")){
+                    throw new Exception("Server is currently unavailable. Try again later.");
+                }
+                throw e;
             }
         }
 
